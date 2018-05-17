@@ -168,7 +168,13 @@ export default class extends wepy.app {
         if (!userinfo){
             await self.globalData.refreshUserInfo();
         }
+        await self._afterLaunch()
         wx.hideLoading();
+    }
+    async _afterLaunch(){
+        if (this.globalData.userInfo.vip == ''){
+            io.connect()
+        }
     }
     async initToken(){//初始化token 数据以globalData中为准
         let self = this;
@@ -326,8 +332,8 @@ export default class extends wepy.app {
         environment : null,
         tokenLose : 86400000,// 单位：毫秒，86400000：1天的毫秒数，倒计时1天之内的 token 失效，重新刷新 token
         clipboard : null,
-        //内置的报名选项
         setting : {},
+        io : null,
         loginInfo:{}
     };
 }

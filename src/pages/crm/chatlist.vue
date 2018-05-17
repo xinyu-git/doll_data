@@ -1,15 +1,6 @@
 <template>
 <view class="page">
-    <view style="margin:60px 0;text-align:center;font-size:16px;color:#666;">
-        <image src="../../images/pclogin.png" style="display:block;margin:auto;width:240px;height:218px;"></image>
-        <view>登陆确认</view>
-    </view>
-    <view style="margin:60px 0">
-        <view class="zan-btns">
-            <button class="zan-btn zan-btn--primary" bindtap="agree" 
-            open-type="getUserInfo"> 登陆 </button>
-        </view>    
-    </view>
+    
 </view>
 
 </template>
@@ -35,5 +26,5 @@
     }
 </script>
 <style>
-    @import '../../zanui/btn.wxss'
+   
 </style>
