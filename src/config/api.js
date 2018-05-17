@@ -1,4 +1,4 @@
-const appid = 'wx06e1f1afd77138c1'
+const appid = 'wxc9d5ed55f506d95c'
 const env = 'production'
 const constant = {
     fileServer: "http://card.kong.net",
