@@ -1,7 +1,6 @@
 
-<style>
-    @import 'zanui/helper.wxss';
-    @import "style/main.wxss";
+<style>    
+    @import "style/app.wxss";
 </style>
 <script>
 import wepy from 'wepy'
@@ -11,11 +10,9 @@ import {api, server} from './config/api'
 export default class extends wepy.app {
     config = {
         "pages":[
-            //广场首页
             "pages/portal/index",
             "pages/auth/refreToken",
             "pages/auth/signup",
-            "pages/auth/loginpc",
             "pages/auth/login"
         ],
         "window":{

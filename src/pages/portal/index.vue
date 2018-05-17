@@ -1,44 +1,36 @@
 <template>
 <view class="page">
-    <view>
-        <image src="../../images/music1.png" class="spin fixbottom" style='width:32px;height:32px;z-index:99;' wx:if="{{hasbackgroundmusic}}"
-        bindtap='go2music'/>
-    </view>
-
-    <view class="padding-bottom-bar">
-        <view  wx:if="{{false}}">
-            <input placeholder="搜索" bindconfirm='search' placeholder-style="color:grey;" confirm-type='搜索' 
-            style="font-size:12px;border:1px solid #c0d0c0;padding:0 15px;border-left:none;border-right:none;"/>
-        </view>
-        <!-- 首页 tab 启用后 top 应改为45px -->
-        <view >
-            <view class="zan-panel zan-panel--without-border">
-                test
-            </view>
+   <view class="page__hd">
+        <view class="page__title">Button</view>
         
-        </view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+        <button class="weui-btn" type="primary" open-type="contact"
+        send-message-title='销售代表任建斌'
+        bindcontact='ongo2contact'
+        >去客服</button>
+        <button class="weui-btn" type="primary"></button>
+
+        <button class="weui-btn" type="default">页面次要操作 Normal</button>
+        <button class="weui-btn" type="default" >页面次要操作 Disabled</button>
+
+        <button class="weui-btn" type="warn">警告类操作 Normal</button>
+        <button class="weui-btn" type="warn" >警告类操作 Disabled</button>
+
+       
     </view>
 </view>
 </template>
 <script>
     import auth from '../base/auth'
     import api from '../../config/api'
-    import zanTab from '@/components/zan-tab'
-
     export default class Index extends auth {
+        config = {
+            "navigationBarTitleText": "咨询列表",
+        }
         data = {
             hasbackgroundmusic : false,
             fileServer: `${api.fileServer}`,
-            bannercourses: [],
-            indicatorDots: true,
-            autoplay: true,
-            interval: 5000,
-            duration: 1000,
-            list:[],
-            pageSize:8,
-            currentPage:0,
-            currentTabIndex:0,
-            winHeight:0
         }
 
         components = {
@@ -46,16 +38,6 @@
         }
 
         methods ={
-            forward(e){
-                let id = e.currentTarget.dataset.url
-                console.log('go to page ', id )
-                if(!!id){
-                    //console.log(decodeURIComponent(e.currentTarget.dataset.url))
-                    wx.navigateTo({url: `../course/info?id=${id}`})
-                }else{
-                    console.error("没有配置可以跳转的 wenviewUrl")
-                }
-            },
             courseimgerror(e){
                 
             },
@@ -66,33 +48,16 @@
         }
 
         events = {
-            
-            
+            ongo2contact(e){
+
+            }
         }
         
         async onLoad(options) {
 
-            let that = this;
-            let res = wx.getSystemInfoSync()
-            this.winHeight = res.windowHeight; // 首页增加 tab 这里要多减掉 45px
-            let sup_result = await super.onLoad();
-            if (! sup_result) return
-            await that.$parent.bindUser(options.uid);
-            this.checkbackgroundsound();
-            that.$apply();
+           
         }
-        checkbackgroundsound(){
-            const backgroundAudioManager = wx.getBackgroundAudioManager()
-            console.log(backgroundAudioManager)
-            this.hasbackgroundmusic = (backgroundAudioManager.paused == false) //当前是是否暂停或停止状态，true 表示暂停或停止，false 表示正在播放
-            console.log(this.hasbackgroundmusic)
-        }
-
-        // async onReachBottom(){
-        async scrolltolower(){
-            //do something
-            this.$apply();
-        }
+        
 
         async onPullDownRefresh(){
             this.$apply();
