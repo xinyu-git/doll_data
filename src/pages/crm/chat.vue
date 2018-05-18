@@ -1,13 +1,28 @@
 <template>
 <view class="page">
     
-</view>
+    <view class="page__bd page__bd_spacing">
+        <view class="content" style="background-color:#ccc">
+        
+        </view>
 
+
+        <view class="weui-footer weui-footer_fixed-bottom" style="bottom:0;">
+            
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="请输入文本" style="text-align:left;"/>
+                </view>
+            </view>
+        
+        </view>
+    </view>
+</view>
 </template>
 <script>
     import wepy from 'wepy'
     import config from '../../config/api'
-    export default class loginPc extends wepy.page {
+    export default class Chat extends wepy.page {
         config = {"navigationBarTitleText": "咨询"}
         components= {
         }
@@ -26,5 +41,5 @@
     }
 </script>
 <style>
-    @import '../../zanui/btn.wxss'
+   
 </style>

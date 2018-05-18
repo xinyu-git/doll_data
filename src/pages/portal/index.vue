@@ -6,13 +6,11 @@
     </view>
     <view class="page__bd page__bd_spacing">
         <button class="weui-btn" type="primary" open-type="contact"
-        send-message-title='销售代表任建斌' show-message-card="true"
-        send-message-img=""
-        session-from="dangdangdang"
-        bindcontact='ongo2contact'
-        >去客服</button>
-        <button class="weui-btn" type="default" >页面次要操作 Disabled</button>
-        <button class="weui-btn" type="warn" >警告类操作 Disabled</button>
+        session-from="uid10"
+        bindcontact='ongo2contact'>找建斌</button>
+        <button class="weui-btn" type="primary" open-type="contact"
+        session-from="uid11"
+        bindcontact='ongo2contact'>找张老师</button>
     </view>
 </view>
 </template>

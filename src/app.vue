@@ -6,10 +6,13 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 import {api, server} from './config/api'
+import {io,socket,socketinit} from './socket/ioevent'
 
 export default class extends wepy.app {
     config = {
         "pages":[
+            "pages/crm/chatList",
+            "pages/crm/chat",
             "pages/portal/index",
             "pages/auth/refreToken",
             "pages/auth/signup",
@@ -39,7 +42,6 @@ export default class extends wepy.app {
                 let defaultheader = {
                     'Content-Type': 'application/json', 
                     'Authorization' : `Bearer ${that.globalData.token}`,
-                    // 'Authorization' : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE2LCJub25zdHIiOiI4MzE4IiwiaWF0IjoxNTIxMDk3NDc1LCJleHAiOjE1MjE3MDIyNzV9.1DSNLnE1RkDDxOKy15VAwHyqF9CMfkKSyHX0kOMuzY4`,
                     "Sourceorigin" : "app"
                 };
                 for (let key in header){
@@ -166,14 +168,20 @@ export default class extends wepy.app {
         wx.showLoading({title: '加载中',mask : true})
         let userinfo = self.globalData.userInfo = self.globalData.userInfo || wx.getStorageSync('user:detail');
         if (!userinfo){
-            await self.globalData.refreshUserInfo();
+            await self.refreshUserInfo();
         }
         await self._afterLaunch()
         wx.hideLoading();
     }
     async _afterLaunch(){
-        if (this.globalData.userInfo.vip == ''){
-            io.connect()
+        console.log("after launch")
+        console.log(this.globalData.userInfo)
+        if (!! this.globalData.userInfo && 
+            !!this.globalData.userInfo.userprofile && 
+            this.globalData.userInfo.userprofile.cert_status == 1){
+            socketinit(this.globalData);
+            this.globalData.io = io;
+            this.globalData.socket = socket;
         }
     }
     async initToken(){//初始化token 数据以globalData中为准
@@ -232,13 +240,13 @@ export default class extends wepy.app {
             await that.globalData.refreshUserInfo();
         }
         userinfo = that.globalData.userInfo = that.globalData.userInfo || wx.getStorageSync('user:detail');
-        console.log("userinfo",userinfo)
+        
         if(userinfo.extra){
             let extraobj = JSON.parse(userinfo.extra);
             if(extraobj.uids.indexOf(fromUserid+"")==-1){
-                console.log(">>>>beginBind")
+                
                 let updateResult = await this.globalData.post(`${server}/auth/user/updateConnectUids`,{uid_from:fromUserid});
-                console.log(">>>>endBind",updateResult)
+                
             }
             await that.globalData.refreshUserInfo();
         }else{
@@ -257,58 +265,21 @@ export default class extends wepy.app {
     }
 
     //刷新用户信息
-    refreshUserInfo(){
+    async refreshUserInfo(){
         let self = this;
-        let updateUserInfo=(info)=>{
-            self.userInfo = info;
-            return new Promise((resolve,reject) =>{
-                wx.setStorage({
-                    key:"user:detail",
-                    data:info,
-                    success : function(){
-                        resolve(true)
-                    },
-                    fail : function(){
-                        reject(false)
-                    }
-                })
-            })
+        let res2 = await this.globalData.get(`${api.auth.userDetail.url}`)
+        let obj = res2;
+        let userDetail = {};
+        if(obj){
+            //兼容处理 userinfo
+            let userProfiles = obj.UserProfiles[0];
+            userDetail = Object.assign({}, obj,  {userprofile: obj.UserProfiles[0]}, {passport : obj.Passports})
+            delete userDetail.UserProfiles
+            delete userDetail.Passports
         }
-        return new Promise((resolve, reject) => {
-            self.get(`${api.auth.userDetail.url}`).then((res2)=>{
-                let obj = res2;
-                let userDetail = {};
-                if(obj){
-                    //兼容处理 userinfo
-                    let userProfiles = obj.UserProfiles[0];
-                    userDetail.uid = userProfiles.uid;
-                    userDetail.fromUid = userProfiles.from_uid;
-                    userDetail.extattr = userProfiles.extattr;
-                    userDetail.email = userProfiles.email;
-                    userDetail.birthday = userProfiles.birthday;
-                    userDetail.certStatus = userProfiles.cert_status;
-                    userDetail.idcardStatus = userProfiles.idcard_status;
-                    userDetail.role = userProfiles.role;
-                    userDetail.remark = userProfiles.remark;
-
-                    userDetail.sex = obj.sex;
-                    userDetail.mobile = obj.mobile;
-                    userDetail.nickname = obj.nickname;
-                    userDetail.passports = obj.Passports;
-                    userDetail.fullname = obj.fullname;
-                    userDetail.status = obj.status;
-                    userDetail.headImg = obj.headimg;
-                    userDetail.vip = obj.vip;
-                    userDetail.corpId = obj.corpid;
-                    userDetail.extra = obj.extra;
-                }
-                updateUserInfo(userDetail).then((result)=>{
-                    resolve(userDetail)             
-                })
-            })
-        })
+        self.globalData.userInfo = userDetail;
+        wx.setStorageSync( "user:detail",userDetail );
     }
-
     onShow(){
         // console.log("this is app on show")
         //此处管理正在背景播放的音乐
@@ -334,7 +305,8 @@ export default class extends wepy.app {
         clipboard : null,
         setting : {},
         io : null,
-        loginInfo:{}
+        loginInfo:{},
+        chatmsg : []
     };
 }
 </script>
