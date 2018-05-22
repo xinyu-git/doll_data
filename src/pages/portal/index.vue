@@ -5,7 +5,6 @@
     <view class="weui-cell__title ">
       <image  src="../../images/peson.png"></image>
     </view>
-<<<<<<< HEAD
     <view class="weui-cell__ft weui-cell__ft-color">
       <text>袁小员</text>
       <text>坦克世界vip运营</text>
@@ -92,16 +91,15 @@
   <view class="weui-cell">
     <view class="weui-cell-bd weui-cell-primary">
       <text>立夏快乐！</text>
-=======
-    <view class="page__bd page__bd_spacing">
-        <button class="weui-btn" type="primary" open-type="contact"
-        session-from="uid10"
-        bindcontact='ongo2contact'>找建斌</button>
-        <button class="weui-btn" type="primary" open-type="contact"
-        session-from="uid11"
-        bindcontact='ongo2contact'>找张老师</button>
->>>>>>> aa6ff69f74b2451382b97aceae44a2d0d47172aa
     </view>
+    <!-- <view class="page__bd page__bd_spacing">
+            <button class="weui-btn" type="primary" open-type="contact"
+            session-from="uid10"
+            bindcontact='ongo2contact'>找建斌</button>
+            <button class="weui-btn" type="primary" open-type="contact"
+            session-from="uid11"
+            bindcontact='ongo2contact'>找张老师</button>
+    </view> -->
   </view>
   <view class="weui-cells__title weui-cells-nopd weui-cells-btpd ">
     <image src="../../images/photo1.jpg"></image>
