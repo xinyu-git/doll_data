@@ -1,121 +1,382 @@
 <template>
 <view class="page">
-   <view class="page__hd">
-        <view class="page__title">Button</view>
-        
+    <!--top定制-->
+  <view class="weui-cell weui-card">
+    <view class="weui-cell__title ">
+      <image  src="../../images/peson.png"></image>
     </view>
-    <view class="page__bd page__bd_spacing">
-        <button class="weui-btn" type="primary" open-type="contact"
-        send-message-title='销售代表任建斌'
-        bindcontact='ongo2contact'
-        >去客服</button>
-        <button class="weui-btn" type="primary"></button>
-
-        <button class="weui-btn" type="default">页面次要操作 Normal</button>
-        <button class="weui-btn" type="default" >页面次要操作 Disabled</button>
-
-        <button class="weui-btn" type="warn">警告类操作 Normal</button>
-        <button class="weui-btn" type="warn" >警告类操作 Disabled</button>
-
-       
+    <view class="weui-cell__ft weui-cell__ft-color">
+      <text>袁小员</text>
+      <text>坦克世界vip运营</text>
     </view>
+    <!--打电话-->
+    <view bindtap="callmeTap" class="weui-cell__ft btn_wx">
+      <image  src="../../images/iconcall.png"></image>
+    </view>
+    <!--客服中心-->
+    <view class="weui-cell__ft weui-cell-cuetom">
+      <button  class='pos' open-type="contact" session-from="weapp"></button>
+      <image class="icon_call"  src="../../images/iconwx.png"></image>
+    </view>
+     
+  </view>
+  <!--视频播放一-->
+  <view class="weui-cells__title">
+    <view class="videoCon">
+      <view class="v_section">
+        <video id="myVideo1" src="http://zz.kongzhong.com/index180118/images/cover.webm"   controls show-center-play-btn="{{controlState}}" bindended="videoEnd1">
+          <cover-view class="coverBox" wx:if="{{vCoverBox1}}"  wx:for-index="index" bindtap="palyVideo" id="1">
+            <cover-view class="videoPoster" >
+              <cover-image class="img"  src="../../images/video.jpg" />
+              </image>
+            </cover-view>
+            <cover-view class="play">
+              <cover-image class="img"  src="../../images/start.png" />
+              </image>
+            </cover-view>
+          </cover-view>
+        </video>
+      </view>
+    </view>
+  </view>
+  <!--最新动态-->  
+  <view class="weui-cells__title">
+    <text class="weui-cell-bt">最新动态</text>
+    <image src="../../images/photo1.jpg"></image>
+  </view>
+  <!--发布内容一-->
+  <view class="weui-cell noline">
+    <view class="weui-cell__bd peson">
+      <image  src="../../images/peson.png" />
+      </image>
+    </view>
+    <view class="weui-cell__ft weui-cell__font">
+      <text>袁小员</text>
+      <text>38分钟前</text>
+    </view>
+  </view>
+  <view class="weui-cell">
+    <view class="weui-cell-bd weui-cell-primary">
+      <text>空中旋转360度，落地没事！</text>
+    </view>
+  </view>
+  <!--视频播放二-->    
+  <view class="weui-cells__title weui-cells-nopd">
+    <view class="videoCon">
+      <view class="v_section">
+        <video id="myVideo2" src="http://zz.kongzhong.com/index180118/images/cover.webm"   controls show-center-play-btn="{{controlState}}" bindended="videoEnd2">
+          <cover-view class="coverBox" data-vCoverBox="vCoverBox2" wx:if="{{vCoverBox2}}" bindtap="palyVideo" id="2">
+            <cover-view class="videoPoster" >
+              <cover-image class="img"  src="../../images/video.jpg"/>
+            </cover-view>
+            <cover-view class="play" >
+              <cover-image class="img"  src="../../images/start.png" />
+            </cover-view>
+          </cover-view>
+        </video>
+      </view>
+    </view>
+  </view>
+  <!--发布内容二-->
+  <view class="weui-cell noline">
+    <view class="weui-cell__bd peson">
+      <image  src="../../images/peson2.png" />
+      </image>
+    </view>
+    <view class="weui-cell__ft weui-cell__font">
+      <text>坦克世界</text>
+      <text>38分钟前</text>
+    </view>
+  </view>
+  <view class="weui-cell">
+    <view class="weui-cell-bd weui-cell-primary">
+      <text>立夏快乐！</text>
+    </view>
+  </view>
+  <view class="weui-cells__title weui-cells-nopd weui-cells-btpd ">
+    <image src="../../images/photo1.jpg"></image>
+  </view>
+  <!--底部固定导航-->  
+  <view class="weui-bottombar weui-cell noline2">
+    <view class="weui-cell__ft  share-icon1">
+      <button class="share" open-type="share" data-name="pageShare" id="share">
+      <image src="../../images/shareto.png"></image>
+      <text>分享</text>
+      </button>
+    </view>
+    <view class="weui-cell__ft  share-icon2">
+      <button class="share" type="default-light" session-from="weapp"  id="service">
+      <image src="../../images/iconnum.png"></image>
+      </button>
+    </view>
+    <view class="weui-cell__ft  share-icon3">
+      <button class="share"  id="user">
+      <image src="../../images/iconuser.png"></image>
+      <text>我的</text>
+      </button>
+    </view>
+  </view>
 </view>
 </template>
 <script>
-    import auth from '../base/auth'
-    import api from '../../config/api'
-    export default class Index extends auth {
-        config = {
-            "navigationBarTitleText": "咨询列表",
-        }
-        data = {
-            hasbackgroundmusic : false,
-            fileServer: `${api.fileServer}`,
-        }
+import auth from "../base/auth";
+import api from "../../config/api";
+export default class Index extends auth {
+  config = {
+    navigationBarTitleText: "用户端",
+    navigationBarBackgroundColor: "#e67841",
+    backgroundColor: "#e67841",
+    navigationBarTextStyle: "white"
+  };
 
-        components = {
-           
-        }
+  data = {
+    hasbackgroundmusic: false,
+    vCoverBox1: true,
+    vCoverBox2: true
+  };
 
-        methods ={
-            courseimgerror(e){
-                
-            },
-            go2music(e){
-                let savedinfoid = wx.getStorageSync('sound:currentbgid');
-                wx.navigateTo({url : `../course/info?id=${saveinfoid}`})
-            }
-        }
+  async onLoad() {}
 
-        events = {
-            ongo2contact(e){
-
-            }
-        }
-        
-        async onLoad(options) {
-
-           
-        }
-        
-
-        async onPullDownRefresh(){
-            this.$apply();
-            wx.stopPullDownRefresh()
-        }
+  methods = {
+    async palyVideo(e) {
+      this.videoContext = wx.createVideoContext("myVideo" + e.currentTarget.id);
+      if (e.currentTarget.id == 1) {
+        this.vCoverBox1 = false;
+      }
+      if (e.currentTarget.id == 2) {
+        this.vCoverBox2 = false;
+      }
+      this.videoContext.play();
+    },
+    videoEnd1(e) {
+      this.vCoverBox1 = true;
+    },
+    videoEnd2(e) {
+      this.vCoverBox2 = true;
+    },
+    callmeTap() {
+      wx.makePhoneCall({
+        phoneNumber: "15311785003"
+      });
     }
+  };
+}
 </script>
 <style>
-    .mybadge {
-        position: absolute;  
-        top:50px;
-        right:-10px;
-        height: 1.6em;
-        min-width: 1.6em;
-        line-height: 1.6;
-        padding: 0 0.4em;
-        font-size: 20px;
-        /*border-radius: 0.8em;*/
-        /*background: #ff4444;*/
-        color: #fff;
-        text-align: center;
-        white-space: nowrap;
-        /*
-        transform: translateX(50%) scale(0.5);
-        transform-origin: center;*/
-        z-index: 10;
-        /*box-shadow: 0 0 0 2px #fff;
-        box-sizing: border-box;*/
-    }
-    .mybadge image{
-        width:16px;
-        height:16px;
-    }
-    .spin{
-        
-        background-color: #0CB1C4;
-        animation-name: spin;
-        animation-duration: 5000ms;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear; 
-    }
-    @keyframes spin {
-        from {
-            transform:rotate(0deg);
-        }
-        to {
-            transform:rotate(360deg);
-        }
-    }
-    .fixbottom{
-        position:absolute; 
-        bottom:10px;
-        right:10px;
-    }
-    @import '../../zanui/badge.wxss';
-    @import '../../zanui/icon.wxss';
-    @import '../../zanui/panel.wxss';
-    @import '../../zanui/card.wxss';
-    @import '../../zanui/color.wxss';
-    @import '../../zanui/tag.wxss';
+.controls {
+  position: relative;
+  top: 50%;
+  height: 50px;
+  margin-top: -25px;
+  display: flex;
+}
+.videoCon {
+  position: relative;
+  width: 690rpx;
+  height: 410rpx;
+  margin: 0 auto;
+}
+.v_section {
+  width: 690rpx;
+  height: 410rpx;
+  position: absolute;
+  left: 50%;
+  margin-left: -345rpx;
+  top: 0;
+}
+.v_section video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.coverBox {
+  position: relative;
+  height: 100%;
+  z-index: 2;
+}
+.play {
+  width: 95rpx;
+  height: 95rpx;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -48rpx;
+  margin-left: -48rpx;
+  z-index: 2;
+}
+.videoPoster {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+.play.hide {
+  display: none;
+}
+video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+image {
+  width: 690rpx;
+  height: 300rpx;
+  margin: 0 auto;
+}
+.peson image {
+  width: 120rpx;
+  height: 120rpx;
+  margin-left: 15rpx;
+}
+.weui-cell__ft text {
+  display: block;
+  font-size: 28rpx;
+  color: #000;
+}
+
+.weui-cells__title text {
+  color: #000;
+}
+.weui-card {
+  background: #e67841;
+  height: 210rpx;
+}
+.weui-card image {
+  width: 150rpx;
+  height: 150rpx;
+  margin-right: 41rpx;
+}
+.weui-cell__ft-color text {
+  color: #fff;
+  text-align: left;
+  font-size: 26rpx;
+}
+.weui-cell__ft-color text:nth-child(1) {
+  font-size: 34rpx;
+}
+.weui-cell-cuetom {
+  margin-left: 20rpx;
+}
+.weui-cell-cuetom image {
+  width: 74rpx;
+  height: 74rpx;
+  margin-left: 20rpx;
+  margin-right: 0;
+}
+.pos {
+  position: absolute;
+  top: 41px;
+  right: 35px;
+  opacity: 0;
+}
+.icon_kf {
+  width: 74rpx;
+  height: 74rpx;
+  display: inline-block;
+  margin-top: 5px;
+}
+.noline::before,
+.noline2::before {
+  border: none;
+}
+.noline {
+  padding: 0 15px;
+  margin: 20rpx 0 10rpx;
+}
+.btn_wx {
+  margin-left: 100rpx;
+}
+.btn_wx image {
+  width: 74rpx;
+  height: 74rpx;
+  margin: 0;
+  border: none;
+}
+.weui-cell__font text {
+  font-size: 32rpx;
+}
+.weui-cell__font text:nth-child(2) {
+  color: #aaa;
+  font-size: 28rpx;
+}
+.weui-cell-bt {
+  display: block;
+  margin-bottom: 10rpx;
+  font-size: 32rpx;
+  color: #000;
+}
+.weui-cells-nopd {
+  margin-top: 0;
+}
+
+cover-view {
+  pointer-events: none;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fixbottom {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.weui-bottombar {
+  width: 100%;
+  height: 80rpx;
+  background: #e67841;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+.share {
+  background: rgba(0, 0, 0, 0);
+  color: #fff;
+  line-height: 40rpx;
+  font-size: 30rpx;
+  padding: 0;
+}
+.share text {
+  display: block;
+  color: #fff;
+}
+.share-icon1 {
+  position: absolute;
+  left: 50rpx;
+}
+.share-icon2 {
+  height: 158rpx;
+  position: absolute;
+  top: -44rpx;
+  left: 284rpx;
+}
+.share-icon3 {
+  position: absolute;
+  right: 110rpx;
+}
+.share-icon1 image {
+  width: 44rpx;
+  height: 47rpx;
+}
+.share-icon2 image {
+  width: 156rpx;
+  height: 158rpx;
+}
+.share-icon3 image {
+  width: 37rpx;
+  height: 48rpx;
+}
+button::after {
+  border: 0;
+}
+.weui-cells-btpd {
+  padding-bottom: 160rpx;
+}
 </style>
