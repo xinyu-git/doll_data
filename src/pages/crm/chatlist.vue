@@ -1,12 +1,19 @@
 <template>
 <view class="page">
+    <view class="page__hd">
+        <view class="page__title">接待列表</view>
+    </view>
     <view class="page__bd">
-        <view class="weui-cells__title">带说明的列表项</view>
+        
         <view class="weui-cells weui-cells_after-title">
-            <view class="weui-cell">
-                <view class="weui-cell__bd">标题文字</view>
-                <view class="weui-cell__ft">说明文字</view>
+            <view class="weui-cell weui-cell_access" wx:for="{{userlist}}" wx:key="id" bindtap="chat2person" data-url="{{item.id}}">
+                <view class="weui-cell__bd">
+                    <view style="display: inline-block; vertical-align: middle">fromuid : {{item.id}}</view>
+                    <view class="weui-badge" style="margin-left: 5px;">x</view>
+                </view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
             </view>
+            
         </view>
     </view>
 </view>
@@ -19,16 +26,44 @@
         components= {
         }
         data = {
-            key: '',
+            userlist: [],
             canclick : true,
-            showMainpage : false
+            showMainpage : false,
+            socket : null
         }
         async onLoad(options) {
-            //进入到页面的时候，对告诉服务器，要lock住这个key
+            let that = this;
+            //clearInterval(checkmsg)
+            //this.socket = this.$parent.globalData.socket
+            this.$parent.globalData.EventBus.removeEventListener('userchage',this.onchatuserchange,this)
+            this.$parent.globalData.EventBus.addEventListener('userchage',this.onchatuserchange,this)
             this.key = options.key || options.scene;
-        }
-        methods = {
             
+            //this.userlist = this.$parent.globalData.chatusers
+            /*
+            let checkmsg = setInterval(()=>{
+                let userobjs = that.$parent.globalData.chatusers
+                
+                that.userlist = !!userobjs ? Object.values(userobjs) : []
+                //console.log(that.userlist)
+                that.$apply();
+                //console.log(that.userlist)
+            },300)
+            */
+        }
+        onchatuserchange(evt){
+            console.log('user changes')
+            this.userlist = this.$parent.globalData.chatusers
+            this.$apply();
+        }
+        
+        methods = {
+            chat2person(e){
+                let id = e.currentTarget.dataset.url
+                console.log("go 2 chat");
+                console.log(id)
+                wx.navigateTo({url: `../crm/chat?id=${id}`})
+            }
         }
     }
 </script>

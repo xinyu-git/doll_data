@@ -15,7 +15,7 @@
     </view>
     <!--客服中心-->
     <view class="weui-cell__ft weui-cell-cuetom">
-      <button  class='pos' open-type="contact" session-from="weapp"></button>
+      <button  class='pos' open-type="contact" session-from="{{uid}}"></button>
       <image class="icon_call"  src="../../images/iconwx.png"></image>
     </view>
      
@@ -92,14 +92,7 @@
     <view class="weui-cell-bd weui-cell-primary">
       <text>立夏快乐！</text>
     </view>
-    <!-- <view class="page__bd page__bd_spacing">
-            <button class="weui-btn" type="primary" open-type="contact"
-            session-from="uid10"
-            bindcontact='ongo2contact'>找建斌</button>
-            <button class="weui-btn" type="primary" open-type="contact"
-            session-from="uid11"
-            bindcontact='ongo2contact'>找张老师</button>
-    </view> -->
+    
   </view>
   <view class="weui-cells__title weui-cells-nopd weui-cells-btpd ">
     <image src="../../images/photo1.jpg"></image>
@@ -113,12 +106,12 @@
       </button>
     </view>
     <view class="weui-cell__ft  share-icon2">
-      <button class="share" type="default-light" session-from="weapp"  id="service">
+      <button class="share" open-type="contact" session-from="{{uid}}" id="service">
       <image src="../../images/iconnum.png"></image>
       </button>
     </view>
     <view class="weui-cell__ft  share-icon3">
-      <button class="share"  id="user">
+      <button class="share"  id="user" bindtap='go2myprofile'>
       <image src="../../images/iconuser.png"></image>
       <text>我的</text>
       </button>
@@ -127,9 +120,9 @@
 </view>
 </template>
 <script>
-import auth from "../base/auth";
+import wepy from 'wepy'
 import api from "../../config/api";
-export default class Index extends auth {
+export default class Index extends  wepy.page {
   config = {
     navigationBarTitleText: "用户端",
     navigationBarBackgroundColor: "#e67841",
@@ -138,12 +131,16 @@ export default class Index extends auth {
   };
 
   data = {
+    uid : null,
     hasbackgroundmusic: false,
     vCoverBox1: true,
     vCoverBox2: true
   };
 
-  async onLoad() {}
+  async onLoad(options) {
+      this.uid = options.id
+      console.log("====", this.uid)
+  }
 
   methods = {
     async palyVideo(e) {
@@ -166,7 +163,10 @@ export default class Index extends auth {
       wx.makePhoneCall({
         phoneNumber: "15311785003"
       });
-    }
+    },
+    go2myprofile(){
+		wx.navigateTo({url:'/pages/crm/chatList'})
+	}
   };
 }
 </script>

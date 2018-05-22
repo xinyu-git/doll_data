@@ -6,12 +6,15 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 import {api, server} from './config/api'
-import {io,socket,socketinit} from './socket/ioevent'
+import {socketinit} from './socket/ioevent'
+const EventBus = require('./util/eventbus');
 
 export default class extends wepy.app {
     config = {
         "pages":[
             "pages/crm/chatList",
+            "pages/portal/cardlist",
+            
             "pages/crm/chat",
             "pages/portal/index",
             "pages/auth/refreToken",
@@ -179,9 +182,7 @@ export default class extends wepy.app {
         if (!! this.globalData.userInfo && 
             !!this.globalData.userInfo.userprofile && 
             this.globalData.userInfo.userprofile.cert_status == 1){
-            socketinit(this.globalData);
-            this.globalData.io = io;
-            this.globalData.socket = socket;
+            socketinit(this);
         }
     }
     async initToken(){//初始化token 数据以globalData中为准
@@ -305,8 +306,10 @@ export default class extends wepy.app {
         clipboard : null,
         setting : {},
         io : null,
+        socket1 : null,
         loginInfo:{},
-        chatmsg : []
+        chatmsg : [],
+        EventBus : EventBus
     };
 }
 </script>

@@ -1,12 +1,65 @@
 const io = require('./weapp.socket.io')
-let socket = null
+
 
 module.exports = {
-    socketinit: (container) => {
-        socket = io(' https://card.kong.net')
-        socket.on('msg', d => {
-            console.log('received news: ', d)
-            container.chatmsg.push(d);
+    socketinit: (app) => {
+        let socket = null;
+        socket = io('http://47.93.34.236:3036/')
+        app.globalData.socket1 = socket;
+
+        socket.on("connect", () => {
+            console.log('into connect')
+            socket.emit('authentication', {
+                token: app.globalData.token,
+                client: 'wxa'
+            });
+            socket.on('authenticated', function () {
+                console.log("already authenticated")
+                socket.emit('join');//发送加入事件
+            });
+
+
         })
-    }, socket, io
+        socket.on('m:userinfo', (d) => {
+            //console.log('receive user info', d)
+            let users = app.globalData.chatusers
+            if (!!users["uid" + d.uid]) {
+                users["uid" + d.from] = {
+                    fullname: d.fullname,
+                    headimg: d.headimg,
+                    nickname: d.nickname
+                }
+                console.log(app.globalData.EventBus);
+                app.globalData.EventBus.dispatch("userchage");
+            }
+        })
+        socket.on('m:msg', (d) => {
+            //console.warn("receive chat message from server", d)
+            //console.log("app is ", app)
+            //console.log("app $broadcast is ", app.$broadcast)
+            //app.$broadcast("chatmsg", d);
+
+            app.globalData.chatusers = app.globalData.chatusers || {}
+            let users = app.globalData.chatusers
+            if (!users["uid" + d.from]) {
+
+                socket.emit('m:userinfo', { uid: d.from })
+                users["uid" + d.from] = {
+                    id: d.from,
+                    fullname: '',
+                    imgurl: ''
+                }
+            }
+            users["uid" + d.from].lasttime = d.msgTime;
+            users["uid" + d.from].lastmsg = d
+            //chatmsg里面存放1000条消息
+            if (app.globalData.chatmsglength > 1000) {
+                app.globalData.chatmsg.shift();
+                app.globalData.chatmsglength--;
+            }
+            app.globalData.chatmsg.push(d);
+            app.globalData.chatmsglength++;
+            app.globalData.EventBus.dispatch("m:msg");
+        })
+    }
 }
