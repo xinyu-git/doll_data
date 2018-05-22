@@ -1,23 +1,21 @@
 <template>
 <view class="page">
-    <view style="margin:60px 0;text-align:center;font-size:16px;color:#666;">
-        <image src="../../images/pclogin.png" style="display:block;margin:auto;width:240px;height:218px;"></image>
-        <view>登陆确认</view>
-    </view>
-    <view style="margin:60px 0">
-        <view class="zan-btns">
-            <button class="zan-btn zan-btn--primary" bindtap="agree" 
-            open-type="getUserInfo"> 登陆 </button>
-        </view>    
+    <view class="page__bd">
+        <view class="weui-cells__title">带说明的列表项</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell">
+                <view class="weui-cell__bd">标题文字</view>
+                <view class="weui-cell__ft">说明文字</view>
+            </view>
+        </view>
     </view>
 </view>
-
 </template>
 <script>
     import wepy from 'wepy'
     import config from '../../config/api'
-    export default class loginPc extends wepy.page {
-        config = {"navigationBarTitleText": "咨询列表"}
+    export default class Chat extends wepy.page {
+        config = {"navigationBarTitleText": "咨询"}
         components= {
         }
         data = {
@@ -35,5 +33,5 @@
     }
 </script>
 <style>
-    @import '../../zanui/btn.wxss'
+   
 </style>
