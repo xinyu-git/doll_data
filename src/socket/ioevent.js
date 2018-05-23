@@ -4,7 +4,7 @@ const io = require('./weapp.socket.io')
 module.exports = {
     socketinit: (app) => {
         let socket = null;
-        socket = io('http://47.93.34.236:3036/')
+        socket = io('https://io.kong.net/')
         app.globalData.socket1 = socket;
 
         socket.on("connect", () => {
@@ -24,12 +24,13 @@ module.exports = {
             //console.log('receive user info', d)
             let users = app.globalData.chatusers
             if (!!users["uid" + d.uid]) {
-                users["uid" + d.from] = {
-                    fullname: d.fullname,
+                users["uid" + d.uid] = {
+                    id: d.uid,
+                    fullname: d.fullname || '未名' + d.uid,
                     headimg: d.headimg,
                     nickname: d.nickname
                 }
-                console.log(app.globalData.EventBus);
+                //console.log(app.globalData.EventBus);
                 app.globalData.EventBus.dispatch("userchage");
             }
         })

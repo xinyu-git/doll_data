@@ -12,9 +12,9 @@ const EventBus = require('./util/eventbus');
 export default class extends wepy.app {
     config = {
         "pages":[
-            "pages/crm/chatList",
-            "pages/portal/cardlist",
             
+            "pages/portal/cardlist",
+            "pages/crm/chatList",
             "pages/crm/chat",
             "pages/portal/index",
             "pages/auth/refreToken",

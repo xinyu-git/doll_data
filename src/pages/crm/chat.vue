@@ -4,10 +4,9 @@
     <view class="page__bd page__bd_spacing">
         <view class="content" style="background-color:#ccc">
             <block wx:for="{{messages}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-                <view class="msgarea{{item.from === 'me' ? ' fromme' : ' other'}}">
-                    <image class="icon" src="{{item.icon}}"></image>
-                    <view class="msg">{{item.msg}}</view>
-                    <view class="clearfix"></view>
+                <view>
+                    <view class="msg" wx:if="{{item.from=='me'}}" style="text-align:right">{{item.content}}</view>
+                    <view class="msg" wx:else>{{item.content}}</view>
                 </view>
             </block>
         </view>
@@ -43,10 +42,19 @@
         }
         async onLoad(options) {
             //进入到页面的时候，对告诉服务器，要lock住这个key
+            this.$parent.globalData.EventBus.removeEventListener('m:msg',this.onmsgchange,this)
+            this.$parent.globalData.EventBus.addEventListener('m:msg',this.onmsgchange,this)
             this.uid = options.id;
-            console.log('this.uid is ', this.uid)
-            console.log(this.$parent.globalData);
-            
+            //console.log('this.uid is ', this.uid)
+            //console.log(this.$parent.globalData);
+            this.onmsgchange();
+        }
+        onmsgchange(evt){
+            this.messages = this.$parent.globalData.chatmsg.filter((item)=>{
+                return item.from == this.uid || item.to == this.uid
+            })
+            console.log(this.messages)
+            this.$apply();
         }
         methods = {
             bindInputTitle(e){
@@ -54,14 +62,23 @@
                 this.$apply();
             },
             sendmsg(evt) {
-                console.log(this.readyToSend);
+
+                //{from: 19904, to: "19901", content: "我", msgTime: "2018-05-23 08:55:07", type: "text"}
                 if (this.readyToSend) {
-                    console.log(this.readyToSend);
+                    
                     this.$parent.globalData.socket1.emit('m:msg',{
                         to : this.uid, 
                         msg : this.readyToSend
+                        
+                    })
+                    this.$parent.globalData.chatmsg.push({
+                        from: "me",
+                        to : this.uid,
+                        content:this.readyToSend,
+                        type: "text"
                     })
                     this.readyToSend = '';
+                    this.onmsgchange();
                     this.$apply();
                 }
             },

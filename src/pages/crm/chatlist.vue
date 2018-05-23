@@ -8,8 +8,8 @@
         <view class="weui-cells weui-cells_after-title">
             <view class="weui-cell weui-cell_access" wx:for="{{userlist}}" wx:key="id" bindtap="chat2person" data-url="{{item.id}}">
                 <view class="weui-cell__bd">
-                    <view style="display: inline-block; vertical-align: middle">fromuid : {{item.id}}</view>
-                    <view class="weui-badge" style="margin-left: 5px;">x</view>
+                    <view style="display: inline-block; vertical-align: middle">{{item.fullname}}</view>
+                    <view class="weui-badge" style="margin-left: 5px;">0</view>
                 </view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
             </view>
@@ -38,22 +38,11 @@
             this.$parent.globalData.EventBus.removeEventListener('userchage',this.onchatuserchange,this)
             this.$parent.globalData.EventBus.addEventListener('userchage',this.onchatuserchange,this)
             this.key = options.key || options.scene;
-            
-            //this.userlist = this.$parent.globalData.chatusers
-            /*
-            let checkmsg = setInterval(()=>{
-                let userobjs = that.$parent.globalData.chatusers
-                
-                that.userlist = !!userobjs ? Object.values(userobjs) : []
-                //console.log(that.userlist)
-                that.$apply();
-                //console.log(that.userlist)
-            },300)
-            */
         }
         onchatuserchange(evt){
-            console.log('user changes')
+            //console.log('user changes')
             this.userlist = this.$parent.globalData.chatusers
+            //console.log(this.userlist)
             this.$apply();
         }
         

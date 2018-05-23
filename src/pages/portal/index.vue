@@ -15,7 +15,7 @@
     </view>
     <!--客服中心-->
     <view class="weui-cell__ft weui-cell-cuetom">
-      <button  class='pos' open-type="contact" session-from="{{uid}}"></button>
+      <button class='pos' open-type="contact" session-from="{{uid}}"></button>
       <image class="icon_call"  src="../../images/iconwx.png"></image>
     </view>
      
@@ -111,7 +111,7 @@
       </button>
     </view>
     <view class="weui-cell__ft  share-icon3">
-      <button class="share"  id="user" bindtap='go2myprofile'>
+      <button class="share" id="user" bindtap='go2myprofile'>
       <image src="../../images/iconuser.png"></image>
       <text>我的</text>
       </button>
@@ -161,7 +161,7 @@ export default class Index extends  wepy.page {
     },
     callmeTap() {
       wx.makePhoneCall({
-        phoneNumber: "15311785003"
+        phoneNumber: "13910100160"
       });
     },
     go2myprofile(){
@@ -275,9 +275,12 @@ image {
 }
 .pos {
   position: absolute;
-  top: 41px;
-  right: 35px;
+  top: 41px;  
   opacity: 0;
+  right:26px;
+  height:40px;
+  width:40px;
+
 }
 .icon_kf {
   width: 74rpx;
