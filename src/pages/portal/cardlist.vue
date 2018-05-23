@@ -49,7 +49,7 @@
         }
         methods = {
             go2chatlist(evt){
-                wx.navigateTo({url:"/pages/crm/chatList"})
+                wx.navigateTo({url:"/pages/crm/chatlist"})
             }
         }
     }
