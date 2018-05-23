@@ -23,37 +23,36 @@
 </view>
 </template>
 <script>
-    import wepy from 'wepy'
-    import config from '../../config/api'
-    export default class loginPc extends wepy.page {
-        config = {"navigationBarTitleText": "收藏名片列表"}
-        components= {
-        }
-        data = {
-            key: '',
-            certstatus : false,
-            canclick : true,
-            showMainpage : false
-        }
-        async onLoad(options) {            
-            this.key = options.key || options.scene;
-            console.log("=====")
-            //console.log(!!this.$parent.globalData.userInfo);
-            //console.log(!!this.$parent.globalData.userInfo.userprofile)
-            //console.log(this.$parent.globalData.userInfo.userprofile.cert_status == 1)
-            this.certstatus = !!this.$parent.globalData.userInfo && 
-            !!this.$parent.globalData.userInfo.userprofile && 
-            this.$parent.globalData.userInfo.userprofile.cert_status == 1
-            this.$apply();
-            
-        }
-        methods = {
-            go2chatlist(evt){
-                wx.navigateTo({url:"/pages/crm/chatList"})
-            }
-        }
+import wepy from "wepy";
+import config from "../../config/api";
+export default class loginPc extends wepy.page {
+  config = { navigationBarTitleText: "收藏名片列表" };
+  components = {};
+  data = {
+    key: "",
+    certstatus: false,
+    canclick: true,
+    showMainpage: false
+  };
+  async onLoad(options) {
+    this.key = options.key || options.scene;
+    console.log("=====");
+    //console.log(!!this.$parent.globalData.userInfo);
+    //console.log(!!this.$parent.globalData.userInfo.userprofile)
+    //console.log(this.$parent.globalData.userInfo.userprofile.cert_status == 1)
+    this.certstatus =
+      !!this.$parent.globalData.userInfo &&
+      !!this.$parent.globalData.userInfo.userprofile &&
+      this.$parent.globalData.userInfo.userprofile.cert_status == 1;
+    this.$apply();
+  }
+  methods = {
+    go2chatlist(evt) {
+      wx.navigateTo({ url: "/pages/crm/chatlist" });
     }
+  };
+}
 </script>
 <style>
-    @import '../../zanui/btn.wxss'
+@import "../../zanui/btn.wxss";
 </style>

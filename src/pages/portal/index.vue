@@ -3,7 +3,7 @@
     <!--top定制-->
   <view class="weui-cell weui-card">
     <view class="weui-cell__title ">
-      <image  src="../../images/peson.png"></image>
+      <image  src="../../images/person.png"></image>
     </view>
     <view class="weui-cell__ft weui-cell__ft-color">
       <text>袁小员</text>
@@ -15,8 +15,8 @@
     </view>
     <!--客服中心-->
     <view class="weui-cell__ft weui-cell-cuetom">
-      <button class='pos' open-type="contact" session-from="{{uid}}"></button>
-      <image class="icon_call"  src="../../images/iconwx.png"></image>
+      <button class='customer-btn' open-type="contact" session-from="{{uid}}"></button>
+      <image src="../../images/iconwx.png"></image>
     </view>
      
   </view>
@@ -30,7 +30,7 @@
               <cover-image class="img"  src="../../images/video.jpg" />
               </image>
             </cover-view>
-            <cover-view class="play">
+            <cover-view class="play-btn">
               <cover-image class="img"  src="../../images/start.png" />
               </image>
             </cover-view>
@@ -42,12 +42,14 @@
   <!--最新动态-->  
   <view class="weui-cells__title">
     <text class="weui-cell-bt">最新动态</text>
+    <view class="imgbox">
     <image src="../../images/photo1.jpg"></image>
+    </view>
   </view>
   <!--发布内容一-->
   <view class="weui-cell noline">
-    <view class="weui-cell__bd peson">
-      <image  src="../../images/peson.png" />
+    <view class="weui-cell__bd person-box">
+      <image  src="../../images/person.png" />
       </image>
     </view>
     <view class="weui-cell__ft weui-cell__font">
@@ -69,7 +71,7 @@
             <cover-view class="videoPoster" >
               <cover-image class="img"  src="../../images/video.jpg"/>
             </cover-view>
-            <cover-view class="play" >
+            <cover-view class="play-btn" >
               <cover-image class="img"  src="../../images/start.png" />
             </cover-view>
           </cover-view>
@@ -79,8 +81,8 @@
   </view>
   <!--发布内容二-->
   <view class="weui-cell noline">
-    <view class="weui-cell__bd peson">
-      <image  src="../../images/peson2.png" />
+    <view class="weui-cell__bd person-box">
+      <image  src="../../images/person2.png" />
       </image>
     </view>
     <view class="weui-cell__ft weui-cell__font">
@@ -95,23 +97,25 @@
     
   </view>
   <view class="weui-cells__title weui-cells-nopd weui-cells-btpd ">
+      <view class="imgbox">
     <image src="../../images/photo1.jpg"></image>
+      </view>
   </view>
   <!--底部固定导航-->  
   <view class="weui-bottombar weui-cell noline2">
-    <view class="weui-cell__ft  share-icon1">
-      <button class="share" open-type="share" data-name="pageShare" id="share">
+    <view class="weui-cell__ft  nav-icon1">
+      <button class="nav-btn" open-type="share" data-name="pageShare" >
       <image src="../../images/shareto.png"></image>
       <text>分享</text>
       </button>
     </view>
-    <view class="weui-cell__ft  share-icon2">
-      <button class="share" open-type="contact" session-from="{{uid}}" id="service">
+    <view class="weui-cell__ft  nav-icon2">
+      <button class="nav-btn" open-type="contact" session-from="{{uid}}">
       <image src="../../images/iconnum.png"></image>
       </button>
     </view>
-    <view class="weui-cell__ft  share-icon3">
-      <button class="share" id="user" bindtap='go2myprofile'>
+    <view class="weui-cell__ft  nav-icon3">
+      <button class="nav-btn"  bindtap='go2myprofile'>
       <image src="../../images/iconuser.png"></image>
       <text>我的</text>
       </button>
@@ -120,9 +124,9 @@
 </view>
 </template>
 <script>
-import wepy from 'wepy'
+import wepy from "wepy";
 import api from "../../config/api";
-export default class Index extends  wepy.page {
+export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: "用户端",
     navigationBarBackgroundColor: "#e67841",
@@ -131,15 +135,15 @@ export default class Index extends  wepy.page {
   };
 
   data = {
-    uid : null,
+    uid: null,
     hasbackgroundmusic: false,
     vCoverBox1: true,
     vCoverBox2: true
   };
 
   async onLoad(options) {
-      this.uid = options.id
-      console.log("====", this.uid)
+    this.uid = options.id;
+    console.log("====", this.uid);
   }
 
   methods = {
@@ -164,9 +168,9 @@ export default class Index extends  wepy.page {
         phoneNumber: "13910100160"
       });
     },
-    go2myprofile(){
-		wx.navigateTo({url:'/pages/crm/chatList'})
-	}
+    go2myprofile() {
+      wx.navigateTo({ url: "/pages/crm/chatList" });
+    }
   };
 }
 </script>
@@ -202,7 +206,7 @@ export default class Index extends  wepy.page {
   height: 100%;
   z-index: 2;
 }
-.play {
+.play-btn {
   width: 95rpx;
   height: 95rpx;
   position: absolute;
@@ -220,20 +224,16 @@ export default class Index extends  wepy.page {
   top: 0;
   z-index: 1;
 }
-.play.hide {
+.play-btn.hide {
   display: none;
 }
-video {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-image {
+
+.imgbox image {
   width: 690rpx;
   height: 300rpx;
   margin: 0 auto;
 }
-.peson image {
+.person-box image {
   width: 120rpx;
   height: 120rpx;
   margin-left: 15rpx;
@@ -273,14 +273,13 @@ image {
   margin-left: 20rpx;
   margin-right: 0;
 }
-.pos {
+.customer-btn {
   position: absolute;
-  top: 41px;  
+  top: 41px;
   opacity: 0;
-  right:26px;
-  height:40px;
-  width:40px;
-
+  right: 26px;
+  height: 40px;
+  width: 40px;
 }
 .icon_kf {
   width: 74rpx;
@@ -322,17 +321,10 @@ image {
   margin-top: 0;
 }
 
-cover-view {
+.v_section cover-view {
   pointer-events: none;
 }
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
 .fixbottom {
   position: absolute;
   bottom: 10px;
@@ -347,40 +339,40 @@ cover-view {
   bottom: 0;
   z-index: 9999;
 }
-.share {
+.nav-btn {
   background: rgba(0, 0, 0, 0);
   color: #fff;
   line-height: 40rpx;
   font-size: 30rpx;
   padding: 0;
 }
-.share text {
+.nav-btn text {
   display: block;
   color: #fff;
 }
-.share-icon1 {
+.nav-icon1 {
   position: absolute;
   left: 50rpx;
 }
-.share-icon2 {
+.nav-icon2 {
   height: 158rpx;
   position: absolute;
   top: -44rpx;
   left: 284rpx;
 }
-.share-icon3 {
+.nav-icon3 {
   position: absolute;
   right: 110rpx;
 }
-.share-icon1 image {
+.nav-icon1 image {
   width: 44rpx;
   height: 47rpx;
 }
-.share-icon2 image {
+.nav-icon2 image {
   width: 156rpx;
   height: 158rpx;
 }
-.share-icon3 image {
+.nav-icon3 image {
   width: 37rpx;
   height: 48rpx;
 }
