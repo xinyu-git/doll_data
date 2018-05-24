@@ -135,6 +135,11 @@ export default class Index extends wepy.page {
   };
 
   data = {
+    userlist: [
+      { fullname: "张三" },
+      { fullname: "王五" },
+      { fullname: "李四" }
+    ],
     uid: null,
     hasbackgroundmusic: false,
     vCoverBox1: true,
