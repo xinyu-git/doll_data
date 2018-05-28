@@ -2,21 +2,22 @@
 <view class="page">
   <view class="page__bd page__bd_spacing">
     <view class="content">
-      <scroll-view scroll-y style="height:1000rpx;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll">
+       <scroll-view scroll-y style="height:980rpx;" scroll-into-view="{{toView}}"  bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll">
         <block wx:for="{{messages}}" wx:key="index" wx:for-index="index" wx:for-item="item">
           <view class="chatbox">
-            <image class="avater right" wx:if="{{item.from=='me'}}" src="{{item.url}}"></image>
-            <image class="avater left" wx:else src="{{item.url}}"></image>
-            <view class="msg right mymsg" wx:if="{{item.from=='me'}}">{{item.content}}</view>
+            <image class="avater float-right" wx:if="{{item.from=='me'}}" src="{{item.url}}"></image>
+            <image class="avater float-left" wx:else src="{{item.url}}"></image>
+            <view class="msg float-right mymsg" wx:if="{{item.from=='me'}}">{{item.content}}</view>
             <view class="msg othermsg" wx:else>{{item.content}}</view>
           </view>
         </block>
+        <view id="sroll-bottom"></view>
       </scroll-view>
     </view>
     <view class="weui-footer weui-footer_fixed-bottom" style="bottom:0;">
       <view class="replymsg_box">
-        <textarea class="weui-textarea" placeholder="请回复消息……" style="text-align:left;" 
-                value="{{readyToSend}}" bindinput="bindInputTitle" confirm-type="send" cursor-spacing="10" bindconfirm="send"></textarea>
+        <input class="weui-textarea" adjust-position="true"  placeholder="请回复消息……" style="text-align:left;" 
+                value="{{readyToSend}}" bindtap="getfocus"  bindinput="bindInputTitle" confirm-type="send" cursor-spacing="85" bindconfirm="send">
       </view>
       <view class="send-box">
         <image class="uploadimg" bindtap="uploadimg"  src="../../images/icon-pic.png"></image>
@@ -33,7 +34,6 @@ export default class Chat extends wepy.page {
   config = {
     navigationBarTitleText: "回复消息",
     navigationBarBackgroundColor: "#e67841",
-    backgroundColor: "#e67841",
     navigationBarTextStyle: "white"
   };
   components = {};
@@ -41,79 +41,51 @@ export default class Chat extends wepy.page {
     key: "",
     messages: [
       {
-        content: "我想问一下黄金59多少钱？",
+        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
         from: "me",
         url: "../../images/person.png"
       },
       {
-        content: "您好，在呢～1888元。",
+        content: "您好,在呢,在呢,在呢",
         from: "other",
         url: "../../images/person.png"
       },
       {
-        content: "想问一下黄金59多少钱？想问一下黄金59多少钱？",
+        content: "少钱o想问一下黄金59多少钱想问一下黄金59多少钱？",
         from: "me",
         url: "../../images/person.png"
       },
       {
-        content: "您好，在呢～1888元您好，在呢～1888元",
+        content: "您好，在呢～1888元您好，在呢～1888元2",
         from: "other",
         url: "../../images/person.png"
       },
       {
-        content: "我想问一下黄金59多少钱",
+        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
         from: "me",
         url: "../../images/person.png"
       },
       {
-        content: "您好，在呢～1888元",
+        content: "您好，在呢～1888元您好，在呢～1888元3",
         from: "other",
         url: "../../images/person.png"
       },
       {
-        content: "想问一下黄金59多少钱？想问一下黄金59多少钱？",
+        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
         from: "me",
         url: "../../images/person.png"
       },
+
       {
-        content: "您好，在呢～1888元您好，在呢～1888元",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "想问一下黄金59多少钱？想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      },
-      {
-        content: "您好，在呢～1888元您好，在呢～1888元",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "我想问一下黄金59多少钱",
-        from: "me",
-        url: "../../images/person.png"
-      },
-      {
-        content: "您好，在呢～1888元",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "想问一下黄金59多少钱？想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      },
-      {
-        content: "您好，在呢～1888元您好，在呢～1888元",
+        content: "您好，在呢～1888元您好，在呢～1888end",
         from: "other",
         url: "../../images/person.png"
       }
     ],
     readyToSend: "",
     showMainpage: true,
-    uid: null
+    uid: null,
+    toView: "sroll-bottom"
   };
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
@@ -140,6 +112,11 @@ export default class Chat extends wepy.page {
     this.$apply();
   }
   methods = {
+    getfocus() {
+      this.setData({
+        toView: "sroll-bottom"
+      });
+    },
     bindInputTitle(e) {
       this.readyToSend = e.detail.value;
       this.$apply();
@@ -186,10 +163,15 @@ export default class Chat extends wepy.page {
 }
 </script>
 <style>
+#sroll-bottom {
+  height: 35rpx;
+}
+
 .send-box {
   padding: 30rpx;
   position: relative;
   height: 80rpx;
+  background: #fff;
 }
 .send-box .uploadimg {
   width: 56rpx;
@@ -212,27 +194,33 @@ export default class Chat extends wepy.page {
 .send-btn {
   background: #e67841;
   color: #fff;
-  width: 140rpx;
-  height: 60rpx;
-  line-height: 60rpx;
+  width: 120rpx;
+  height: 68rpx;
+  line-height: 68rpx;
   font-size: 30rpx;
   border-radius: 8rpx;
   position: absolute;
-  right: 30rpx;
+  right: 40rpx;
   top: 35rpx;
+  padding-left: 5rpx;
+  padding-right: 5rpx;
 }
-.left {
+.float-left {
   float: left;
 }
-.right {
+.float-right {
   float: right;
 }
+
 .chatbox {
-  padding: 20rpx 0;
+  margin: 20rpx 0 0;
 }
-.chatbox .right,
-.chatbox .left {
+
+.chatbox .float-left {
   margin-right: 30rpx;
+}
+.chatbox .float-right {
+  margin-left: 30rpx;
 }
 .chatbox:after {
   content: " ";
@@ -244,12 +232,13 @@ export default class Chat extends wepy.page {
   border-radius: 10rpx;
   background: #fff;
   position: relative;
-  margin-top: 16rpx;
+  margin-top: 25rpx;
   display: inline-block;
-  width: 55%;
+  min-width: 5%;
+  max-width: 70%;
   border: 2px solid #e67841;
   text-align: left;
-  padding: 10rpx;
+  padding: 20rpx;
   font-size: 32rpx;
 }
 .mymsg {
@@ -260,6 +249,7 @@ export default class Chat extends wepy.page {
   width: 100rpx;
   height: 100rpx;
   display: inline-block;
+  margin-top: 16rpx;
 }
 .mymsg:after {
   content: "";
