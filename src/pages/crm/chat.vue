@@ -235,7 +235,7 @@ export default class Chat extends wepy.page {
   margin-top: 25rpx;
   display: inline-block;
   min-width: 5%;
-  max-width: 70%;
+  max-width: 69%;
   border: 2px solid #e67841;
   text-align: left;
   padding: 20rpx;
@@ -254,7 +254,7 @@ export default class Chat extends wepy.page {
 .mymsg:after {
   content: "";
   position: absolute;
-  right: -36rpx;
+  right: -32rpx;
   top: 10rpx;
   width: 0;
   height: 0;
