@@ -143,7 +143,6 @@ export default class extends wepy.app {
         this.use('promisify');
     }
     
-    
     async onLaunch(options) {
        
         /*
@@ -173,7 +172,17 @@ export default class extends wepy.app {
         if (!userinfo){
             await self.refreshUserInfo();
         }
+        await self._afterLaunch()
         wx.hideLoading();
+    }
+    async _afterLaunch(){
+        console.log("after launch")
+        console.log(this.globalData.userInfo)
+        if (!! this.globalData.userInfo && 
+            !!this.globalData.userInfo.userprofile && 
+            this.globalData.userInfo.userprofile.cert_status == 1){
+            socketinit(this);
+        }
     }
     async initToken(){//初始化token 数据以globalData中为准
         let self = this;
@@ -231,13 +240,13 @@ export default class extends wepy.app {
             await that.globalData.refreshUserInfo();
         }
         userinfo = that.globalData.userInfo = that.globalData.userInfo || wx.getStorageSync('user:detail');
-        console.log("userinfo",userinfo)
+        
         if(userinfo.extra){
             let extraobj = JSON.parse(userinfo.extra);
             if(extraobj.uids.indexOf(fromUserid+"")==-1){
-                console.log(">>>>beginBind")
+                
                 let updateResult = await this.globalData.post(`${server}/auth/user/updateConnectUids`,{uid_from:fromUserid});
-                console.log(">>>>endBind",updateResult)
+                
             }
             await that.globalData.refreshUserInfo();
         }else{
@@ -258,9 +267,7 @@ export default class extends wepy.app {
     //刷新用户信息
     async refreshUserInfo(){
         let self = this;
-        let res2 = await self.get(`${api.auth.userDetail.url}`)
-        console.log("obj is")
-        console.log(obj)
+        let res2 = await this.globalData.get(`${api.auth.userDetail.url}`)
         let obj = res2;
         let userDetail = {};
         if(obj){
@@ -270,10 +277,9 @@ export default class extends wepy.app {
             delete userDetail.UserProfiles
             delete userDetail.Passports
         }
-        self.userInfo = userDetail;
+        self.globalData.userInfo = userDetail;
         wx.setStorageSync( "user:detail",userDetail );
     }
-
     onShow(){
         // console.log("this is app on show")
         //此处管理正在背景播放的音乐
@@ -281,7 +287,6 @@ export default class extends wepy.app {
     onHide(){
         // console.log("this is app on hide");
     }
-
 
     globalData = {
         sleep: this.sleep,

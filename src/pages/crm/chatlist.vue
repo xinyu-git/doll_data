@@ -2,7 +2,7 @@
 <view class="page">
   <view class="page__bd">
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_access" wx:for="{{userlist}}" wx:key="id" bindtap="chat2person" data-url="{{item.id}}">
+      <view class="weui-cell weui-cell_access " wx:for="{{userlist}}" wx:key="id" bindtap="chat2person" data-url="{{item.id}}">
         <view class="weui-media-box weui-media-box_appmsg list-box">
           <view class="weui-media_hd">
             <image class="weui-media-box__thumb" src="{{item.url}}"></image>
@@ -60,22 +60,15 @@ export default class Chat extends wepy.page {
     let that = this;
     //clearInterval(checkmsg)
     //this.socket = this.$parent.globalData.socket
-    this.$parent.globalData.EventBus.removeEventListener(
-      "userchage",
-      this.onchatuserchange,
-      this
-    );
-    this.$parent.globalData.EventBus.addEventListener(
-      "userchage",
-      this.onchatuserchange,
-      this
-    );
+    this.onchatuserchange();
+    this.$parent.globalData.EventBus.removeEventListener( "userchage",  this.onchatuserchange, this );
+    this.$parent.globalData.EventBus.addEventListener( "userchage", this.onchatuserchange, this );
     this.key = options.key || options.scene;
   }
   onchatuserchange(evt) {
-    //console.log('user changes')
+    console.log('user changes')
     this.userlist = this.$parent.globalData.chatusers;
-    //console.log(this.userlist)
+    console.log(this.userlist)
     this.$apply();
   }
 
