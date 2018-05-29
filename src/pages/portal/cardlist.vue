@@ -30,24 +30,11 @@
         components= {
         }
         data = {
-            canclick : true,
-            showMainpage : false,
-            socket : null,
             key: '',
-            certstatus : false,
-            canclick : true,
             showMainpage : false
         }
         async onLoad(options) {            
             this.key = options.key || options.scene;
-            console.log("=====")
-            //console.log(!!this.$parent.globalData.userInfo);
-            //console.log(!!this.$parent.globalData.userInfo.userprofile)
-            //console.log(this.$parent.globalData.userInfo.userprofile.cert_status == 1)
-            this.certstatus = !!this.$parent.globalData.userInfo && 
-            !!this.$parent.globalData.userInfo.userprofile && 
-            this.$parent.globalData.userInfo.userprofile.cert_status == 1
-            this.$apply();
             
         }
         methods = {
