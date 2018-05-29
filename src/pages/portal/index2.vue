@@ -7,7 +7,7 @@
     </view>
   </view>
   <!--名片信息一-->
-  <view class="my-cardBox1" wx:if="{{cardBox1}}">
+  <view class="my-cardBox1" wx:if="{{mycard1}}">
     <view class="weui-cell my-cardCon">
       <view class="weui-cell_primary my-avaterBox">
         <text>袁小员</text>
@@ -104,7 +104,7 @@ export default class Index extends wepy.page {
     uid: null,
     hasbackgroundmusic: false,
     custombg: true,
-    cardBox1: true,
+    mycard1: true,
     cardBox2: false
   };
 
@@ -134,11 +134,11 @@ export default class Index extends wepy.page {
       } else {
         if (ty < 0) {
           this.custombg = false;
-          this.cardBox1 = false;
+          this.mycard1 = false;
           this.cardBox2 = true;
         } else if (ty > 0) {
           this.custombg = true;
-          this.cardBox1 = true;
+          this.mycard1 = true;
           this.cardBox2 = false;
         }
       }
