@@ -1,6 +1,73 @@
 <template>
-<view class="page">
-  <!--底部固定导航-->  
+<view class="page" bindtouchstart = "handletouchtart" bindtouchmove="handletouchmove">
+  <!--视频播放-->
+  <view class="weui-cell my-bgColor" wx:if="{{custombg}}">
+    <view class="my-videoBox1">
+      <video id="myVideo" src="http://zz.kongzhong.com/index180118/images/cover.webm" autoplay="true" loop="true" controls></video>
+    </view>
+  </view>
+  <!--名片信息一-->
+  <view class="my-cardBox1" wx:if="{{cardBox1}}">
+    <view class="weui-cell my-cardCon">
+      <view class="weui-cell_primary my-avaterBox">
+        <text>袁小员</text>
+        <text>坦克世界VIP运营</text>
+      </view>
+      <button bindtap="callmeTap" class="call-btn">联系我</button>
+      <view class="my-addressBox">
+        <text>公司：空中网</text>
+        <text>地址：北京市海淀区西直门外大街168号腾达大厦</text>
+        <text>手机：18511878888</text>
+      </view>
+      <view class="weui-cell_hd my-picBox">
+        <image src="../../images/person.png"></image>
+      </view>
+      <view class="my-bottomBg">
+        <image src="../../images/bottom_bg1.jpg"></image>
+      </view>
+    </view>
+  </view>
+  <!--名片信息二-->
+  <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{cardBox2}}">
+    <view class="weui-cell_hd">
+      <image src="../../images/person.png"></image>
+    </view>
+    <view class="weui-cell_bd weuicell_primary">
+      <text>袁小员</text>
+      <text>坦克世界vip运营</text>
+    </view>
+    <button bindtap="callmeTap" class="call-btn">联系我</button>
+  </view>
+  <!--小视频列表-->
+  <view class="my-videoBox2 my-pd15">
+    <view class="weui-cells_title">视频</view>
+    <view class="small-videobox clearfloat">
+      <view>
+        <image src="../../images/video-sm1.jpg"></image>
+      </view>
+      <view>
+        <image src="../../images/video-sm2.jpg"></image>
+      </view>
+      <view>
+        <image src="../../images/video-sm3.jpg"></image>
+      </view>
+      <view>
+        <image src="../../images/video-sm4.jpg"></image>
+      </view>
+      <view>
+        <image src="../../images/video-sm5.jpg"></image>
+      </view>
+      <view>
+        <image src="../../images/video-sm6.jpg"></image>
+      </view>
+    </view>
+  </view>
+  <!--企业信息-->
+  <view class="my-infobox">
+    <view class="weui-cells_title">企业信息</view>
+    <image src="../../images/photo1.jpg"></image>
+  </view>
+  <!--底部固定导航-->
   <view class="weui-bottombar weui-cell noline2">
     <view class="weui-cell__ft  nav-icon1">
       <button class="nav-btn" open-type="share" data-name="pageShare" >
@@ -20,8 +87,7 @@
       </button>
     </view>
   </view>
-  </view>
-
+</view>
 </template>
 <script>
 import wepy from "wepy";
@@ -35,15 +101,11 @@ export default class Index extends wepy.page {
   };
 
   data = {
-    userlist: [
-      { fullname: "张三" },
-      { fullname: "王五" },
-      { fullname: "李四" }
-    ],
     uid: null,
     hasbackgroundmusic: false,
-    vCoverBox1: true,
-    vCoverBox2: true
+    custombg: true,
+    cardBox1: true,
+    cardBox2: false
   };
 
   async onLoad(options) {
@@ -62,174 +124,169 @@ export default class Index extends wepy.page {
       }
       this.videoContext.play();
     },
-    videoEnd1(e) {
-      this.vCoverBox1 = true;
+    handletouchmove: function(event) {
+      var currentX = event.touches[0].pageX;
+      var currentY = event.touches[0].pageY;
+      var tx = currentX - this.data.lastX;
+      var ty = currentY - this.data.lastY;
+      var text = "";
+      if (Math.abs(tx) > Math.abs(ty)) {
+      } else {
+        if (ty < 0) {
+          this.custombg = false;
+          this.cardBox1 = false;
+          this.cardBox2 = true;
+        } else if (ty > 0) {
+          this.custombg = true;
+          this.cardBox1 = true;
+          this.cardBox2 = false;
+        }
+      }
+      //将当前坐标进行保存以进行下一次计算
+      this.data.lastX = currentX;
+      this.data.lastY = currentY;
     },
-    videoEnd2(e) {
-      this.vCoverBox2 = true;
+    playVideo() {
+      this.videoContext.requestFullScreen({ direction: 90 });
     },
     callmeTap() {
       wx.makePhoneCall({
-        phoneNumber: "13910100160"
+        phoneNumber: "10086"
       });
-    },
-    go2myprofile() {
-      wx.navigateTo({ url: "/pages/crm/chatList" });
     }
   };
 }
 </script>
 <style>
-.controls {
-  position: relative;
-  top: 50%;
-  height: 50px;
-  margin-top: -25px;
-  display: flex;
-}
-.videoCon {
-  position: relative;
-  width: 690rpx;
-  height: 410rpx;
-  margin: 0 auto;
-}
-.v_section {
-  width: 690rpx;
-  height: 410rpx;
-  position: absolute;
-  left: 50%;
-  margin-left: -345rpx;
-  top: 0;
-}
-.v_section video {
-  width: 100%;
-  height: 100%;
+.clearfloat:after {
+  clear: both;
+  content: "";
   display: block;
+  height: 0;
+  visibility: hidden;
 }
-.coverBox {
+.my-pd15 {
+  padding: 15px;
+}
+.my-bgColor {
+  background: #e67841;
+}
+.my-videoBox1 #myVideo {
+  width: 692rpx;
+  height: 568rpx;
+}
+.my-cardBox1 {
+  background: #e67841;
+  height: 343rpx;
+}
+.my-cardCon {
+  background: #c76433;
+  height: 343rpx;
   position: relative;
-  height: 100%;
-  z-index: 2;
-}
-.play-btn {
-  width: 95rpx;
-  height: 95rpx;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -48rpx;
-  margin-left: -48rpx;
-  z-index: 2;
-}
-.videoPoster {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-}
-.play-btn.hide {
-  display: none;
-}
-
-.imgbox image {
-  width: 690rpx;
-  height: 300rpx;
+  width: 95%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
-.person-box image {
+.my-cardCon image,
+.my-cardBox2 image {
   width: 120rpx;
   height: 120rpx;
-  margin-left: 15rpx;
-}
-.weui-cell__ft text {
   display: block;
+}
+.my-picBox {
+  position: absolute;
+  right: 37rpx;
+  top: 24rpx;
+}
+.my-avaterBox text {
+  display: block;
+  color: #fff;
+  font-size: 32rpx;
+  width: 375rpx;
+  text-indent: 15rpx;
+}
+.my-avaterBox text:nth-child(2) {
   font-size: 28rpx;
-  color: #000;
+  border-bottom: solid 1rpx #cd7e57;
+  padding-bottom: 10rpx;
+}
+.my-avaterBox {
+  position: absolute;
+  top: 50rpx;
+}
+.call-btn {
+  position: absolute;
+  top: 158rpx;
+  right: 35rpx;
+  width: 120rpx;
+  height: 60rpx;
+  padding: 0;
+  font-size: 30rpx;
+  line-height: 56rpx;
+  color: #e67841;
+  border: solid 2px #b75c2f;
+  z-index: 4;
+}
+.my-addressBox {
+  position: absolute;
+  bottom: 30rpx;
+  color: #fff;
+  font-size: 28rpx;
+  z-index: 2;
+}
+.my-addressBox text {
+  display: block;
+}
+.my-bottomBg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.my-bottomBg image {
+  width: 100%;
+  display: block;
+  z-index: 1;
+}
+.small-videobox {
+  padding-top: 15rpx;
+}
+.small-videobox image {
+  width: 227rpx;
+  height: 227rpx;
+  float: left;
+}
+.my-infobox {
+  padding: 0 15px 65px;
+}
+.my-infobox image {
+  width: 100%;
+  height: 300rpx;
+  display: block;
+  margin-top: 15rpx;
+}
+.my-cardBox2 text {
+  color: #fff;
+  display: block;
+  font-size: 32rpx;
+  margin-left: 40rpx;
+}
+.my-cardBox2 text:nth-child(2) {
+  font-size: 28rpx;
+}
+.my-cardBox2 {
+  position: relative;
+}
+.my-cardBox2 .call-btn {
+  position: absolute;
+  top: 60rpx;
+  right: 30rpx;
 }
 
-.weui-cells__title text {
-  color: #000;
-}
-.weui-card {
-  background: #e67841;
-  height: 210rpx;
-}
-.weui-card image {
-  width: 150rpx;
-  height: 150rpx;
-  margin-right: 41rpx;
-}
-.weui-cell__ft-color text {
-  color: #fff;
-  text-align: left;
-  font-size: 26rpx;
-}
-.weui-cell__ft-color text:nth-child(1) {
-  font-size: 34rpx;
-}
-.weui-cell-cuetom {
-  margin-left: 20rpx;
-}
-.weui-cell-cuetom image {
-  width: 74rpx;
-  height: 74rpx;
-  margin-left: 20rpx;
-  margin-right: 0;
-}
-.customer-btn {
-  position: absolute;
-  top: 41px;
-  opacity: 0;
-  right: 26px;
-  height: 40px;
-  width: 40px;
-}
-.icon_kf {
-  width: 74rpx;
-  height: 74rpx;
-  display: inline-block;
-  margin-top: 5px;
-}
 .noline::before,
 .noline2::before {
   border: none;
 }
-.noline {
-  padding: 0 15px;
-  margin: 20rpx 0 10rpx;
-}
-.btn_wx {
-  margin-left: 100rpx;
-}
-.btn_wx image {
-  width: 74rpx;
-  height: 74rpx;
-  margin: 0;
-  border: none;
-}
-.weui-cell__font text {
-  font-size: 32rpx;
-}
-.weui-cell__font text:nth-child(2) {
-  color: #aaa;
-  font-size: 28rpx;
-}
-.weui-cell-bt {
-  display: block;
-  margin-bottom: 10rpx;
-  font-size: 32rpx;
-  color: #000;
-}
-.weui-cells-nopd {
-  margin-top: 0;
-}
-
-.v_section cover-view {
-  pointer-events: none;
-}
-
 .fixbottom {
   position: absolute;
   bottom: 10px;
