@@ -1,7 +1,5 @@
 <style lang="css">
-@import '../../zanui/panel.wxss';
-@import '../../zanui/btn.wxss';
-@import '../../zanui/cell.wxss';
+
 .field__title--radius {
   padding-bottom: 10px;
 }

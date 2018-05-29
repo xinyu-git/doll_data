@@ -13,8 +13,8 @@ export default class extends wepy.app {
     config = {
         "pages":[
             "pages/portal/cardlist",
-            "pages/crm/chatlist",
-            "pages/crm/chat",
+            "pages/card/chatlist",
+            "pages/card/chat",
             "pages/portal/index",
             "pages/auth/refreToken",
             "pages/auth/signup",

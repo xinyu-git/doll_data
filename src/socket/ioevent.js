@@ -21,8 +21,8 @@ module.exports = {
 
         })
         socket.on('m:userinfo', (d) => {
-            //console.log('receive user info', d)
             let users = app.globalData.chatusers
+            console.log(d);
             if (!!users["uid" + d.uid]) {
                 users["uid" + d.uid] = {
                     id: d.uid,
@@ -30,20 +30,14 @@ module.exports = {
                     headimg: d.headimg,
                     nickname: d.nickname
                 }
-                //console.log(app.globalData.EventBus);
                 app.globalData.EventBus.dispatch("userchage");
+                wx.setStorageSync("card:users", users)
             }
         })
         socket.on('m:msg', (d) => {
-            //console.warn("receive chat message from server", d)
-            //console.log("app is ", app)
-            //console.log("app $broadcast is ", app.$broadcast)
-            //app.$broadcast("chatmsg", d);
-
             app.globalData.chatusers = app.globalData.chatusers || {}
             let users = app.globalData.chatusers
             if (!users["uid" + d.from]) {
-
                 socket.emit('m:userinfo', { uid: d.from })
                 users["uid" + d.from] = {
                     id: d.from,
@@ -61,6 +55,7 @@ module.exports = {
             app.globalData.chatmsg.push(d);
             app.globalData.chatmsglength++;
             app.globalData.EventBus.dispatch("m:msg");
+            wx.setStorageSync("card:chatmsg", app.globalData.chatmsg)
         })
     }
 }

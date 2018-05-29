@@ -174,7 +174,7 @@ export default class Index extends wepy.page {
       });
     },
     go2myprofile() {
-      wx.navigateTo({ url: "/pages/crm/chatList" });
+      wx.navigateTo({ url: "/pages/card/chatList" });
     }
   };
 }

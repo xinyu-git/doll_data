@@ -27,7 +27,7 @@
     import config from '../../config/api'
     export default class loginPc extends wepy.page {
         config = {"navigationBarTitleText": "收藏名片列表"}
-        components= {
+        components= { 
         }
         data = {
             key: '',
@@ -35,17 +35,11 @@
         }
         async onLoad(options) {            
             this.key = options.key || options.scene;
-            
         }
         methods = {
             go2chatlist(evt){
-                wx.navigateTo({url:"/pages/crm/chatlist"})
+                wx.navigateTo({url:"/pages/card/chatlist"})
             }
         }
     }
-  };
-}
 </script>
-<style>
-@import "../../zanui/btn.wxss";
-</style>

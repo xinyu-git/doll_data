@@ -31,35 +31,15 @@ export default class Chat extends wepy.page {
   };
   components = {};
   data = {
-    userlist: [
-      {
-        fullname: "张三",
-        fullcon: "我想问一下黄金59多少钱？",
-        status: 0,
-        url: "../../images/person.png"
-      },
-      {
-        fullname: "王五",
-        fullcon:
-          "我想问一下黄金59多少想问一下黄金59多少想问一下黄金59多少想问一下黄金59多少钱？",
-        status: 1,
-        url: "../../images/person.png"
-      },
-      {
-        fullname: "李四",
-        fullcon: "我想问一下黄金59多少钱？",
-        status: 1,
-        url: "../../images/person.png"
-      }
-    ],
+    userlist: [],
     canclick: true,
     showMainpage: false,
     socket: null
   };
   async onLoad(options) {
     let that = this;
-    //clearInterval(checkmsg)
-    //this.socket = this.$parent.globalData.socket
+    this.$parent.globalData.chatusers = wx.getStorageSync("card:users")
+    this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg")
     this.onchatuserchange();
     this.$parent.globalData.EventBus.removeEventListener( "userchage",  this.onchatuserchange, this );
     this.$parent.globalData.EventBus.addEventListener( "userchage", this.onchatuserchange, this );
@@ -77,7 +57,7 @@ export default class Chat extends wepy.page {
       let id = e.currentTarget.dataset.url;
       console.log("go 2 chat");
       console.log(id);
-      wx.navigateTo({ url: `../crm/chat?id=${id}` });
+      wx.navigateTo({ url: `../card/chat?id=${id}` });
     }
   };
 }

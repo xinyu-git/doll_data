@@ -44,42 +44,6 @@ export default class Chat extends wepy.page {
         content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
         from: "me",
         url: "../../images/person.png"
-      },
-      {
-        content: "您好,在呢,在呢,在呢",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "少钱o想问一下黄金59多少钱想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      },
-      {
-        content: "您好，在呢～1888元您好，在呢～1888元2",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      },
-      {
-        content: "您好，在呢～1888元您好，在呢～1888元3",
-        from: "other",
-        url: "../../images/person.png"
-      },
-      {
-        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      },
-
-      {
-        content: "您好，在呢～1888元您好，在呢～1888end",
-        from: "other",
-        url: "../../images/person.png"
       }
     ],
     readyToSend: "",
@@ -88,20 +52,15 @@ export default class Chat extends wepy.page {
     toView: "sroll-bottom"
   };
   async onLoad(options) {
-    //进入到页面的时候，对告诉服务器，要lock住这个key
     this.onmsgchange();
     this.$parent.globalData.EventBus.removeEventListener( "m:msg", this.onmsgchange, this );
     this.$parent.globalData.EventBus.addEventListener(  "m:msg", this.onmsgchange, this );
     this.uid = options.id;
-    //console.log('this.uid is ', this.uid)
-    //console.log(this.$parent.globalData);
-    //this.onmsgchange();
   }
   onmsgchange(evt) {
     this.messages = this.$parent.globalData.chatmsg.filter(item => {
       return item.from == this.uid || item.to == this.uid;
-    });
-    console.log(this.messages);
+    });    
     this.$apply();
   }
   methods = {
@@ -116,9 +75,9 @@ export default class Chat extends wepy.page {
     },
     sendmsg(evt) {
       //{from: 19904, to: "19901", content: "我", msgTime: "2018-05-23 08:55:07", type: "text"}
-      if (this.readyToSend) {
+      if (!!this.readyToSend) {
         this.$parent.globalData.socket1.emit("m:msg", {
-          to: this.uid,
+          	to: this.uid,
           msg: this.readyToSend
         });
         this.$parent.globalData.chatmsg.push({

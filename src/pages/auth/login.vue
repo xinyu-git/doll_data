@@ -49,6 +49,3 @@
         }
     }
 </script>
-<style>
-    @import '../../zanui/btn.wxss'
-</style>
