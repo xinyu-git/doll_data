@@ -89,16 +89,9 @@ export default class Chat extends wepy.page {
   };
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
-    this.$parent.globalData.EventBus.removeEventListener(
-      "m:msg",
-      this.onmsgchange,
-      this
-    );
-    this.$parent.globalData.EventBus.addEventListener(
-      "m:msg",
-      this.onmsgchange,
-      this
-    );
+    this.onmsgchange();
+    this.$parent.globalData.EventBus.removeEventListener( "m:msg", this.onmsgchange, this );
+    this.$parent.globalData.EventBus.addEventListener(  "m:msg", this.onmsgchange, this );
     this.uid = options.id;
     //console.log('this.uid is ', this.uid)
     //console.log(this.$parent.globalData);

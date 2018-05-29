@@ -142,6 +142,7 @@ export default class extends wepy.app {
 
   sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
+<<<<<<< HEAD
   constructor() {
     super();
     this.use("requestfix");
@@ -150,6 +151,17 @@ export default class extends wepy.app {
 
   async onLaunch(options) {
     /*
+=======
+    constructor() {
+        super();
+        this.use('requestfix');
+        this.use('promisify');
+    }
+    
+    async onLaunch(options) {
+       
+        /*
+>>>>>>> 267c39cdc54214ab39473e6e8fe162d90e097a30
         path	String	打开小程序的路径
         query	Object	打开小程序的query
         scene	Number	打开小程序的场景值
@@ -158,6 +170,7 @@ export default class extends wepy.app {
         referrerInfo.appId	String	来源小程序或公众号或App的 appId，详见下方说明
         referrerInfo.extraData	Object	来源小程序传过来的数据，scene=1037或1038时支持
         */
+<<<<<<< HEAD
 
     let self = this;
     let result = wx.getSystemInfoSync(); //取运行环境
@@ -171,6 +184,49 @@ export default class extends wepy.app {
       //发请求前先拿合法token
       self.globalData.shareTicket = options.shareTicket;
       // await sself.globalData.get(``)//发请求，告诉后端有ticket
+=======
+        
+        let self = this;
+        let result = wx.getSystemInfoSync();//取运行环境
+        self.globalData.environment = result.environment || "";
+        
+        if(!!options.scene){
+            self.globalData.scene = options.scene;//huan
+        }
+        await self.initToken();
+        if(!!options.shareTicket){//发请求前先拿合法token
+            self.globalData.shareTicket = options.shareTicket;
+            // await sself.globalData.get(``)//发请求，告诉后端有ticket
+        }
+        wx.showLoading({title: '加载中',mask : true})
+        let userinfo = self.globalData.userInfo = self.globalData.userInfo || wx.getStorageSync('user:detail');
+        if (!userinfo){
+            await self.refreshUserInfo();
+        }
+        await self._afterLaunch()
+        wx.hideLoading();
+    }
+    async _afterLaunch(){
+        console.log("after launch")
+        console.log(this.globalData.userInfo)
+        if (!! this.globalData.userInfo && 
+            !!this.globalData.userInfo.userprofile && 
+            this.globalData.userInfo.userprofile.cert_status == 1){
+            socketinit(this);
+        }
+    }
+    async initToken(){//初始化token 数据以globalData中为准
+        let self = this;
+        if(self.hasToken()){
+            self.globalData.token = self.globalData.token || wx.getStorageSync('user:token');
+            let token_is_expired = await self.tokenIsExpired();
+            if(token_is_expired){
+                await self.refreshToken()
+            }
+        }else{
+            await self.login()
+        }
+>>>>>>> 267c39cdc54214ab39473e6e8fe162d90e097a30
     }
     wx.showLoading({ title: "加载中", mask: true });
     let userinfo = (self.globalData.userInfo =
@@ -238,11 +294,37 @@ export default class extends wepy.app {
     } else {
       return false;
     }
+<<<<<<< HEAD
   }
   async bindUser(fromUserid) {
     //用户做关联
     if (!fromUserid) {
       return;
+=======
+    async bindUser(fromUserid){//用户做关联
+        if(!fromUserid){
+            return;
+        }
+        let that = this;
+        let userinfo = that.globalData.userInfo = that.globalData.userInfo || wx.getStorageSync('user:detail');
+        if (!userinfo){
+            await that.globalData.refreshUserInfo();
+        }
+        userinfo = that.globalData.userInfo = that.globalData.userInfo || wx.getStorageSync('user:detail');
+        
+        if(userinfo.extra){
+            let extraobj = JSON.parse(userinfo.extra);
+            if(extraobj.uids.indexOf(fromUserid+"")==-1){
+                
+                let updateResult = await this.globalData.post(`${server}/auth/user/updateConnectUids`,{uid_from:fromUserid});
+                
+            }
+            await that.globalData.refreshUserInfo();
+        }else{
+            let updateResult = await this.globalData.post(`${server}/auth/user/updateConnectUids`,{uid_from:fromUserid});
+            await that.globalData.refreshUserInfo();
+        }
+>>>>>>> 267c39cdc54214ab39473e6e8fe162d90e097a30
     }
     let that = this;
     let userinfo = (that.globalData.userInfo =
@@ -250,6 +332,7 @@ export default class extends wepy.app {
     if (!userinfo) {
       await that.globalData.refreshUserInfo();
     }
+<<<<<<< HEAD
     userinfo = that.globalData.userInfo =
       that.globalData.userInfo || wx.getStorageSync("user:detail");
     console.log("userinfo", userinfo);
@@ -301,11 +384,37 @@ export default class extends wepy.app {
       );
       delete userDetail.UserProfiles;
       delete userDetail.Passports;
+=======
+
+    //刷新用户信息
+    async refreshUserInfo(){
+        let self = this;
+        let res2 = await this.globalData.get(`${api.auth.userDetail.url}`)
+        let obj = res2;
+        let userDetail = {};
+        if(obj){
+            //兼容处理 userinfo
+            let userProfiles = obj.UserProfiles[0];
+            userDetail = Object.assign({}, obj,  {userprofile: obj.UserProfiles[0]}, {passport : obj.Passports})
+            delete userDetail.UserProfiles
+            delete userDetail.Passports
+        }
+        self.globalData.userInfo = userDetail;
+        wx.setStorageSync( "user:detail",userDetail );
+    }
+    onShow(){
+        // console.log("this is app on show")
+        //此处管理正在背景播放的音乐
+    }
+    onHide(){
+        // console.log("this is app on hide");
+>>>>>>> 267c39cdc54214ab39473e6e8fe162d90e097a30
     }
     self.userInfo = userDetail;
     wx.setStorageSync("user:detail", userDetail);
   }
 
+<<<<<<< HEAD
   onShow() {
     // console.log("this is app on show")
     //此处管理正在背景播放的音乐
@@ -336,5 +445,29 @@ export default class extends wepy.app {
     chatmsg: [],
     EventBus: EventBus
   };
+=======
+    globalData = {
+        sleep: this.sleep,
+        get : this.Prequest('GET'),
+        post : this.Prequest('POST'),
+        upload : this.Pupload(),
+        bindUser: this.bindUser,
+        refreshUserInfo : this.refreshUserInfo,
+        userInfo: null,
+        expireTime: null,
+        token : null,
+        scene : null,
+        shareTicket : null,
+        environment : null,
+        tokenLose : 86400000,// 单位：毫秒，86400000：1天的毫秒数，倒计时1天之内的 token 失效，重新刷新 token
+        clipboard : null,
+        setting : {},
+        io : null,
+        socket1 : null,
+        loginInfo:{},
+        chatmsg : [],
+        EventBus : EventBus
+    };
+>>>>>>> 267c39cdc54214ab39473e6e8fe162d90e097a30
 }
 </script>
