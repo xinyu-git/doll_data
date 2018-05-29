@@ -28,7 +28,7 @@
     </view>
   </view>
   <!--名片信息二-->
-  <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{cardBox2}}">
+  <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{mycard2}}">
     <view class="weui-cell_hd">
       <image src="../../images/person.png"></image>
     </view>
@@ -105,7 +105,7 @@ export default class Index extends wepy.page {
     hasbackgroundmusic: false,
     custombg: true,
     mycard1: true,
-    cardBox2: false
+    mycard2: false
   };
 
   async onLoad(options) {
@@ -135,11 +135,11 @@ export default class Index extends wepy.page {
         if (ty < 0) {
           this.custombg = false;
           this.mycard1 = false;
-          this.cardBox2 = true;
+          this.mycard2 = true;
         } else if (ty > 0) {
           this.custombg = true;
           this.mycard1 = true;
-          this.cardBox2 = false;
+          this.mycard2 = false;
         }
       }
       //将当前坐标进行保存以进行下一次计算
