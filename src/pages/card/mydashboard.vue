@@ -7,7 +7,7 @@
 <script>
     import wepy from 'wepy'
     import config from '../../config/api'
-    export default class Mycard extends wepy.page {
+    export default class Mydashboard extends wepy.page {
         config = {"navigationBarTitleText": "我的名片"}
         components= {
         }
