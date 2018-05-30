@@ -8,7 +8,7 @@
         <label class="weui-label">姓名</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入姓名">
+        <input class="weui-input" type="text" placeholder="请输入姓名"  bindinput="bindInput" data-name="fullname">
       </view>
     </view>
     <!--手机号-->
@@ -17,7 +17,7 @@
         <label class="weui-label">手机号</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="tel" placeholder="请输入手机号">
+        <input class="weui-input" type="tel" placeholder="请输入手机号"  bindinput="bindInput" data-name="mobile" maxlength="11">
       </view>
       <view class="weui-cell__ft">
         <view class="weui-vcode-btn my-orange-btn" bindtap="getCode">获取验证码</view>
@@ -29,7 +29,7 @@
         <label class="weui-label">公司</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入公司">
+        <input class="weui-input" type="text" placeholder="请输入公司" bindinput="bindInput"  data-name="company">
       </view>
     </view>
     <!--职位-->
@@ -38,19 +38,20 @@
         <label class="weui-label">职位</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入职位">
+        <input class="weui-input" type="text" placeholder="请输入职位" bindinput="bindInput"  data-name="title">
       </view>
     </view>
     <!--保存按钮-->
     <view class="weui-btn-area">
-      <button class="weui-btn my-btn_orange">保存</button>
+      <button class="weui-btn my-btn_orange" bindtap="createCard">保存</button>
     </view>
   </view>
 </view>
 </template>
 <script>
 import wepy from "wepy";
-import config from "../../config/api";
+
+import api from "../../config/api";
 export default class Register extends wepy.page {
   config = {
     navigationBarTitleText: "新用户注册",
@@ -59,14 +60,44 @@ export default class Register extends wepy.page {
     navigationBarTextStyle: "white"
   };
   components = {};
-  data = {
-    key: ""
+	data = { 
+		fullname : '',
+		mobile : '',
+		fromcode : '',
+		checkcode : '', 
+		
+		title : "",
+		company : "", 
+		key: ""
   };
+  async createCard(){
+	wx.showLoading({title: '请稍后',mask : true})
+    let result = await this.$parent.globalData.post(`${api.server}/auth/user/card/registerAndCreate`,
+		{fullname : this.fullname, mobile : this.mobile, checkcode : this.checkcode, title: this.title, company: this.company})            
+    wx.hideLoading();
+	if(!!result.errorCode){
+		wx.showModal({
+			confirmColor: "#338AF1",
+			title: '提示',
+			showCancel : false,
+			content: result.messasge || '出错了，请重试'
+		})
+	}else{
+		await this.$parent.globalData.refreshUserInfo();
+	}
+                
+  }
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
     this.key = options.key || options.scene;
   }
-  methods = {};
+  methods = {
+    bindInput(e){
+      let key = e.currentTarget.dataset.name;
+      this[key] = e.detail.value;
+      this.$apply();
+  	},
+  };
 }
 </script>
 <style>

@@ -31,7 +31,7 @@
             this._originate = options._originate;
         }
         methods = {
-            async agree(e){
+            async agree(e){ 
                 let res1 = await wepy.login();
                 let res2 = e.detail
                 console.log(res2)

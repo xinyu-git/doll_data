@@ -38,7 +38,7 @@
         </video>
       </view>
     </view>
-  </view>
+  </view> 
   <!--最新动态-->  
   <view class="weui-cells__title">
     <text class="weui-cell-bt">最新动态</text>

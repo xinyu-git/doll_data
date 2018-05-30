@@ -78,7 +78,7 @@ export default class Chat extends wepy.page {
       if (!!this.readyToSend) {
         this.$parent.globalData.socket1.emit("m:msg", {
           	to: this.uid,
-          msg: this.readyToSend
+          msg: this.readyToSend 
         });
         this.$parent.globalData.chatmsg.push({
           from: "me",

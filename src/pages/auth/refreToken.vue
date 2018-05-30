@@ -13,7 +13,7 @@
         async onLoad() {
             //此页面用于重新获取授权信息，token 已经失效，无法用旧的 token 获取新 token
             console.log("refreshUserinfo ,into login method, we'll get token from server")
-            try{
+            try{ 
                 wx.showLoading({title: '授权中',mask : true})
                 this.$parent.globalData.appPrepare = true
                 let res1 = await wepy.login();

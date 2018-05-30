@@ -12,7 +12,7 @@
             <view class="zan-cell__hd zan-field__title">真实姓名</view>
             <input class="zan-field__input zan-cell__bd" bindinput="bindInput" data-name="fullname" type="text" placeholder="请输入姓名"/>
         </view>
-        <view class="zan-cell zan-field">
+        <view class="zan-cell zan-field"> 
             <view class="zan-cell__hd zan-field__title">手机号</view>
             <input type="number" class="zan-field__input zan-cell__bd" placeholder="请输入手机号"  bindinput="bindInput"  data-name="mobile" maxlength="11"/>
         </view>

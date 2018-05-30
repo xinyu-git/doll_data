@@ -110,12 +110,13 @@ export default class Index extends wepy.page {
 
   async onLoad(options) {
     this.uid = options.id;
-    console.log("====", this.uid);
-	await this.loadCard();
+    console.log("====", this.uid); 
+	  await this.loadCard();
   }
   async loadCard(){
 	  wx.showNavigationBarLoading()
-	  this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card?uid=${this.uid}`);
+	  this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.uid}`);
+    console.log(this.cardinfo)
 	  wx.setNavigationBarTitle({title:this.cardinfo.name})
 	  wx.hideNavigationBarLoading()
   }

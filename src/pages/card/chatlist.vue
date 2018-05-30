@@ -26,7 +26,7 @@ export default class Chat extends wepy.page {
   config = {
     navigationBarTitleText: "最新消息",
     navigationBarBackgroundColor: "#e67841",
-    backgroundColor: "#e67841",
+    backgroundColor: "#e67841", 
     navigationBarTextStyle: "white"
   };
   components = {};

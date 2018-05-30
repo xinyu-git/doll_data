@@ -10,38 +10,14 @@ import { socketinit } from "./socket/ioevent";
 const EventBus = require("./util/eventbus");
 
 export default class extends wepy.app {
-<<<<<<< HEAD
-  config = {
-    pages: [
-     "pages/card/mycard",
-      "pages/card/register",
-      "pages/portal/cardlist",
-      "pages/card/chatlist",
-      "pages/card/chat",
-      "pages/portal/index",
-      "pages/auth/refreToken",
-      "pages/auth/signup",
-      "pages/auth/login"
-    ],
-    window: {
-      backgroundTextStyle: "drak",
-      navigationBarBackgroundColor: "#fff",
-      navigationBarTitleText: "企业名片",
-      navigationBarTextStyle: "black",
-      enablePullDownRefresh: true
-    },
-    networkTimeout: {
-      request: 10000,
-      downloadFile: 10000
-    },
-    debug: false
-  };
-=======
+
     config = {
         "pages":[
+            
             "pages/portal/cardlist",
             "pages/card/chatlist",
             "pages/card/chat",
+            "pages/card/register",
             "pages/portal/index",
             "pages/portal/index2",
             "pages/auth/refreToken",
@@ -62,77 +38,6 @@ export default class extends wepy.app {
         "debug": false
     };
     
-    Prequest(method = 'GET') {
-        let that = this;
-        return function(url, data = {},header={}) {
-            return new Promise(function(resolve, reject) {
-                if(!that.globalData.token){
-                    return reject('token is null')
-                }
-                let defaultheader = {
-                    'Content-Type': 'application/json', 
-                    'Authorization' : `Bearer ${that.globalData.token}`,
-                    "Sourceorigin" : "app"
-                };
-                for (let key in header){
-                    defaultheader[key] = header[key]
-                }
-                wx.request({
-                    url,data,method,
-                    header: defaultheader,
-                    success: function(res) {
-                        if(res && res.data){
-                            if(res.data.errCode=="200002"){
-                                //token 失效
-                                wx.showModal({
-                                    confirmColor: "#7ec792",
-                                    content: `登陆凭证失效，重新获取中`,
-                                    showCancel: false,
-                                    success: async function(){
-                                        //失效之后
-                                        //1.获取新的 token
-                                        console.log("token 失效了，>>>>即将重新获取 userToken")
-                                        wx.removeStorageSync("user:token")
-                                        wx.removeStorageSync("user:expireTime")
-                                        //2.重新 onLauch 到首页
-                                        wx.reLaunch({url: '/pages/auth/refreToken'})
-                                    }
-                                })
-                                wx.hideLoading();
-                                reject(res)
-                                return;
-                            }else if(res.data.errorCode){
-                                console.error(res)
-                                let msg = res.data.errorMsg || res.data.messasge || res.data.errmsg
-                                wx.showModal({
-                                    confirmColor: "#7ec792",
-                                    content: msg,
-                                    showCancel: false
-                                })
-                                wx.removeStorageSync("user:token")
-                                wx.removeStorageSync("user:expireTime")
-                                wx.hideLoading();
-                                reject(res)
-                                return;
-                            }
-                        }
-                        resolve(res.data)
-                    },
-                    fail: function(err) {
-                        console.error("系统错误",err)
-                        wx.showModal({
-                            confirmColor: "#7ec792",
-                            content: err.errMsg || "出错了,请稍后再试",
-                            showCancel: false
-                        })
-                        wx.hideLoading();
-                        reject(err)
-                    }
-                });
-            })
-        }
-    }
->>>>>>> fa1ada95eb2b61e0979030d22f870a78fc7223c0
 
   Prequest(method = "GET") {
     let that = this;
@@ -395,7 +300,9 @@ export default class extends wepy.app {
   //刷新用户信息
   async refreshUserInfo() {
     let self = this;
-    let res2 = await this.globalData.get(`${api.auth.userDetail.url}`);
+    let res2
+    
+    res2 = await this.globalData.get(`${api.auth.userDetail.url}`);
     let obj = res2;
     let userDetail = {};
     if (obj) {
@@ -427,7 +334,7 @@ export default class extends wepy.app {
     post: this.Prequest("POST"),
     upload: this.Pupload(),
     bindUser: this.bindUser,
-    refreshUserInfo: this.refreshUserInfo,
+    refreshUserInfo: this.refreshUserInfo.bind(this),
     userInfo: null,
     expireTime: null,
     token: null,
