@@ -75,13 +75,13 @@
       </button>
     </view>
     <view class="weui-cell__ft  nav-icon5">
-      <button class="nav-btn">
+      <button class="nav-btn"  bindtap='go2dashboard'>
       <image src="../../images/myicon7.png"></image>
       <text>销售</text>
       </button>
     </view>
     <view class="weui-cell__ft  nav-icon3">
-      <button class="nav-btn"  bindtap='go2myprofile'>
+      <button class="nav-btn"  bindtap='go2mycard'>
       <image src="../../images/iconuser.png"></image>
       <text>我的</text>
       </button>
@@ -98,6 +98,7 @@ export default class Mycard extends wepy.page {
     navigationBarTitleText: "我的名片",
     navigationBarBackgroundColor: "#e67841",
     backgroundColor: "#e67841",
+	enablePullDownRefresh : false, 
     navigationBarTextStyle: "white"
   };
   components = {};
@@ -106,7 +107,7 @@ export default class Mycard extends wepy.page {
     list: [
       {
         url: "../../images/pic1.jpg",
-        id:'5b0e85ce185d7b34f985ad99',
+        id: "5b0e85ce185d7b34f985ad99",
         name: "张益君",
         game: "坦克世界",
         type: "VIP运营经理"
@@ -114,13 +115,13 @@ export default class Mycard extends wepy.page {
       {
         url: "../../images/pic2.jpg",
         name: "任建斌",
-        id:2,
+        id: 2,
         game: "坦克世界",
         type: "VIP运营经理"
       },
       {
         url: "../../images/pic3.jpg",
-        id:3,
+        id: 3,
         name: "孙奇",
         game: "坦克世界",
         type: "VIP运营经理",
@@ -128,7 +129,7 @@ export default class Mycard extends wepy.page {
       },
       {
         url: "../../images/pic4.jpg",
-        id:4,
+        id: 4,
         name: "尹平辉",
         game: "坦克世界",
         type: "VIP运营经理"
@@ -149,29 +150,28 @@ export default class Mycard extends wepy.page {
     msg: "",
     cardlist: [
       {
-          id:'5b0e85ce185d7b34f985ad99',
+        id: "5b0e85ce185d7b34f985ad99",
         name: "孙奇",
         tip: "坦克世界VIP运营经理",
         url: "../../images/person1.png",
         status: "1"
-        
       },
       {
-          id:'5b0e864c185d7b34f985ad9a',
+        id: "5b0e864c185d7b34f985ad9a",
         name: "张益君",
         tip: "坦克世界VIP运营经理",
         url: "../../images/person1.png",
         status: "1"
       },
       {
-          id:'5b0e864e185d7b34f985ad9b',
+        id: "5b0e864e185d7b34f985ad9b",
         name: "任建斌",
         tip: "坦克世界VIP运营经理",
         url: "../../images/person1.png",
         status: "0"
       },
       {
-          id:'5b0e86a8185d7b34f985ad9c',
+        id: "5b0e86a8185d7b34f985ad9c",
         name: "尹平辉",
         tip: "坦克世界VIP运营经理",
         url: "../../images/person1.png",
@@ -187,36 +187,45 @@ export default class Mycard extends wepy.page {
     this.key = options.key || options.scene;
     this.msg = this.list;
     this.uid = options.id;
-    this.usercard = this.$parent.globalData.usercard || wx.getStorageSync("user:card");
-    console.log(this.usercard)
-    if(!this.usercard){
-      let result = await this.$parent.globalData.get(`${api.server}/auth/user/card/myowncards`);
-	  console.log(result)
-	  if (result.length > 0){
-		  this.createCard = false
-		  this.usercard  = this.$parent.globalData.usercard = result
-		  this.$apply();
-		  //wx.setStorageSync("user:card",result.rows);
-	  }
-    }else{
-		this.createCard = false
-		this.usrCardbar = true;
-		this.$apply();
-	}
+    this.usercard =
+      this.$parent.globalData.usercard || wx.getStorageSync("user:card");
+    console.log(this.usercard);
+    if (!this.usercard) {
+      let result = await this.$parent.globalData.get(
+        `${api.server}/auth/user/card/myowncards`
+      );
+      console.log(result);
+      if (result.length > 0) {
+        this.createCard = false;
+        this.usercard = this.$parent.globalData.usercard = result;
+        this.$apply();
+        //wx.setStorageSync("user:card",result.rows);
+      }
+    } else {
+      this.createCard = false;
+      this.usrCardbar = true;
+      this.$apply();
+    }
 
     if (this.uid) {
       this.usrCardbar = true;
     }
   }
-  go2chatlist(){
-	  wx.navigateTo({url:"/pages/card/chatlist"})
+  go2dashboard(){
+	  wx.navigateTo({ url: "/pages/card/mydashboard" });
   }
-  go2card(e){
-      let id = e.currentTarget.dataset.cardid;
-      wx.navigateTo({url:"/pages/portal/index2?id=" + id})
+  go2mycard() {
+    wx.navigateTo({ url: "/pages/card/mycard" });
   }
-  go2register(){
-      wx.navigateTo({url : "/pages/card/register"})
+  go2chatlist() {
+    wx.navigateTo({ url: "/pages/card/chatlist" });
+  }
+  go2card(e) {
+    let id = e.currentTarget.dataset.cardid;
+    wx.navigateTo({ url: "/pages/portal/index2?id=" + id });
+  }
+  go2register() {
+    wx.navigateTo({ url: "/pages/card/register" });
   }
   methods = {
     changeList() {

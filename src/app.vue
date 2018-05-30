@@ -17,6 +17,8 @@ export default class extends wepy.app {
             "pages/portal/cardlist",
             "pages/card/chatlist",
             "pages/card/chat",
+			"pages/card/mycard",
+			"pages/card/mydashboard",
             "pages/card/register",
             "pages/portal/index",
             "pages/portal/index2",

@@ -1,5 +1,5 @@
 <template>
-<view class="page" bindtouchstart = "handletouchtart" bindtouchmove="handletouchmove">
+<view class="page" bindtouchstart="handletouchtart" bindtouchmove="handletouchmove">
   <!--视频播放-->
   <view class="weui-cell my-bgColor" wx:if="{{custombg}}">
     <view class="my-videoBox1">
@@ -10,33 +10,33 @@
   <view class="my-cardBox1" wx:if="{{mycard1}}">
     <view class="weui-cell my-cardCon">
       <view class="weui-cell_primary my-avaterBox">
-        <text>袁小员</text>
-        <text>坦克世界VIP运营</text>
+        <text>{{cardinfo.name}}</text>
+        <text>{{cardinfo.title}}</text>
       </view>
-      <button bindtap="callmeTap" class="call-btn">联系我</button>
+      <button bindtap="callmeTap" class="call-btn" >联系我</button>
       <view class="my-addressBox">
-        <text>公司：空中网</text>
-        <text>地址：北京市海淀区西直门外大街168号腾达大厦</text>
-        <text>手机：18511878888</text>
+        <text>公司：{{cardinfo.corp}}</text>
+        <text>地址：{{cardinfo.address}}</text>
+        <text>手机：{{cardinfo.mobile}}</text>
       </view>
       <view class="weui-cell_hd my-picBox">
-        <image src="../../images/person.png"></image>
+        <image src="../../images/person.png"/>
       </view>
       <view class="my-bottomBg">
-        <image src="../../images/bottom_bg1.jpg"></image>
+        <image src="../../images/bottom_bg1.jpg"/>
       </view>
     </view>
   </view>
   <!--名片信息二-->
   <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{mycard2}}">
     <view class="weui-cell_hd">
-      <image src="../../images/person.png"></image>
+      <image src="../../images/person.png"/>
     </view>
     <view class="weui-cell_bd weuicell_primary">
-      <text>袁小员</text>
-      <text>坦克世界vip运营</text>
+      <text>{{cardinfo.name}}</text>
+      <text>{{cardinfo.title}}</text>
     </view>
-    <button bindtap="callmeTap" class="call-btn">联系我</button>
+    <button bindtap="callmeTap" class="call-btn" data-mobile="{{cardinfo.mobile}}">联系我</button>
   </view>
   <!--小视频列表-->
   <view class="my-videoBox2 my-pd15">
@@ -81,7 +81,7 @@
       </button>
     </view>
     <view class="weui-cell__ft  nav-icon3">
-      <button class="nav-btn"  bindtap='go2myprofile'>
+      <button class="nav-btn"  bindtap='go2mycard'>
       <image src="../../images/iconuser.png"></image>
       <text>我的</text>
       </button>
@@ -95,12 +95,14 @@ import api from "../../config/api";
 export default class Index extends wepy.page {
   config = {
     //navigationBarTitleText: "袁小员的视频介绍",
+	enablePullDownRefresh : false, 
     navigationBarBackgroundColor: "#e67841",
     backgroundColor: "#e67841",
     navigationBarTextStyle: "white"
   };
 
   data = {
+    cardinfo: null,
     uid: null,
     hasbackgroundmusic: false,
     custombg: true,
@@ -111,17 +113,18 @@ export default class Index extends wepy.page {
   async onLoad(options) {
     this.uid = options.id;
     console.log("====", this.uid); 
-	  await this.loadCard();
+	await this.loadCard();
   }
   async loadCard(){
-	  wx.showNavigationBarLoading()
-	  this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.uid}`);
-    console.log(this.cardinfo)
-	  wx.setNavigationBarTitle({title:this.cardinfo.name})
-	  wx.hideNavigationBarLoading()
+	  	wx.showNavigationBarLoading()
+	  	this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.uid}`);
+    	//console.log(this.cardinfo)
+		this.$apply();
+	  	wx.setNavigationBarTitle({title:this.cardinfo.name})
+	  	wx.hideNavigationBarLoading()
   }
   methods = {
-    async palyVideo(e) {
+    async playVideo(e) {
       this.videoContext = wx.createVideoContext("myVideo" + e.currentTarget.id);
       if (e.currentTarget.id == 1) {
         this.vCoverBox1 = false;
@@ -156,6 +159,9 @@ export default class Index extends wepy.page {
     playVideo() {
       this.videoContext.requestFullScreen({ direction: 90 });
     },
+	go2mycard(){
+		wx.navigateTo({url : "/pages/card/mycard"})
+	},
     callmeTap() {
       wx.makePhoneCall({
         phoneNumber: this.cardinfo.mobile

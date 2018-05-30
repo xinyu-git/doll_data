@@ -8,7 +8,7 @@
         <label class="weui-label">姓名</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入姓名"  bindinput="bindInput" data-name="fullname">
+        <input class="weui-input" type="text" placeholder="请输入姓名"  bindinput="bindInput" data-name="fullname"/>
       </view>
     </view>
     <!--手机号-->
@@ -17,7 +17,7 @@
         <label class="weui-label">手机号</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="tel" placeholder="请输入手机号"  bindinput="bindInput" data-name="mobile" maxlength="11">
+        <input class="weui-input" type="tel" placeholder="请输入手机号"  bindinput="bindInput" data-name="mobile" maxlength="11"/>
       </view>
       <view class="weui-cell__ft">
         <view class="weui-vcode-btn my-orange-btn" bindtap="getCode">获取验证码</view>
@@ -29,7 +29,7 @@
         <label class="weui-label">公司</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入公司" bindinput="bindInput"  data-name="company">
+        <input class="weui-input" type="text" placeholder="请输入公司" bindinput="bindInput"  data-name="company"/>
       </view>
     </view>
     <!--职位-->
@@ -38,7 +38,7 @@
         <label class="weui-label">职位</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" type="text" placeholder="请输入职位" bindinput="bindInput"  data-name="title">
+        <input class="weui-input" type="text" placeholder="请输入职位" bindinput="bindInput"  data-name="title"/>
       </view>
     </view>
     <!--保存按钮-->

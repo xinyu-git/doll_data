@@ -1,6 +1,6 @@
 <template>
 <view class="page">
-    
+    这里是个人dashboard页面
 </view>
 
 </template>
