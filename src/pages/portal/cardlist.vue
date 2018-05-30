@@ -5,13 +5,13 @@
         <view class="page__desc">此处是我的名片夹，显示的是各个的名片的入口</view>
     </view>
     <view class="page__bd page__bd_spacing">
-        <navigator url="/pages/portal/index?id=19901" hover-class="navigator-hover">
+        <navigator url="/pages/portal/index2?id=19901" hover-class="navigator-hover">
             <button class="weui-btn" type="primary">名片:尹平辉</button>
         </navigator>
-        <navigator url="/pages/portal/index?id=19906" hover-class="navigator-hover">
+        <navigator url="/pages/portal/index2?id=19906" hover-class="navigator-hover">
             <button class="weui-btn" type="default" plain="true" style="margin-top:15px;">名片:任建斌</button>
         </navigator>
-        <navigator url="/pages/portal/index?id=19905" hover-class="navigator-hover" >
+        <navigator url="/pages/portal/index2?id=19905" hover-class="navigator-hover" >
             <button class="weui-btn" type="default" plain="true" style="margin-top:15px;">名片:张益君</button>
         </navigator>
        

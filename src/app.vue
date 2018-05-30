@@ -16,6 +16,7 @@ export default class extends wepy.app {
             "pages/card/chatlist",
             "pages/card/chat",
             "pages/portal/index",
+            "pages/portal/index2",
             "pages/auth/refreToken",
             "pages/auth/signup",
             "pages/auth/login"

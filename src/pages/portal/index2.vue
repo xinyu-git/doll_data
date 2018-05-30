@@ -94,7 +94,7 @@ import wepy from "wepy";
 import api from "../../config/api";
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: "袁小员的视频介绍",
+    //navigationBarTitleText: "袁小员的视频介绍",
     navigationBarBackgroundColor: "#e67841",
     backgroundColor: "#e67841",
     navigationBarTextStyle: "white"
@@ -111,8 +111,14 @@ export default class Index extends wepy.page {
   async onLoad(options) {
     this.uid = options.id;
     console.log("====", this.uid);
+	await this.loadCard();
   }
-
+  async loadCard(){
+	  wx.showNavigationBarLoading()
+	  this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card?uid=${this.uid}`);
+	  wx.setNavigationBarTitle({title:this.cardinfo.name})
+	  wx.hideNavigationBarLoading()
+  }
   methods = {
     async palyVideo(e) {
       this.videoContext = wx.createVideoContext("myVideo" + e.currentTarget.id);
@@ -151,7 +157,7 @@ export default class Index extends wepy.page {
     },
     callmeTap() {
       wx.makePhoneCall({
-        phoneNumber: "10086"
+        phoneNumber: this.cardinfo.mobile
       });
     }
   };
