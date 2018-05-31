@@ -11,7 +11,7 @@
     </view>
     <view class="weui-cell my-list-picbox">
       <block wx:for="{{msg}}" wx:for-item="item" wx:if="{{index<3}}" wx:key="item.id">
-        <view class="my-picbox">
+        <view class="my-picbox" bindtap="go2card" data-cardid="{{item.id}}">
           <image src="{{item.url}}"></image>
           <view class="my-mark"></view>
           <view class="my-card-info">
@@ -106,45 +106,25 @@ export default class Mycard extends wepy.page {
     key: "",
     list: [
       {
-        url: "../../images/pic1.jpg",
         id: "5b0e85ce185d7b34f985ad99",
-        name: "张益君",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic2.jpg",
-        name: "任建斌",
-        id: 2,
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic3.jpg",
-        id: 3,
         name: "孙奇",
-        game: "坦克世界",
-        type: "VIP运营经理",
+        tip: "坦克世界VIP运营经理",
+        url: "../../images/pic1.jpg",
+        status: "1"
+      },
+      {
+        id: "5b0e864c185d7b34f985ad9a",
+        name: "张益君",
+        tip: "坦克世界VIP运营经理",
+        url: "../../images/pic2.jpg",
+        status: "1"
+      },
+      {
+        id: "5b0e864e185d7b34f985ad9b",
+        name: "任建斌",
+        tip: "坦克世界VIP运营经理",
+        url: "../../images/pic3.jpg",
         status: "0"
-      },
-      {
-        url: "../../images/pic4.jpg",
-        id: 4,
-        name: "尹平辉",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic5.jpg",
-        name: "王小王",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic6.jpg",
-        name: "李小李",
-        game: "坦克世界",
-        type: "VIP运营经理"
       }
     ],
     msg: "",
@@ -189,27 +169,27 @@ export default class Mycard extends wepy.page {
     this.uid = options.id;
     this.usercard =
       this.$parent.globalData.usercard || wx.getStorageSync("user:card");
-    console.log(this.usercard);
-    if (!this.usercard) {
-      let result = await this.$parent.globalData.get(
-        `${api.server}/auth/user/card/myowncards`
-      );
-      console.log(result);
-      if (result.length > 0) {
+      console.log(this.usercard);
+      if (!this.usercard) {
+        let result = await this.$parent.globalData.get(
+          `${api.server}/auth/user/card/myowncards`
+        );
+        console.log(result);
+        if (result.length > 0) {
+          this.createCard = false;
+          this.usercard = this.$parent.globalData.usercard = result;
+          this.$apply();
+          //wx.setStorageSync("user:card",result.rows);
+        }
+      } else {
         this.createCard = false;
-        this.usercard = this.$parent.globalData.usercard = result;
+        this.usrCardbar = true;
         this.$apply();
-        //wx.setStorageSync("user:card",result.rows);
       }
-    } else {
-      this.createCard = false;
-      this.usrCardbar = true;
-      this.$apply();
-    }
 
-    if (this.uid) {
-      this.usrCardbar = true;
-    }
+      if (this.uid) {
+        this.usrCardbar = true;
+      }
   }
   go2dashboard(){
 	  wx.navigateTo({ url: "/pages/card/mydashboard" });

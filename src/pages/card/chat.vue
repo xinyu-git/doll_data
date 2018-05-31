@@ -5,9 +5,9 @@
        <scroll-view scroll-y style="height:980rpx;" scroll-into-view="{{toView}}"  bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll">
         <block wx:for="{{messages}}" wx:key="index" wx:for-index="index" wx:for-item="item">
           <view class="chatbox">
-            <image class="avater float-right" wx:if="{{item.from=='me'}}" src="{{item.url}}"></image>
-            <image class="avater float-left" wx:else src="{{item.url}}"></image>
-            <view class="msg float-right mymsg" wx:if="{{item.from=='me'}}">{{item.content}}</view>
+            <image class="avater float-right" wx:if="{{item.from== myid}}" src="{{my_avator}}"></image>
+            <image class="avater float-left" wx:else src="{{to_avator}}"></image>
+            <view class="msg float-right mymsg" wx:if="{{item.from== myid}}">{{item.content}}</view>
             <view class="msg othermsg" wx:else>{{item.content}}</view>
           </view>
         </block>
@@ -38,36 +38,36 @@ export default class Chat extends wepy.page {
   };
   components = {};
   data = {
+    to_avator : "", 
+    my_avator : "", 
     key: "",
-    messages: [
-      {
-        content: "wo想问一下黄金59多少钱？想问一下黄金59多少钱？",
-        from: "me",
-        url: "../../images/person.png"
-      }
-    ],
+    messages: [],
     readyToSend: "",
     showMainpage: true,
+    myid : '', 
     uid: null,
     toView: "sroll-bottom"
   };
   async onLoad(options) {
-    this.onmsgchange();
     this.$parent.globalData.EventBus.removeEventListener( "m:msg", this.onmsgchange, this );
     this.$parent.globalData.EventBus.addEventListener(  "m:msg", this.onmsgchange, this );
+    
+    //console.log(this.$parent.globalData.userInfo);
+    this.my_avator = this.$parent.globalData.userInfo.headimg;
+    this.myid = this.$parent.globalData.userInfo.id;
     this.uid = options.id;
+    this.onmsgchange();
   }
   onmsgchange(evt) {
     this.messages = this.$parent.globalData.chatmsg.filter(item => {
       return item.from == this.uid || item.to == this.uid;
-    });    
+    });
+    console.log('after filter' , this.messages)
     this.$apply();
   }
   methods = {
     getfocus() {
-      this.setData({
-        toView: "sroll-bottom"
-      });
+      this.toView = "sroll-bottom"
     },
     bindInputTitle(e) {
       this.readyToSend = e.detail.value;
@@ -78,13 +78,7 @@ export default class Chat extends wepy.page {
       if (!!this.readyToSend) {
         this.$parent.globalData.socket1.emit("m:msg", {
           	to: this.uid,
-          msg: this.readyToSend 
-        });
-        this.$parent.globalData.chatmsg.push({
-          from: "me",
-          to: this.uid,
-          content: this.readyToSend,
-          type: "text"
+            content: this.readyToSend 
         });
         this.readyToSend = "";
         this.onmsgchange();
@@ -96,19 +90,12 @@ export default class Chat extends wepy.page {
         count: 9, // 最多可以选择的图片张数，默认9
         sizeType: ["original", "compressed"], // original 原图，compressed 压缩图，默认二者都有
         sourceType: ["album", "camera"], // album 从相册选图，camera 使用相机，默认二者都有
-        success: function(res) {
-          // success
+        success: (res) =>{
           console.log(res);
-          _this.setData({
-            src: res.tempFilePaths
-          });
+          this.imgsrc = res.tempFilePaths
         },
-        fail: function() {
-          // fail
-        },
-        complete: function() {
-          // complete
-        }
+        fail: function() { },
+        complete: function() {}
       });
     }
   };

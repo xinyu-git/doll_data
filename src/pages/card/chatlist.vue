@@ -38,8 +38,8 @@ export default class Chat extends wepy.page {
   };
   async onLoad(options) {
     let that = this;
-    this.$parent.globalData.chatusers = wx.getStorageSync("card:users")
-    this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg")
+    //this.$parent.globalData.chatusers = wx.getStorageSync("card:users")
+    //this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg")
     this.onchatuserchange();
     this.$parent.globalData.EventBus.removeEventListener( "userchage",  this.onchatuserchange, this );
     this.$parent.globalData.EventBus.addEventListener( "userchage", this.onchatuserchange, this );
@@ -48,7 +48,7 @@ export default class Chat extends wepy.page {
   onchatuserchange(evt) {
     console.log('user changes')
     this.userlist = this.$parent.globalData.chatusers;
-    console.log(this.userlist)
+    //console.log(this.userlist)
     this.$apply();
   }
 

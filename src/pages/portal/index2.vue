@@ -3,7 +3,7 @@
   <!--视频播放-->
   <view class="weui-cell my-bgColor" wx:if="{{custombg}}">
     <view class="my-videoBox1">
-      <video id="myVideo" src="http://zz.kongzhong.com/index180118/images/cover.webm" autoplay="true" loop="true" controls></video>
+      <video id="myVideo" src="{{medias[0].source}}" autoplay="true" loop="true" controls></video>
     </view>
   </view>
   <!--名片信息一-->
@@ -13,7 +13,7 @@
         <text>{{cardinfo.name}}</text>
         <text>{{cardinfo.title}}</text>
       </view>
-      <button bindtap="callmeTap" class="call-btn" >联系我</button>
+      <button open-type="contact" session-from="{{uid}}" class="call-btn" >联系我</button>
       <view class="my-addressBox">
         <text>公司：{{cardinfo.corp}}</text>
         <text>地址：{{cardinfo.address}}</text>
@@ -36,7 +36,7 @@
       <text>{{cardinfo.name}}</text>
       <text>{{cardinfo.title}}</text>
     </view>
-    <button bindtap="callmeTap" class="call-btn" data-mobile="{{cardinfo.mobile}}">联系我</button>
+    <button open-type="contact" session-from="{{uid}}" class="call-btn" data-mobile="{{cardinfo.mobile}}">联系我</button>
   </view>
   <!--小视频列表-->
   <view class="my-videoBox2 my-pd15">
@@ -104,22 +104,34 @@ export default class Index extends wepy.page {
   data = {
     cardinfo: null,
     uid: null,
+    cardid : null,
     hasbackgroundmusic: false,
     custombg: true,
     mycard1: true,
+    medias : [],
     mycard2: false
   };
 
   async onLoad(options) {
-    this.uid = options.id;
-    console.log("====", this.uid); 
-	await this.loadCard();
+    this.cardid = options.id;
+    
+	  await this.loadCard();
   }
   async loadCard(){
 	  	wx.showNavigationBarLoading()
-	  	this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.uid}`);
+	  	this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.cardid}`);
     	//console.log(this.cardinfo)
-		this.$apply();
+      let medias = this.cardinfo.medias 
+      try{
+        this.medias = JSON.parse(medias)
+      }catch(e){
+        
+        this.medias = []
+      }
+      //console.log(this.cardinfo.medias)
+      //console.log(this.medias)
+      this.uid = this.cardinfo.User.id
+		  this.$apply();
 	  	wx.setNavigationBarTitle({title:this.cardinfo.name})
 	  	wx.hideNavigationBarLoading()
   }
