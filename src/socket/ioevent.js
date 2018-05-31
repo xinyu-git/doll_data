@@ -49,7 +49,7 @@ module.exports = {
         })
         socket.on('m:msg', (d) => {
             //app.globalData.chatusers = app.globalData.chatusers || {}
-            //console.log('m:msg : ', d);
+            console.log('m:msg : ', d);
             let users = app.globalData.chatusers
             //console.log('1. global user is ', app.globalData.chatusers)
             if (!users["uid" + d.from] && d.from !== me.id) {

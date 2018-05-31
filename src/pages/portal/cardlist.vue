@@ -133,28 +133,28 @@ export default class Mycard extends wepy.page {
         id: "5b0e85ce185d7b34f985ad99",
         name: "孙奇",
         tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
+        url: "http://wx.qlogo.cn/mmopen/HE6qQtUcENYLLkjK0icyic1oh7fe71HguCxS0WEklQkibKZiasNjAat1GYEPicqt04cpcWnfKJL68bh1XuYTdXibBJnh7bZznkQeQr/0",
         status: "1"
       },
       {
         id: "5b0e864c185d7b34f985ad9a",
         name: "张益君",
         tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
+        url: "https://ws4.sinaimg.cn/large/006tNc79ly1fruhbv2j9ej30rs0rudvt.jpg ",
         status: "1"
       },
       {
         id: "5b0e864e185d7b34f985ad9b",
         name: "任建斌",
         tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
+        url: "https://ws4.sinaimg.cn/large/006tNc79ly1fruhdqcv8ij30rq0rk4ft.jpg",
         status: "0"
       },
       {
         id: "5b0e86a8185d7b34f985ad9c",
         name: "尹平辉",
         tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
+        url: "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoKWvo0PoFkZwAtSEzXibzoRnlNgnYWWqVGEwfgmZLryIwJGUIDCA38gXLMhlhwh1RiapnEuU5Cib6Ng/0",
         status: "0"
       }
     ],
@@ -322,6 +322,7 @@ export default class Mycard extends wepy.page {
 .my-cardboxes image {
   width: 118rpx;
   height: 118rpx;
+  border-radius: 50%;
 }
 .my-cardboxes text {
   display: block;

@@ -1,6 +1,6 @@
 <template>
-<view class="page" bindtouchstart="handletouchtart" bindtouchmove="handletouchmove">
-  <!--视频播放-->
+<view class="page" >
+  <!--视频播放  bindtouchstart="handletouchtart" bindtouchmove="handletouchmove"-->
   <view class="weui-cell my-bgColor" wx:if="{{custombg}}">
     <view class="my-videoBox1">
       <video id="myVideo" src="{{medias[0].source}}" autoplay="true" loop="true" controls></video>
@@ -20,7 +20,7 @@
         <text>手机：{{cardinfo.mobile}}</text>
       </view>
       <view class="weui-cell_hd my-picBox">
-        <image src="../../images/person.png"/>
+        <image src="{{cardinfo.User.headimg}}"/>
       </view>
       <view class="my-bottomBg">
         <image src="../../images/bottom_bg1.jpg"/>
@@ -30,7 +30,7 @@
   <!--名片信息二-->
   <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{mycard2}}">
     <view class="weui-cell_hd">
-      <image src="../../images/person.png"/>
+      <image src="{{cardinfo.User.headimg}}"/>
     </view>
     <view class="weui-cell_bd weuicell_primary">
       <text>{{cardinfo.name}}</text>
