@@ -10,36 +10,44 @@ import { socketinit } from "./socket/ioevent";
 const EventBus = require("./util/eventbus");
 
 export default class extends wepy.app {
+  config = {
+    pages: [
+      "pages/portal/cardlist",
+      "pages/card/index1",
+      "pages/card/home",
+      "pages/card/order",
+      "pages/card/orderdetail",
+      "pages/portal/index2",
+      "pages/card/payresult",
+      "pages/card/cart",
+      "pages/card/checkout",
+      "pages/card/goods",
+      "pages/card/catalog",
+      "pages/card/mycard",
+      "pages/card/chat",
+      "pages/card/register",
+      "pages/card/chatlist",
+      "pages/card/mydashboard",
+      "pages/card/uploadvideo",
+      "pages/auth/refreToken",
+      "pages/auth/signup",
+      "pages/auth/login"
+    ],
+    window: {
+      backgroundTextStyle: "drak",
+      navigationBarBackgroundColor: "#fff",
+      backgroundColor: "#fff",
+      navigationBarTitleText: "企业名片",
+      navigationBarTextStyle: "black",
+      enablePullDownRefresh: true
+    },
 
-    config = {
-        "pages":[
-            
-            "pages/portal/cardlist",
-            "pages/card/chatlist",
-            "pages/card/chat",
-			"pages/card/mycard",
-			"pages/card/mydashboard",
-            "pages/card/register",
-            "pages/portal/index",
-            "pages/portal/index2",
-            "pages/auth/refreToken",
-            "pages/auth/signup",
-            "pages/auth/login"
-        ],
-        "window":{
-            "backgroundTextStyle":"drak",
-            "navigationBarBackgroundColor": "#fff",
-            "navigationBarTitleText": "企业名片",
-            "navigationBarTextStyle":"black",
-            "enablePullDownRefresh" : true
-        },
-        "networkTimeout": {
-            "request": 10000,
-            "downloadFile": 10000
-        },
-        "debug": false
-    };
-    
+    networkTimeout: {
+      request: 10000,
+      downloadFile: 10000
+    },
+    debug: false
+  };
 
   Prequest(method = "GET") {
     let that = this;
@@ -302,8 +310,8 @@ export default class extends wepy.app {
   //刷新用户信息
   async refreshUserInfo() {
     let self = this;
-    let res2
-    
+    let res2;
+
     res2 = await this.globalData.get(`${api.auth.userDetail.url}`);
     let obj = res2;
     let userDetail = {};

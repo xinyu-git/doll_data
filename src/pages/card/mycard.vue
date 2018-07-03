@@ -1,335 +1,344 @@
 <template>
 <view class="page">
-    我的名片页:)
+  <!--名片信息-->
+  <view class="weui-media-box weui-media-box_appmsg my-cardinfoBox" wx:for="{{cardinfo}}" wx:if="{{index<1}}" wx:key="">
+    <view class="weui-media-box__hd_in-appmsg my-roundness-img">
+      <image class="weui-media-box__thumb" src="{{my_avator}}"></image>
+    </view>
+    <view class="weui-media-box__bd_in-appmsg my-infoBox" >
+      <view class="weui-media-box__title my-nameBox">
+        <text>{{item.name}}</text>
+        <text>{{item.title}}</text>
+      </view>
+      <view class="weui-media-box__desc my-addressBox">
+        <text>公司：{{item.corp}}</text>
+        <text>地址：{{item.address}}</text>
+        <text>手机：{{item.mobile}}</text>
+      </view>
+      <view class="ico-editor-btn">
+        <image src="../../images/ico-editor.png"></image>
+        <text>编辑</text>
+      </view>
+    </view>
+  </view>
+  <!--名片发送数据-->
+  <view class="weui-flex my-dateBox">
+    <view class="weui-cell__ft my-dateNum">
+      <text>150</text>
+      <text>次发送名片</text>
+    </view>
+    <view class="weui-cell__ft my-dateNum">
+      <text>15</text>
+      <text>人互动</text>
+    </view>
+    <view class="weui-cell__ft my-dateNum">
+      <button class="btn-share" open-type="share" data-name="pageShare" >分享名片</button>
+    </view>
+  </view>
+  <!--视频列表-->
+  <view class="my-videoList">
+    <view class="weui-cells__title my-videoTitle">视频</view>
+    <view class="weui-grids my-sVideoBox">
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm1.jpg"></image>
+      </view>
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm2.jpg"></image>
+      </view>
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm3.jpg"></image>
+      </view>
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm4.jpg"></image>
+      </view>
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm5.jpg"></image>
+      </view>
+      <view class="weui-grid my-small-video">
+        <image src="../../images/video-sm6.jpg"></image>
+      </view>
+    </view>
+  </view>
+  <!--底部固定导航-->
+  <view class="weui-cell weui-bottombar noline">
+    <view class="weui-cell__ft ico_bt_card" bindtap='go2cardlist'>
+      <button class="ico_bt_btn">
+      <image src="../../images/ico_bt_card.png"></image>
+      <text>名片夹</text>
+      </button>
+    </view>
+    <view class="weui-cell__ft  ico_bt_news" bindtap='go2chatlist'>
+      <button class="ico_bt_btn">
+      <image src="../../images/ico_bt_news.png"></image>
+      <text>消息</text>
+      </button>
+    </view>
+    <view class="weui-cell__ft ico_bt_add">
+      <button class="ico_bt_btn" bindtap='go2uploadvideo'>
+      <image src="../../images/ico_bt_add.png"></image>
+      </button>
+    </view>
+    <view class="weui-cell__ft ico_bt_sell">
+      <button class="ico_bt_btn"  bindtap='go2dashboard'>
+      <image src="../../images/ico_bt_sell.png"></image>
+      <text>销售</text>
+      </button>
+    </view>
+    <view class="weui-cell__ft ico_bt_my">
+      <button class="ico_bt_btn">
+      <image src="../../images/ico_bt_my.png"></image>
+      <text>我的</text>
+      </button>
+    </view>
+  </view>
 </view>
 </template>
 <script>
 import wepy from "wepy";
-import config from "../../config/api";
+
+import api from "../../config/api";
 export default class Mycard extends wepy.page {
   config = {
-    navigationBarTitleText: "我的名片",
-    navigationBarBackgroundColor: "#e67841",
-    backgroundColor: "#e67841",
-    navigationBarTextStyle: "white"
+    navigationBarTitleText: "我的名片"
   };
   components = {};
   data = {
-    key: "",
-    list: [
-      {
-        url: "../../images/pic1.jpg",
-        name: "袁小员",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic2.jpg",
-        name: "赵小赵",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic3.jpg",
-        name: "张小张",
-        game: "坦克世界",
-        type: "VIP运营经理",
-        status: "0"
-      },
-      {
-        url: "../../images/pic4.jpg",
-        name: "于小于4",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic5.jpg",
-        name: "王小王",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      },
-      {
-        url: "../../images/pic6.jpg",
-        name: "李小李",
-        game: "坦克世界",
-        type: "VIP运营经理"
-      }
-    ],
-    msg: "",
-    cardlist: [
-      {
-        name: "袁小袁",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
-        status: "1"
-      },
-      {
-        name: "赵小赵",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
-        status: "1"
-      },
-      {
-        name: "李小李",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
-        status: "0"
-      },
-      {
-        name: "于小于",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/person1.png",
-        status: "0"
-      }
-    ],
+    cardinfo: null,
     uid: null,
-    createCard: true,
-    usrCardbar: false
+    cardid: null,
+    hasbackgroundmusic: false,
+    mycard1: true,
+    medias: [],
+    mycard2: false,
+    my_avator: ""
   };
+
   async onLoad(options) {
-    //进入到页面的时候，对告诉服务器，要lock住这个key
-    this.key = options.key || options.scene;
-    this.msg = this.list;
-    this.uid = options.id;
-    if (this.uid) {
-      this.createCard = false;
-      this.usrCardbar = true;
-    }
-  }
-  methods = {
-    changeList() {
-      if (this.data.list.length > 3) {
-        let dataThree = new Array();
-        for (var k = 0; k < 3; k++) {
-          var i = Math.ceil(Math.random() * (this.data.list.length - 1));
-          if (dataThree.indexOf(this.data.list[i]) === -1) {
-            dataThree.push(this.data.list[i]);
-          } else {
-            k = k - 1;
-            continue;
-          }
-        }
-        this.msg = dataThree;
-      } else {
-        this.msg = this.list;
+    this.cardid = options.id;
+    this.cardinfo = this.cardinfo =
+      this.$parent.globalData.usercard || wx.getStorageSync("user:card");
+    //console.log(this.cardinfo);
+    if (!this.cardinfo) {
+      let result = await this.$parent.globalData.get(
+        `${api.server}/auth/user/card/myowncards`
+      );
+      //console.log(result);
+      if (result.length > 0) {
+        this.createCard = false;
+        this.cardinfo = this.$parent.globalData.usercard = result;
+        this.my_avator = this.$parent.globalData.userInfo.headimg;
+        this.$apply();
+        //wx.setStorageSync("user:card",result.rows);
       }
     }
-  };
+
+    await this.loadCard();
+  }
+  async loadCard() {
+    wx.showNavigationBarLoading();
+    this.cardinfo = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/info?card_id=${this.cardid}`
+    );
+    //console.log(this.cardinfo)
+    let medias = this.cardinfo.medias;
+    try {
+      this.medias = JSON.parse(medias);
+    } catch (e) {
+      this.medias = [];
+    }
+    //console.log(this.cardinfo.medias)
+    //console.log(this.medias)
+    this.uid = this.cardinfo.User.id;
+    this.$apply();
+    wx.setNavigationBarTitle({ title: this.cardinfo.name });
+    wx.hideNavigationBarLoading();
+  }
+  methods = {};
+  go2cardlist() {
+    wx.navigateTo({ url: "/pages/portal/cardlist" });
+  }
+  go2dashboard() {
+    wx.navigateTo({ url: "/pages/card/mydashboard" });
+  }
+  go2mycard() {
+    wx.navigateTo({ url: "/pages/card/mycard" });
+  }
+  go2chatlist() {
+    wx.navigateTo({ url: "/pages/card/chatlist" });
+  }
+  go2uploadvideo() {
+    wx.navigateTo({ url: "/pages/card/uploadvideo" });
+  }
+  go2register() {
+    wx.navigateTo({ url: "/pages/card/register" });
+  }
 }
 </script>
 <style>
-.my-picbox::before {
+.my-addressBox text {
+  display: block;
+  color: #666;
+  font-size: 32rpx;
+  line-height: 1.4;
+}
+.my-nameBox {
+  padding-bottom: 10rpx;
+  width: 75%;
+}
+.my-nameBox text {
+  display: block;
+  margin-right: 30rpx;
+  color: #333;
+  font-size: 40rpx;
+  font-weight: bolder;
+}
+.my-nameBox text:nth-child(2) {
+  font-size: 36rpx;
+  font-weight: lighter;
+}
+.my-dateNum {
+  margin: 0 15rpx 0 30rpx;
+}
+.my-dateBox {
+  padding: 20rpx 10rpx;
+  font-size: 32rpx;
+}
+.my-dateNum text {
+  display: inline-block;
+  text-align: center;
+  margin-left: 15rpx;
+  color: #333;
+}
+.btn-share {
+  font-size: 30rpx;
+  color: #ff6434;
+  border: solid 2px #ff6434;
+  width: 150rpx;
+  padding: 0;
+  line-height: 2;
+  margin: -10rpx 0 0 20rpx;
+}
+.my-small-video image {
+  width: 229rpx;
+  height: 229rpx;
+  display: inline-block;
+}
+.my-small-video {
+  padding: 0;
+  border: 0;
+  width: 229rpx;
+  height: 229rpx;
+  overflow: hidden;
+}
+.my-sVideoBox {
+  padding: 5rpx 14px;
   border: 0;
 }
-.clearfloat:after {
-  clear: both;
-  content: "";
-  display: block;
-  height: 0;
-  visibility: hidden;
-}
-.my-listbox {
-  position: relative;
-}
-.my-icon1,
-.my-icon2 {
-  position: absolute;
-  top: 30rpx;
-}
-.my-icon1 image {
-  width: 29rpx;
-  height: 38rpx;
-  display: inline-block;
-  margin-right: 15rpx;
-}
-.my-list-title {
-  margin-left: 50rpx;
-  font-size: 34rpx;
-  margin-top: 5rpx;
-}
-.my-change-btn {
-  position: absolute;
-  right: 40rpx;
-  top: 35rpx;
-  font-size: 30rpx;
-  color: #e67841;
-}
-.my-list-picbox {
-  padding: 0 15px;
-}
-.my-picbox {
-  width: 230rpx;
-  height: 302rpx;
-  float: left;
-  position: relative;
-}
-.my-picbox image {
-  width: 230rpx;
-  height: 302rpx;
-}
-.my-card-info {
-  position: absolute;
-  left: 32rpx;
-  bottom: 17rpx;
-  color: #fff;
-}
-.my-card-info text {
-  display: block;
-  font-size: 28rpx;
-}
-.my-card-info text:nth-child(1) {
-  font-size: 36rpx;
-  border-bottom: solid 1px #858d83;
-  padding-bottom: 3rpx;
-  margin-bottom: 10rpx;
-}
-.my-mark {
-  width: 230rpx;
-  height: 302rpx;
-  background: rgba(0, 0, 0, 0.5);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.my-icon2 image {
-  width: 51rpx;
-  height: 38rpx;
-}
-.my-cardcase-box .my-list-title {
-  margin-left: 75rpx;
-}
-.my-cardboxes {
-  height: 165rpx;
-  width: 95%;
-  background: #ffaa2f;
-  border-radius: 10rpx;
-  margin: 0 auto;
-  color: #fff;
-  box-shadow: 0 -10px 20px #e58823 inset;
-  margin-top: -5rpx;
-}
-.my-cardboxes image {
-  width: 118rpx;
-  height: 118rpx;
-}
-.my-cardboxes text {
-  display: block;
-  margin-left: 30rpx;
-  font-size: 28rpx;
-}
-.my-cardboxes text:nth-child(1) {
-  font-size: 34rpx;
-}
-.my-status {
-  color: #fff;
-  font-size: 30rpx;
-  background: #fc2930;
-  padding: 5rpx 30rpx;
-  border-radius: 50rpx;
-  border: solid 2px #fffcf8;
-  margin-top: -70rpx;
-  margin-right: -10rpx;
-}
-.createCard-box {
-  background: #e67841;
-  height: 140rpx;
-  width: 95%;
-  margin: 0 auto;
-  color: #fff;
-  text-align: center;
-  line-height: 140rpx;
-  position: relative;
+.my-videoList {
+  background: #fafafa;
+  border-top: solid 1px #e0e0e0;
   margin-top: 10rpx;
 }
-.createCard-box text {
-  float: left;
-  display: block;
+.my-videoTitle {
+  color: #666;
+  font-size: 36rpx;
+  margin-bottom: 10rpx;
 }
-.createCard-box image {
-  width: 29rpx;
-  height: 29rpx;
-  display: block;
-  float: left;
-  margin: 55rpx 40rpx;
+.my-roundness-img {
+  width: 186rpx;
+  height: 186rpx;
 }
-.my-createCard {
-  margin-left: 160rpx;
+.my-roundness-img image {
+  border-radius: 50%;
 }
-.fixbottom {
+.my-cardinfoBox {
+  position: relative;
+}
+.ico-editor-btn {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  top: 60rpx;
+  right: 100rpx;
+}
+.ico-editor-btn image {
+  width: 22rpx;
+  height: 22rpx;
+}
+.ico-editor-btn text {
+  margin-left: 15rpx;
+  color: #ff6434;
+  font-size: 34rpx;
 }
 .weui-bottombar {
   width: 100%;
   height: 80rpx;
-  background: #e67841;
+  background: #fff;
   position: fixed;
   left: 0;
   bottom: 0;
   z-index: 9999;
+  border-top: solid 1px #e0e0e0;
 }
-.nav-btn {
+.ico_bt_btn {
   background: rgba(0, 0, 0, 0);
   color: #fff;
   line-height: 40rpx;
   font-size: 30rpx;
   padding: 0;
 }
-.nav-btn text {
+.ico_bt_btn text {
   display: block;
-  color: #fff;
+  color: #666;
 }
-.nav-icon1 {
+.ico_bt_card {
   position: absolute;
-  left: 30rpx;
+  left: 50rpx;
 }
-.nav-icon2 {
-  height: 158rpx;
+.ico_bt_add {
   position: absolute;
-  top: -44rpx;
-  left: 294rpx;
+  left: 337rpx;
 }
-.nav-icon3 {
+.ico_bt_my {
   position: absolute;
   right: 110rpx;
 }
-.nav-icon4 {
+.ico_bt_news {
   position: absolute;
-  left: 180rpx;
+  left: 210rpx;
 }
-.nav-icon5 {
+.ico_bt_sell {
   position: absolute;
-  left: 510rpx;
+  left: 505rpx;
 }
-.nav-icon1 image {
-  width: 52rpx;
-  height: 38rpx;
+.ico_bt_card image {
+  width: 36rpx;
+  height: 30rpx;
 }
-.nav-icon2 image {
-  width: 156rpx;
-  height: 158rpx;
+.iconBox-three .ico_bt_card {
+  top: 20rpx;
+  left: 50rpx;
 }
-.nav-icon3 image {
-  width: 37rpx;
-  height: 48rpx;
+.iconBox-three .ico_bt_card image {
+  width: 44rpx;
+  height: 47rpx;
 }
-.nav-icon4 image {
-  width: 45rpx;
-  height: 42rpx;
+.ico_bt_add image {
+  width: 98rpx;
+  height: 98rpx;
 }
-.nav-icon5 image {
-  width: 52rpx;
-  height: 52rpx;
+.ico_bt_my image {
+  width: 28rpx;
+  height: 32rpx;
 }
-button::after {
-  border: 0;
+.ico_bt_news image {
+  width: 32rpx;
+  height: 29rpx;
 }
-.weui-cells-btpd {
-  padding-bottom: 160rpx;
+.ico_bt_sell image {
+  width: 38rpx;
+  height: 36rpx;
 }
 .noline::before,
-.noline2::before {
+button::after {
   border: none;
 }
 </style>

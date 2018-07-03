@@ -1,88 +1,69 @@
 <template>
 <view class="page" >
   <!--视频播放  bindtouchstart="handletouchtart" bindtouchmove="handletouchmove"-->
-  <view class="weui-cell my-bgColor" wx:if="{{custombg}}">
+  <view class="videoBox" wx:if="{{custombg}}">
     <view class="my-videoBox1">
-      <video id="myVideo" src="{{medias[0].source}}" autoplay="true" loop="true" controls></video>
+      <video id="myVideo" class="myVideo" src="{{source}}" autoplay="true"  loop="true" controls></video>
     </view>
   </view>
-  <!--名片信息一-->
+  <!--名片信息-->
   <view class="my-cardBox1" wx:if="{{mycard1}}">
     <view class="weui-cell my-cardCon">
+      <view class="my-colorLump"></view>
       <view class="weui-cell_primary my-avaterBox">
         <text>{{cardinfo.name}}</text>
         <text>{{cardinfo.title}}</text>
       </view>
-      <button open-type="contact" session-from="{{uid}}" class="call-btn" >联系我</button>
+      <view class="weui-cell__ft my-btn_wx">
+        <button class='my-btn_news' open-type="contact" session-from="{{uid}}"></button>
+        <image src="../../images/ico_wx.png"></image>
+      </view>
+      <view class="my-btn_call" bindtap="callmeTap" >
+        <image  src="../../images/ico_call.png"></image>
+      </view>
+      <view class="my-border-r"></view>
       <view class="my-addressBox">
         <text>公司：{{cardinfo.corp}}</text>
         <text>地址：{{cardinfo.address}}</text>
         <text>手机：{{cardinfo.mobile}}</text>
       </view>
-      <view class="weui-cell_hd my-picBox">
-        <image src="{{cardinfo.User.headimg}}"/>
-      </view>
-      <view class="my-bottomBg">
-        <image src="../../images/bottom_bg1.jpg"/>
-      </view>
+      <button class="goShopBtn" bindtap="go2shop">我的商城</button>
     </view>
-  </view>
-  <!--名片信息二-->
-  <view class="weui-cell my-bgColor my-cardBox2" wx:if="{{mycard2}}">
-    <view class="weui-cell_hd">
-      <image src="{{cardinfo.User.headimg}}"/>
-    </view>
-    <view class="weui-cell_bd weuicell_primary">
-      <text>{{cardinfo.name}}</text>
-      <text>{{cardinfo.title}}</text>
-    </view>
-    <button open-type="contact" session-from="{{uid}}" class="call-btn" data-mobile="{{cardinfo.mobile}}">联系我</button>
   </view>
   <!--小视频列表-->
-  <view class="my-videoBox2 my-pd15">
-    <view class="weui-cells_title">视频</view>
-    <view class="small-videobox clearfloat">
-      <view>
-        <image src="../../images/video-sm1.jpg"></image>
+  <view class="my-videoList">
+    <view class="weui-cells__title my_title">视频</view>
+    <view class="myVideoBoxes clearfloat">
+    <view class="weui-grids my-sVideoBox" wx:for="{{videolist}}" wx:key="">
+      <view class="weui-grid my-small-video" id="{{index}}" bindtap="playVideo">
+        <image src="{{item.cover}}"></image>
       </view>
-      <view>
-        <image src="../../images/video-sm2.jpg"></image>
-      </view>
-      <view>
-        <image src="../../images/video-sm3.jpg"></image>
-      </view>
-      <view>
-        <image src="../../images/video-sm4.jpg"></image>
-      </view>
-      <view>
-        <image src="../../images/video-sm5.jpg"></image>
-      </view>
-      <view>
-        <image src="../../images/video-sm6.jpg"></image>
-      </view>
-    </view>
+    </view></view>
   </view>
-  <!--企业信息-->
-  <view class="my-infobox">
-    <view class="weui-cells_title">企业信息</view>
-    <image src="../../images/photo1.jpg"></image>
+  <!--企业信息文章-->
+  <view class="my-introBox">
+    <view class="weui-cells__title my_title">企业信息</view>
+    <text>空中网是中国领先的网络游戏研发商和运营商，致力于为中国及海外互联网用户提供高品质的大型在线游戏服务，同时为中国手机用户提供多元化的无线娱乐服务。 </text>
+    <text>公司于2004年在美国纳斯达克上市，目前公司业务覆盖互联网游戏、手机游戏以及无线增值三大领域。</text>
+    <text> 2017年4月14日晚间消息，空中网今日宣布，已完成私有化交易，公司将不再是一家上市公司，而成为Linkedsee Limited的全资子公司。</text>
   </view>
   <!--底部固定导航-->
-  <view class="weui-bottombar weui-cell noline2">
-    <view class="weui-cell__ft  nav-icon1">
-      <button class="nav-btn" open-type="share" data-name="pageShare" >
-      <image src="../../images/shareto.png"></image>
+  <view class="weui-cell weui-bottombar noline">
+    <view class="weui-cell__ft ico_bt_share">
+      <button class="ico_bt_btn" open-type="share" data-name="pageShare" >
+      <image src="../../images/ico_bt_share.png"></image>
       <text>分享</text>
       </button>
     </view>
-    <view class="weui-cell__ft  nav-icon2">
-      <button class="nav-btn" open-type="contact" session-from="{{uid}}">
-      <image src="../../images/iconnum.png"></image>
+    <view class="weui-cell__ft ico_bt_news2">
+      <button class="ico_bt_btn"  bindtap='go2chatlist'>
+      <image src="../../images/ico_bt_news2.png"></image>
+      <text>消息</text>
       </button>
     </view>
-    <view class="weui-cell__ft  nav-icon3">
-      <button class="nav-btn"  bindtap='go2mycard'>
-      <image src="../../images/iconuser.png"></image>
+    <view class="weui-cell__ft  ico_bt_my2">
+      <button class="ico_bt_btn"  bindtap='go2mycard'>
+      <image src="../../images/ico_bt_my2.png"></image>
       <text>我的</text>
       </button>
     </view>
@@ -95,56 +76,107 @@ import api from "../../config/api";
 export default class Index extends wepy.page {
   config = {
     //navigationBarTitleText: "袁小员的视频介绍",
-	enablePullDownRefresh : false, 
-    navigationBarBackgroundColor: "#e67841",
-    backgroundColor: "#e67841",
-    navigationBarTextStyle: "white"
+    enablePullDownRefresh: false
   };
 
   data = {
     cardinfo: null,
     uid: null,
-    cardid : null,
+    cardid: null,
     hasbackgroundmusic: false,
     custombg: true,
     mycard1: true,
-    medias : [],
-    mycard2: false
+    medias: [],
+    mycard2: false,
+    posterurl: "",
+    source: "",
+    videolist: []
   };
 
   async onLoad(options) {
     this.cardid = options.id;
-    
-	  await this.loadCard();
+    await this.createFavorite();
+    await this.loadCard();
   }
-  async loadCard(){
-	  	wx.showNavigationBarLoading()
-	  	this.cardinfo =  await this.$parent.globalData.get(`${api.server}/auth/user/card/info?card_id=${this.cardid}`);
-    	//console.log(this.cardinfo)
-      let medias = this.cardinfo.medias 
-      try{
-        this.medias = JSON.parse(medias)
-      }catch(e){
-        
-        this.medias = []
+  async loadCard() {
+    wx.showNavigationBarLoading();
+    this.cardinfo = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/info?card_id=${this.cardid}`
+    );
+    //console.log(this.cardinfo)
+    let medias = this.cardinfo.medias;
+    try {
+      this.medias = JSON.parse(medias);
+    } catch (e) {
+      this.medias = [];
+    }
+    for (var i = 0; i < this.medias.length; i++) {
+      if (this.medias[i].isDefault) {
+        this.source = this.medias[i].source;
+      } else {
+        this.videolist.push(this.medias[i]);
       }
-      //console.log(this.cardinfo.medias)
-      //console.log(this.medias)
-      this.uid = this.cardinfo.User.id
-		  this.$apply();
-	  	wx.setNavigationBarTitle({title:this.cardinfo.name})
-	  	wx.hideNavigationBarLoading()
+    }
+    //console.log(this.cardinfo.medias)
+    //console.log(this.medias)
+    this.uid = this.cardinfo.User.id;
+    this.$apply();
+    wx.setNavigationBarTitle({ title: this.cardinfo.name });
+    wx.hideNavigationBarLoading();
+  }
+  async createFavorite() {
+    let result = await this.$parent.globalData.post(
+      `${api.server}/api/favorite/create`,
+      {
+        target_id: "5b0e85ce185d7b34f985ad99",
+        target_type: "card",
+        description: "descriptio",
+        category: "classify",
+        cover_img:
+          "https://ws4.sinaimg.cn/large/006tNc79ly1fruhbv2j9ej30rs0rudvt.jpg",
+        title: "标题"
+      }
+    );
+    //console.log(this.cardid);
+
+    if (result.status == 1) {
+      wx.showToast({
+        title: result.message,
+        icon: "success",
+        duration: 2000
+      });
+      this.$apply();
+      return;
+    }
+    if (result.status == -1) {
+      wx.showToast({
+        title: result.message,
+        icon: "success",
+        duration: 2000
+      });
+      this.$apply();
+      return;
+    }
   }
   methods = {
     async playVideo(e) {
-      this.videoContext = wx.createVideoContext("myVideo" + e.currentTarget.id);
-      if (e.currentTarget.id == 1) {
-        this.vCoverBox1 = false;
+      this.onLoad();
+      this.videoContext = wx.createVideoContext("myVideo");
+      //if (e.currentTarget.id == 1) {
+      //  this.vCoverBox1 = false;
+      //}
+      //if (e.currentTarget.id == 2) {
+      //  this.vCoverBox2 = false;
+      //}
+      for (var i = 0; i < this.videolist.length; i++) {
+        if (e.currentTarget.id == i) {
+          this.source = this.videolist[i].source;
+        }
       }
-      if (e.currentTarget.id == 2) {
-        this.vCoverBox2 = false;
-      }
-      this.videoContext.play();
+      //this.custombg = false;
+      //this.box = true;
+      //this.videoContext.play();
+      this.videoContext.requestFullScreen({ direction: 90 });
     },
     handletouchmove: function(event) {
       var currentX = event.touches[0].pageX;
@@ -168,12 +200,18 @@ export default class Index extends wepy.page {
       this.data.lastX = currentX;
       this.data.lastY = currentY;
     },
-    playVideo() {
+    playVideo2() {
       this.videoContext.requestFullScreen({ direction: 90 });
     },
-	go2mycard(){
-		wx.navigateTo({url : "/pages/card/mycard"})
-	},
+    go2mycard() {
+      wx.navigateTo({ url: "/pages/card/home" });
+    },
+    go2chatlist() {
+      wx.navigateTo({ url: "/pages/card/chatlist" });
+    },
+    go2shop() {
+      wx.navigateTo({ url: "/pages/card/index1" });
+    },
     callmeTap() {
       wx.makePhoneCall({
         phoneNumber: this.cardinfo.mobile
@@ -183,57 +221,31 @@ export default class Index extends wepy.page {
 }
 </script>
 <style>
-.clearfloat:after {
-  clear: both;
-  content: "";
-  display: block;
-  height: 0;
-  visibility: hidden;
-}
-.my-pd15 {
-  padding: 15px;
-}
-.my-bgColor {
-  background: #e67841;
-}
-.my-videoBox1 #myVideo {
-  width: 692rpx;
+.my-videoBox1 .myVideo {
+  width: 100%;
   height: 568rpx;
 }
 .my-cardBox1 {
-  background: #e67841;
-  height: 343rpx;
+  color: #ff6434;
+  border-bottom: solid 1px #e0e0e0;
 }
 .my-cardCon {
-  background: #c76433;
-  height: 343rpx;
   position: relative;
   width: 95%;
   margin: 0 auto;
   box-sizing: border-box;
 }
-.my-cardCon image,
-.my-cardBox2 image {
-  width: 120rpx;
-  height: 120rpx;
-  display: block;
-}
-.my-picBox {
-  position: absolute;
-  right: 37rpx;
-  top: 24rpx;
-}
 .my-avaterBox text {
-  display: block;
-  color: #fff;
-  font-size: 32rpx;
-  width: 375rpx;
-  text-indent: 15rpx;
+  display: inline-block;
+  color: #ff6434;
+  font-size: 56rpx;
+  font-weight: bolder;
 }
 .my-avaterBox text:nth-child(2) {
-  font-size: 28rpx;
-  border-bottom: solid 1rpx #cd7e57;
+  font-size: 32rpx;
+  margin-left: 20rpx;
   padding-bottom: 10rpx;
+  color: #ffa285;
 }
 .my-avaterBox {
   position: absolute;
@@ -248,125 +260,168 @@ export default class Index extends wepy.page {
   padding: 0;
   font-size: 30rpx;
   line-height: 56rpx;
-  color: #e67841;
-  border: solid 2px #b75c2f;
   z-index: 4;
 }
 .my-addressBox {
-  position: absolute;
-  bottom: 30rpx;
-  color: #fff;
-  font-size: 28rpx;
-  z-index: 2;
+  color: #666;
+  margin-top: 125rpx;
+  margin-left: 8rpx;
 }
 .my-addressBox text {
   display: block;
-}
-.my-bottomBg {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-.my-bottomBg image {
-  width: 100%;
-  display: block;
-  z-index: 1;
-}
-.small-videobox {
-  padding-top: 15rpx;
-}
-.small-videobox image {
-  width: 227rpx;
-  height: 227rpx;
-  float: left;
-}
-.my-infobox {
-  padding: 0 15px 65px;
-}
-.my-infobox image {
-  width: 100%;
-  height: 300rpx;
-  display: block;
-  margin-top: 15rpx;
-}
-.my-cardBox2 text {
-  color: #fff;
-  display: block;
   font-size: 32rpx;
-  margin-left: 40rpx;
 }
-.my-cardBox2 text:nth-child(2) {
-  font-size: 28rpx;
+.myVideoBoxes {
+  padding: 0 32rpx;
 }
-.my-cardBox2 {
-  position: relative;
-}
-.my-cardBox2 .call-btn {
-  position: absolute;
-  top: 60rpx;
-  right: 30rpx;
-}
-
 .noline::before,
-.noline2::before {
+.my-smallVideo::before,
+.myVideoBoxes::before {
   border: none;
 }
-.fixbottom {
+.my-btn_call {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  top: 60rpx;
+  right: 142rpx;
+}
+.my-btn_call image,
+.my-btn_wx image {
+  width: 72rpx;
+  height: 72rpx;
+}
+.my-btn_wx {
+  position: absolute;
+  top: 60rpx;
+  right: 10rpx;
+}
+.my-border-r {
+  border-right: solid 1px #ff6434;
+  position: absolute;
+  top: 80rpx;
+  right: 108rpx;
+  width: 1px;
+  height: 40rpx;
+}
+.my-colorLump {
+  background: #ffa285;
+  width: 20rpx;
+  height: 52rpx;
+  position: absolute;
+  top: 20%;
+  left: -2.5%;
+}
+.my-btn_news {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 72rpx;
+  height: 72rpx;
+  padding: 0;
+  z-index: 4;
+  opacity: 0;
+}
+.my-small-video image {
+  width: 230rpx;
+  height: 230rpx;
+  display: inline-block;
+}
+
+.my-small-video {
+  padding: 0;
+  border: 0;
+  width: 230rpx;
+  height: 230rpx;
+  overflow: hidden;
+}
+
+.my-sVideoBox {
+  border: 0;
+  width: 229rpx;
+  height: 229rpx;
+  float: left;
+}
+.my_title {
+  font-size: 36rpx;
+  color: #666;
+}
+.my-videoList {
+  padding-bottom: 40rpx;
+  border-bottom: solid 1px #e0e0e0;
+}
+.my-introBox {
+  padding-bottom: 180rpx;
+}
+.my-introBox text {
+  display: block;
+  padding: 5px 15px 0;
+  color: #333;
+  font-size: 32rpx;
+  text-indent: 2em;
 }
 .weui-bottombar {
   width: 100%;
   height: 80rpx;
-  background: #e67841;
+  background: #fff;
   position: fixed;
   left: 0;
   bottom: 0;
   z-index: 9999;
+  border-top: solid 1px #e0e0e0;
 }
-.nav-btn {
+
+.ico_bt_btn {
   background: rgba(0, 0, 0, 0);
   color: #fff;
   line-height: 40rpx;
   font-size: 30rpx;
   padding: 0;
 }
-.nav-btn text {
+
+.ico_bt_btn text {
   display: block;
-  color: #fff;
+  color: #666;
 }
-.nav-icon1 {
+
+.ico_bt_share {
   position: absolute;
-  left: 50rpx;
+  left: 105rpx;
 }
-.nav-icon2 {
-  height: 158rpx;
+.ico_bt_share image {
+  width: 41rpx;
+  height: 40rpx;
+}
+.ico_bt_news2 {
   position: absolute;
-  top: -44rpx;
-  left: 284rpx;
+  left: 351rpx;
 }
-.nav-icon3 {
+.ico_bt_news2 image {
+  width: 48rpx;
+  height: 45rpx;
+}
+.ico_bt_my2 {
   position: absolute;
-  right: 110rpx;
+  left: 604rpx;
 }
-.nav-icon1 image {
-  width: 44rpx;
+.ico_bt_my2 image {
+  width: 42rpx;
   height: 47rpx;
-}
-.nav-icon2 image {
-  width: 156rpx;
-  height: 158rpx;
-}
-.nav-icon3 image {
-  width: 37rpx;
-  height: 48rpx;
 }
 button::after {
   border: 0;
 }
-.weui-cells-btpd {
-  padding-bottom: 160rpx;
+.clearfloat:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+.goShopBtn {
+  position: absolute;
+  bottom: 35rpx;
+  right: 15rpx;
+  color: #fff;
+  background: #ff6434;
+  font-size: 32rpx;
 }
 </style>
