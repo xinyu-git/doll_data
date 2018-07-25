@@ -121,16 +121,23 @@ export default class Index extends wepy.page {
     resultgoods: {},
     user_id: null,
     goodsId: null,
-    cartsource: 0
+    type: 1,
+    productId: null,
+    retail_price: null,
+    pic_url: null
   };
   async onLoad(options) {
     this.number = options.number;
-    this.goodsid = options.goodsid;
-    if (this.number && this.goodsid) {
+    this.goodsId = options.goodsid;
+    this.productId = options.productId;
+    this.pic_url = options.pic_url;
+    this.retail_price = options.retail_price;
+    if (this.number && this.goodsId) {
       this.getGoodsInfo();
-      this.cartsource = 1;
+      this.type = 2;
+    } else {
+      this.getCheckoutInfo();
     }
-    this.getCheckoutInfo();
     try {
       let couponId = wx.getStorageSync("couponId");
       if (couponId) {
@@ -146,18 +153,21 @@ export default class Index extends wepy.page {
     let resultorder = await this.$parent.globalData.get(
       `${api.server}/api/shop/cart/checkout?addressId=${
         this.addressId
-      }&couponId=${this.couponId}`
+      }&couponId=${this.couponId}&shopId=${this.$parent.globalData.shopId}`
     );
     //console.log(resultorder);
     if (resultorder.errno === 0) {
-      (this.checkedGoodsList = resultorder.data.checkedGoodsList),
-        (this.actualPrice = resultorder.data.actualPrice),
-        (this.checkedCoupon = resultorder.data.checkedCoupon),
-        (this.couponList = resultorder.data.couponList),
-        (this.couponPrice = resultorder.data.couponPrice),
-        (this.freightPrice = resultorder.data.freightPrice),
-        (this.goodsTotalPrice = resultorder.data.goodsTotalPrice),
-        (this.orderTotalPrice = resultorder.data.orderTotalPrice);
+      this.checkedGoodsList = resultorder.data.checkedGoodsList;
+      this.actualPrice = resultorder.data.actualPrice;
+      this.checkedCoupon = resultorder.data.checkedCoupon;
+      this.couponList = resultorder.data.couponList;
+      this.couponPrice = resultorder.data.couponPrice;
+      this.freightPrice = resultorder.data.freightPrice;
+      this.goodsTotalPrice = resultorder.data.goodsTotalPrice;
+      this.orderTotalPrice = resultorder.data.orderTotalPrice;
+      for (let i in resultorder.data.checkedGoodsList) {
+        this.productId = resultorder.data.checkedGoodsList[i].product_id;
+      }
     }
     this.$apply();
   }
@@ -165,15 +175,15 @@ export default class Index extends wepy.page {
     let listArry = {};
     //获取商品的详细
     let resultgoods = await this.$parent.globalData.get(
-      `${api.server}/api/shop/goods/detail?id=${this.goodsid}`
+      `${api.server}/api/shop/goods/detail?id=${this.goodsId}`
     );
     this.goodsTotalPrice = resultgoods.data.info.retail_price * this.number;
     this.freightPrice = resultgoods.data.info.extra_price;
-    listArry.list_pic_url = resultgoods.data.info.primary_pic_url;
+    listArry.list_pic_url = this.pic_url;
     listArry.id = resultgoods.data.info.id;
     listArry.goods_name = resultgoods.data.info.name;
-    listArry.retail_price = resultgoods.data.info.retail_price;
-    this.actualPrice = resultgoods.data.info.retail_price * this.number;
+    listArry.retail_price = this.retail_price;
+    this.actualPrice = this.retail_price * this.number;
     listArry.number = this.number;
     this.checkedGoodsList[0] = listArry;
     this.$apply();
@@ -241,19 +251,23 @@ export default class Index extends wepy.page {
       }
 
       let params = {};
-      if (cartsource === 1) {
+      console.log(params);
+      if (this.type === 1) {
         params = {
           addressId: this.addressId,
           couponId: this.couponId,
-          cartsource: this.cartsource,
-          goodsId: this.goodsId,
-          number: this.number
+          type: this.type,
+          shopId: this.$parent.globalData.shopId
         };
       } else {
         params = {
           addressId: this.addressId,
           couponId: this.couponId,
-          cartsource: this.cartsource
+          goodsId: this.goodsId,
+          number: this.number,
+          type: this.type,
+          shopId: this.$parent.globalData.shopId,
+          productId: this.productId
         };
       }
 
@@ -264,7 +278,7 @@ export default class Index extends wepy.page {
       //console.log(resultorder)
       if (resultorder.errno === 0) {
         const orderId = resultorder.data.orderInfo.id;
-        let resultpay = this.$parent.globalData.get(
+        /* let resultpay = this.$parent.globalData.get(
           `${api.server}/api/shop/pay/prepay?orderId=${orderId}`
         );
         //console.log(resultpay);
@@ -302,7 +316,7 @@ export default class Index extends wepy.page {
           title: "下单失败",
           icon: "none",
           duration: 2000
-        });
+        });*/
       }
     }
   };

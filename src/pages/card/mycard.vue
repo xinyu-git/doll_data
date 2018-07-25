@@ -115,8 +115,6 @@ export default class Mycard extends wepy.page {
 
   async onLoad(options) {
     this.cardid = options.id;
-    this.cardinfo = this.cardinfo =
-      this.$parent.globalData.usercard || wx.getStorageSync("user:card");
     //console.log(this.cardinfo);
     if (!this.cardinfo) {
       let result = await this.$parent.globalData.get(
@@ -131,27 +129,6 @@ export default class Mycard extends wepy.page {
         //wx.setStorageSync("user:card",result.rows);
       }
     }
-
-    await this.loadCard();
-  }
-  async loadCard() {
-    wx.showNavigationBarLoading();
-    this.cardinfo = await this.$parent.globalData.get(
-      `${api.server}/auth/user/card/info?card_id=${this.cardid}`
-    );
-    //console.log(this.cardinfo)
-    let medias = this.cardinfo.medias;
-    try {
-      this.medias = JSON.parse(medias);
-    } catch (e) {
-      this.medias = [];
-    }
-    //console.log(this.cardinfo.medias)
-    //console.log(this.medias)
-    this.uid = this.cardinfo.User.id;
-    this.$apply();
-    wx.setNavigationBarTitle({ title: this.cardinfo.name });
-    wx.hideNavigationBarLoading();
   }
   methods = {};
   go2cardlist() {
@@ -231,7 +208,7 @@ export default class Mycard extends wepy.page {
   overflow: hidden;
 }
 .my-sVideoBox {
-  padding: 5rpx 14px;
+  padding: 5rpx 33rpx;
   border: 0;
 }
 .my-videoList {

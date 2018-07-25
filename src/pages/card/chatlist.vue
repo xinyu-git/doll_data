@@ -70,7 +70,7 @@ export default class Chat extends wepy.page {
     this.key = options.key || options.scene;
   }
   onchatuserchange(evt) {
-    console.log("user changes");
+    //console.log("user changes");
     this.userlist = this.$parent.globalData.chatusers;
     //console.log(this.userlist)
     this.$apply();
@@ -79,8 +79,8 @@ export default class Chat extends wepy.page {
   methods = {
     chat2person(e) {
       let id = e.currentTarget.dataset.url;
-      console.log("go 2 chat");
-      console.log(id);
+      //console.log("go 2 chat");
+      //console.log(id);
       wx.navigateTo({ url: `../card/chat?id=${id}` });
     }
   };

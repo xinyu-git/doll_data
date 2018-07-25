@@ -1,10 +1,5 @@
 <template>
 <view class="page">
-  <view class="service-policy">
-    <view class="item">30天无忧退货</view>
-    <view class="item">48小时快速退款</view>
-    <view class="item">满88元免邮费</view>
-  </view>
   <view class="no-cart" wx:if="{{cartGoods.length <= 0}}">
     <view class="c">
       <image src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
@@ -54,7 +49,8 @@ import wepy from "wepy";
 import api from "../../config/api";
 export default class Index extends wepy.page {
   config = {
-    enablePullDownRefresh: false
+    enablePullDownRefresh: false,
+    navigationBarTitleText: "购物车"
   };
   data = {
     cartGoods: [],
@@ -77,7 +73,9 @@ export default class Index extends wepy.page {
   async getCartList() {
     //获取购物车的详细
     let resultcart = await this.$parent.globalData.get(
-      `${api.server}/api/shop/cart/index`
+      `${api.server}/api/shop/cart/index?shopId=${
+        this.$parent.globalData.shopId
+      }`
     );
     if (resultcart.data.cartList.length > 0) {
       this.cartGoods = this.$parent.globalData.cartGoods =
@@ -159,13 +157,13 @@ export default class Index extends wepy.page {
         let productIds = this.cartGoods.map(function(v) {
           return v.product_id;
         });
-        //console.log(productIds);
-        //console.log(this.isCheckedAll());
+
         let resultchecked = await this.$parent.globalData.post(
           `${api.server}/api/shop/cart/checked`,
           {
             productIds: productIds.join(","),
-            isChecked: this.isCheckedAll() ? 0 : 1
+            isChecked: this.isCheckedAll() ? 0 : 1,
+            shopId: this.$parent.globalData.shopId
           }
         );
         //.log(resultchecked);
@@ -189,7 +187,7 @@ export default class Index extends wepy.page {
       }
     },
     go2checkoutOrder() {
-      wx.navigateTo({ url: "/pages/card/checkout" });
+      wx.navigateTo({ url: "/pages/shop/checkout" });
     },
     editCart() {
       if (this.isEditCart) {
@@ -212,13 +210,17 @@ export default class Index extends wepy.page {
     async checkedItem(event) {
       let itemIndex = event.target.dataset.itemIndex;
       if (!this.isEditCart) {
+        console.log(this.cartGoods[itemIndex].product_id);
+        console.log(this.cartGoods[itemIndex].checked);
         let resultcheckeditem = await this.$parent.globalData.post(
           `${api.server}/api/shop/cart/checked`,
           {
             productIds: this.cartGoods[itemIndex].product_id,
-            isChecked: this.cartGoods[itemIndex].checked ? 0 : 1
+            isChecked: this.cartGoods[itemIndex].checked ? 0 : 1,
+            shopId: this.$parent.globalData.shopId
           }
         );
+
         if (resultcheckeditem.errno === 0) {
           (this.cartGoods = resultcheckeditem.data.cartList),
             (this.cartTotal = resultcheckeditem.data.cartTotal);
@@ -295,8 +297,7 @@ export default class Index extends wepy.page {
     go2goods(e) {
       if (!this.isEditCart) {
         let id = e.currentTarget.id;
-        //console.log(id);
-        wx.navigateTo({ url: "/pages/card/goods?id=" + id });
+        wx.navigateTo({ url: "/pages/shop/goods?id=" + id });
       }
     }
   };
@@ -373,7 +374,9 @@ export default class Index extends wepy.page {
   width: 100%;
   margin-bottom: 18rpx;
 }
-
+.cart-view .goods {
+  margin-top: 25rpx;
+}
 .cart-view .item {
   height: 164rpx;
   width: 100%;
@@ -445,11 +448,12 @@ export default class Index extends wepy.page {
 
 .cart-view .item .attr {
   margin-bottom: 17rpx;
-  height: 24rpx;
-  line-height: 24rpx;
-  font-size: 22rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  font-size: 29rpx;
   color: #666;
   overflow: hidden;
+  margin-top: 8rpx;
 }
 
 .cart-view .item .b {

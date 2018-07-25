@@ -1,10 +1,16 @@
 <template>
 <view class="page">
-   <view class="orders">
+   <view class="no-cart" wx:if="{{orderList.length <= 0}}">
+    <view class="c">
+      <image src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png" />
+      <text>去添加点什么吧</text>
+    </view>
+  </view>
+   <view class="orders" wx:if="{{orderList.length > 0}}">
         <view bindtap="go2orderDetail" class="order" wx:for="{{orderList}}" wx:key="{{item.id}}" id="{{item.id}}">
-            <view class="h">
-                <view class="l">订单编号：{{item.order_sn}}</view>
-                <view class="r">{{item.order_status_text}}</view>
+            <view class="orders_title">
+                <view class="left">订单编号：{{item.order_sn}}</view>
+                <view class="right">{{item.order_status_text}}</view>
             </view>
             <view class="goods" wx:for="{{item.goodsList}}" wx:key="{{gitem.id}}" wx:for-item="gitem">
                 <view class="img">
@@ -16,9 +22,9 @@
                 </view>
                 <view class="status"></view>
             </view>
-            <view class="b">
-                <view class="l">实付：￥{{item.actual_price}}</view>
-                <view class="r">
+            <view class="pay-fee">
+                <view class="left">实付：￥{{item.actual_price}}</view>
+                <view class="right">
                     <button class="btn" data-order-index="{{index}}" catchtap="payOrder" wx:if="{{item.handleOption.pay}}">去付款</button>
                 </view>
             </view>
@@ -43,7 +49,9 @@ export default class Index extends wepy.page {
   //获取订单列表信息
   async getOrderList() {
     let resultorder = await this.$parent.globalData.post(
-      `${api.server}/api/shop/order/list`
+      `${api.server}/api/shop/order/list?shopId=${
+        this.$parent.globalData.shopId
+      }`
     );
     console.log(resultorder);
     if (resultorder.errno === 0) {
@@ -57,7 +65,7 @@ export default class Index extends wepy.page {
     go2orderDetail(e) {
       let id = e.currentTarget.id;
       //console.log(id);
-      wx.navigateTo({ url: "/pages/card/orderdetail?id=" + id });
+      wx.navigateTo({ url: "/pages/shop/orderdetail?id=" + id });
     }
   };
 }
@@ -74,7 +82,7 @@ export default class Index extends wepy.page {
   background: #fff;
 }
 
-.order .h {
+.order .orders_title {
   height: 83.3rpx;
   line-height: 83.3rpx;
   margin-left: 31.25rpx;
@@ -84,11 +92,11 @@ export default class Index extends wepy.page {
   color: #333;
 }
 
-.order .h .l {
+.order .orders_title .left {
   float: left;
 }
 
-.order .h .r {
+.order .orders_title .right {
   float: right;
   color: #b4282d;
   font-size: 24rpx;
@@ -141,7 +149,7 @@ export default class Index extends wepy.page {
   font-size: 25rpx;
 }
 
-.order .b {
+.order .pay-fee {
   height: 103rpx;
   line-height: 103rpx;
   margin-left: 31.25rpx;
@@ -151,15 +159,15 @@ export default class Index extends wepy.page {
   color: #333;
 }
 
-.order .b .l {
+.order .pay-fee .left {
   float: left;
 }
 
-.order .b .r {
+.order .pay-fee .right {
   float: right;
 }
 
-.order .b .btn {
+.order .pay-fee .btn {
   margin-top: 19rpx;
   height: 64.5rpx;
   line-height: 64.5rpx;
@@ -169,5 +177,35 @@ export default class Index extends wepy.page {
   font-size: 28rpx;
   color: #fff;
   background: #b4282d;
+}
+.no-cart {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.no-cart .c {
+  width: 100%;
+  height: auto;
+  margin-top: 200rpx;
+}
+
+.no-cart .c image {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  width: 258rpx;
+  height: 258rpx;
+}
+
+.no-cart .c text {
+  margin: 0 auto;
+  display: block;
+  width: 258rpx;
+  height: 29rpx;
+  line-height: 29rpx;
+  text-align: center;
+  font-size: 29rpx;
+  color: #999;
 }
 </style>

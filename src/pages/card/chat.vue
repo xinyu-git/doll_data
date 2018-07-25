@@ -85,7 +85,7 @@ export default class Chat extends wepy.page {
     this.messages = this.$parent.globalData.chatmsg.filter(item => {
       return item.from == this.uid || item.to == this.uid;
     });
-    console.log(this.messages);
+    //console.log(this.messages);
     this.$apply();
   }
   methods = {
@@ -123,7 +123,7 @@ export default class Chat extends wepy.page {
         sourceType: ["album", "camera"], // album 从相册选图，camera 使用相机，默认二者都有
         success: function(res) {
           // success
-          console.log(res);
+          //console.log(res);
           _this.setData({
             src: res.tempFilePaths
           });

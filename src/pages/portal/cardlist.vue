@@ -194,7 +194,7 @@ export default class Mycard extends wepy.page {
     wx.navigateTo({ url: "/pages/card/uploadvideo" });
   }
   go2myshop() {
-    wx.navigateTo({ url: "/pages/card/home" });
+    wx.navigateTo({ url: "/pages/shop/my" });
   }
   go2chatlist() {
     wx.navigateTo({ url: "/pages/card/chatlist" });

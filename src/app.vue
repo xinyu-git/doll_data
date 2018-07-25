@@ -13,16 +13,19 @@ export default class extends wepy.app {
   config = {
     pages: [
       "pages/portal/cardlist",
-      "pages/card/index1",
-      "pages/card/home",
-      "pages/card/order",
-      "pages/card/orderdetail",
+      "pages/article/articlelist",
+      "pages/article/article",
+      "pages/shop/index1",
+      "pages/shop/goods",
+      "pages/shop/catalog",
+      "pages/shop/category",
+      "pages/shop/my",
+      "pages/shop/orderlist",
+      "pages/shop/orderdetail",
+      "pages/shop/payresult",
+      "pages/shop/cart",
+      "pages/shop/checkout",
       "pages/portal/index2",
-      "pages/card/payresult",
-      "pages/card/cart",
-      "pages/card/checkout",
-      "pages/card/goods",
-      "pages/card/catalog",
       "pages/card/mycard",
       "pages/card/chat",
       "pages/card/register",
@@ -33,6 +36,7 @@ export default class extends wepy.app {
       "pages/auth/signup",
       "pages/auth/login"
     ],
+
     window: {
       backgroundTextStyle: "drak",
       navigationBarBackgroundColor: "#fff",
@@ -358,7 +362,9 @@ export default class extends wepy.app {
     socket1: null,
     loginInfo: {},
     chatmsg: [],
-    EventBus: EventBus
+    EventBus: EventBus,
+    shopId: null,
+    cardid: null
   };
 }
 </script>

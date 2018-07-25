@@ -62,7 +62,6 @@ export default class Register extends wepy.page {
     mobile: "",
     fromcode: "",
     checkcode: "",
-
     title: "",
     company: "",
     key: ""

@@ -128,7 +128,7 @@ export default class Index extends wepy.page {
     let result = await this.$parent.globalData.post(
       `${api.server}/api/favorite/create`,
       {
-        target_id: "5b0e85ce185d7b34f985ad99",
+        target_id: "cardid",
         target_type: "card",
         description: "descriptio",
         category: "classify",
@@ -151,7 +151,7 @@ export default class Index extends wepy.page {
     if (result.status == -1) {
       wx.showToast({
         title: result.message,
-        icon: "success",
+        image: "/static/images/icon_error.png",
         duration: 2000
       });
       this.$apply();
@@ -160,7 +160,6 @@ export default class Index extends wepy.page {
   }
   methods = {
     async playVideo(e) {
-      this.onLoad();
       this.videoContext = wx.createVideoContext("myVideo");
       //if (e.currentTarget.id == 1) {
       //  this.vCoverBox1 = false;
@@ -168,17 +167,19 @@ export default class Index extends wepy.page {
       //if (e.currentTarget.id == 2) {
       //  this.vCoverBox2 = false;
       //}
+      console.log(e.currentTarget.id);
       for (var i = 0; i < this.videolist.length; i++) {
         if (e.currentTarget.id == i) {
           this.source = this.videolist[i].source;
         }
       }
+
       //this.custombg = false;
       //this.box = true;
       //this.videoContext.play();
       this.videoContext.requestFullScreen({ direction: 90 });
     },
-    handletouchmove: function(event) {
+    /*handletouchmove: function(event) {
       var currentX = event.touches[0].pageX;
       var currentY = event.touches[0].pageY;
       var tx = currentX - this.data.lastX;
@@ -199,18 +200,18 @@ export default class Index extends wepy.page {
       //将当前坐标进行保存以进行下一次计算
       this.data.lastX = currentX;
       this.data.lastY = currentY;
-    },
+    },*/
     playVideo2() {
       this.videoContext.requestFullScreen({ direction: 90 });
     },
     go2mycard() {
-      wx.navigateTo({ url: "/pages/card/home" });
+      wx.navigateTo({ url: "/pages/shop/my" });
     },
     go2chatlist() {
       wx.navigateTo({ url: "/pages/card/chatlist" });
     },
     go2shop() {
-      wx.navigateTo({ url: "/pages/card/index1" });
+      wx.navigateTo({ url: "/pages/shop/index1?id=" + this.cardid });
     },
     callmeTap() {
       wx.makePhoneCall({

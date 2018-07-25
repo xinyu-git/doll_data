@@ -21,6 +21,12 @@
         <text class="txt">我的名片</text>
       </view>
     </view>
+    <view class="item no-border" bindtap="go2myarticle">
+      <view  class="a">
+        <text class="icon kefu"></text>
+        <text class="txt">我的文章</text>
+      </view>
+    </view>
     <view class="item no-border">
       <view class="a">
         <text class="icon coupon"></text>
@@ -39,12 +45,7 @@
         <text class="txt">我的足迹</text>
       </view>
     </view>
-    <view class="item no-border">
-      <navigator url="url" class="a">
-        <text class="icon kefu"></text>
-        <text class="txt">会员福利</text>
-      </navigator>
-    </view>
+    
     <view class="item">
      <view class="a">
         <text class="icon address"></text>
@@ -101,7 +102,10 @@ export default class Index extends wepy.page {
       wx.navigateTo({ url: "/pages/card/mycard" });
     },
     go2order() {
-      wx.navigateTo({ url: "/pages/card/order" });
+      wx.navigateTo({ url: "/pages/shop/orderlist" });
+    },
+    go2myarticle() {
+      wx.navigateTo({ url: "/pages/article/articlelist" });
     }
   };
 }

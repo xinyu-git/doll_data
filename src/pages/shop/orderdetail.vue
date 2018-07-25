@@ -1,29 +1,29 @@
 <template>
 <view class="page">
     <view class="order-info">
-        <view class="item-a">下单时间：{{orderInfo.add_time}}</view>
-        <view class="item-b">订单编号：{{orderInfo.order_sn}}</view>
-        <view class="item-c">
-            <view class="l">实付：<text class="cost">￥{{orderInfo.actual_price}}</text></view>
-            <view class="r">
-                <view class="btn" bindtap="cancelOrder">取消订单</view>
+        <view class="item-time">下单时间：{{orderInfo.add_time}}</view>
+        <view class="item-number">订单编号：{{orderInfo.order_sn}}</view>
+        <view class="item-price" wx:if="{{orderStatus}}">
+            <view class="left">实付：<text class="cost">￥{{orderInfo.actual_price}}</text></view>
+            <view class="right">
+               <!-- <view class="btn" bindtap="cancelOrder">取消订单</view>-->
                 <view class="btn active" bindtap="payOrder">去付款</view>
             </view>
         </view>
     </view>
 
     <view class="order-goods">
-        <view class="h">
+        <view class="goods_title">
             <view class="label">商品信息</view>
             <view class="status">{{orderInfo.order_status_text}}</view>
         </view>
-        <view class="goods">
+        <view class="goodsBox">
             <view class="item" wx:for="{{orderGoods}}" wx:key="{{item.id}}">
                 <view class="img">
                     <image src="{{item.list_pic_url}}"></image>
                 </view>
                 <view class="info">
-                    <view class="t">
+                    <view class="info_title">
                         <text class="name">{{item.goods_name}}</text>
                         <text class="number">x{{item.number}}</text>
                     </view>
@@ -36,18 +36,18 @@
 
     <view class="order-bottom">
         <view class="address">
-            <view class="t">
+            <view class="address_title">
                 <text class="name">{{orderInfo.consignee}}</text>
                 <text class="mobile">{{orderInfo.mobile}}</text>
             </view>
-            <view class="b">{{orderInfo.full_region + orderInfo.address}}</view>
+            <view class="address_text">{{orderInfo.full_region + orderInfo.address}}</view>
         </view>
         <view class="total">
-            <view class="t">
+            <view class="total_title">
                 <text class="label">商品合计：</text>
                 <text class="txt">￥{{orderInfo.goods_price}}</text>
             </view>
-            <view class="t">
+            <view class="total_title">
                 <text class="label">运费：</text>
                 <text class="txt">￥{{orderInfo.freight_price}}</text>
             </view>
@@ -71,7 +71,8 @@ export default class Index extends wepy.page {
     orderId: 0,
     orderInfo: {},
     orderGoods: [],
-    handleOption: {}
+    handleOption: {},
+    orderStatus: false
   };
   async onLoad(options) {
     this.orderId = options.id;
@@ -91,6 +92,9 @@ export default class Index extends wepy.page {
         resultorderdetail.data.orderGoods;
       this.handleOption = this.$parent.globalData.handleOption =
         resultorderdetail.data.handleOption;
+      if (resultorderdetail.data.orderInfo.order_status === 0) {
+        this.orderStatus = true;
+      }
     }
     this.$apply();
   }
@@ -115,7 +119,18 @@ export default class Index extends wepy.page {
       });
     }
   }
-  methods = {};
+  methods = {
+    cancelOrder() {
+      let resultOrderDel = this.$parent.globalData.post(
+        `${api.server}/api/shop/order/cancel?orderId=${this.orderId}`
+      );
+      if (resultOrderDel.errno === 0) {
+        this.order_status = false;
+        this.orderInfo = resultorderdetail.data.orderInfo;
+      }
+      this.$apply();
+    }
+  };
 }
 </script>
 <style>
@@ -126,7 +141,7 @@ export default class Index extends wepy.page {
   overflow: hidden;
 }
 
-.item-a {
+.item-time {
   padding-left: 31.25rpx;
   height: 42.5rpx;
   padding-bottom: 12.5rpx;
@@ -135,7 +150,7 @@ export default class Index extends wepy.page {
   color: #666;
 }
 
-.item-b {
+.item-number {
   padding-left: 31.25rpx;
   height: 29rpx;
   line-height: 29rpx;
@@ -145,18 +160,18 @@ export default class Index extends wepy.page {
   color: #666;
 }
 
-.item-c {
+.item-price {
   margin-left: 31.25rpx;
   border-top: 1px solid #f4f4f4;
   height: 103rpx;
   line-height: 103rpx;
 }
 
-.item-c .l {
+.item-price .left {
   float: left;
 }
 
-.item-c .r {
+.item-price .right {
   height: 103rpx;
   float: right;
   display: flex;
@@ -164,15 +179,15 @@ export default class Index extends wepy.page {
   padding-right: 16rpx;
 }
 
-.item-c .r .btn {
+.item-price .right .btn {
   float: right;
 }
 
-.item-c .cost {
+.item-price .cost {
   color: #b4282d;
 }
 
-.item-c .btn {
+.item-price .btn {
   line-height: 66rpx;
   border-radius: 5rpx;
   text-align: center;
@@ -181,7 +196,7 @@ export default class Index extends wepy.page {
   height: 66rpx;
 }
 
-.item-c .btn.active {
+.item-price .btn.active {
   background: #b4282d;
   color: #fff;
 }
@@ -191,7 +206,7 @@ export default class Index extends wepy.page {
   background: #fff;
 }
 
-.order-goods .h {
+.order-goods .goods_title {
   height: 93.75rpx;
   line-height: 93.75rpx;
   margin-left: 31.25rpx;
@@ -199,13 +214,13 @@ export default class Index extends wepy.page {
   padding-right: 31.25rpx;
 }
 
-.order-goods .h .label {
+.order-goods .goods_title .label {
   float: left;
   font-size: 30rpx;
   color: #333;
 }
 
-.order-goods .h .status {
+.order-goods .goods_title .status {
   float: right;
   font-size: 30rpx;
   color: #b4282d;
@@ -241,14 +256,14 @@ export default class Index extends wepy.page {
   margin-left: 20rpx;
 }
 
-.order-goods .item .t {
+.order-goods .item .info_title {
   margin-top: 8rpx;
   height: 33rpx;
   line-height: 33rpx;
   margin-bottom: 10.5rpx;
 }
 
-.order-goods .item .t .name {
+.order-goods .item .info_title .name {
   display: block;
   float: left;
   height: 33rpx;
@@ -257,7 +272,7 @@ export default class Index extends wepy.page {
   font-size: 30rpx;
 }
 
-.order-goods .item .t .number {
+.order-goods .item .info_title .number {
   display: block;
   float: right;
   height: 33rpx;
@@ -272,7 +287,7 @@ export default class Index extends wepy.page {
   line-height: 29rpx;
   color: #666;
   margin-bottom: 25rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
 .order-goods .item .price {
@@ -296,10 +311,10 @@ export default class Index extends wepy.page {
   border-bottom: 1px solid #f4f4f4;
 }
 
-.order-bottom .address .t {
+.order-bottom .address .address_title {
   height: 35rpx;
   line-height: 35rpx;
-  margin-bottom: 7.5rpx;
+  margin-bottom: 20rpx;
 }
 
 .order-bottom .address .name {
@@ -307,20 +322,20 @@ export default class Index extends wepy.page {
   height: 35rpx;
   width: 140rpx;
   line-height: 35rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
 .order-bottom .address .mobile {
   display: inline-block;
   height: 35rpx;
   line-height: 35rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
-.order-bottom .address .b {
+.order-bottom .address .address_text {
   height: 35rpx;
   line-height: 35rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
 .order-bottom .total {
@@ -329,19 +344,18 @@ export default class Index extends wepy.page {
   border-bottom: 1px solid #f4f4f4;
 }
 
-.order-bottom .total .t {
-  height: 25rpx;
-  line-height: 25rpx;
-  margin-bottom: 7.5rpx;
+.order-bottom .total .total_title {
+  height: 30rpx;
+  line-height: 30rpx;
+  margin-bottom: 20rpx;
   display: flex;
 }
 
 .order-bottom .total .label {
-  width: 140rpx;
   display: inline-block;
   height: 35rpx;
   line-height: 35rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
 .order-bottom .total .txt {
@@ -349,7 +363,7 @@ export default class Index extends wepy.page {
   display: inline-block;
   height: 35rpx;
   line-height: 35rpx;
-  font-size: 25rpx;
+  font-size: 30rpx;
 }
 
 .order-bottom .pay-fee {

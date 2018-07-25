@@ -9,7 +9,7 @@
   </view>
   <view class="catalog">
     <scroll-view class="nav" scroll-y="true">
-        <view class="item {{ currentCategory.id == item.id ? 'active' : ''}}" wx:for="{{navList}}"  data-id="{{item.id}}" data-index="{{index}}" bindtap="switchCate">{{item.name}}</view>
+        <view class="item {{ currentCategory.id == item.id ? 'active' : ''}}" wx:for="{{navList}}" wx:key="item.id"  id="{{item.id}}" data-index="{{index}}" bindtap="switchCate">{{item.name}}</view>
     </scroll-view>
     <scroll-view class="cate" scroll-y="true">
         <navigator url="url" class="banner">
@@ -22,10 +22,10 @@
             <text class="line"></text>
         </view>
         <view class="bd">
-            <navigator url="/pages/category/category?id={{item.id}}" class="item {{(index+1) % 3 == 0 ? 'last' : ''}}" wx:for="{{currentCategory.subCategoryList}}">
+            <view bindtap="go2goods" class="item {{(index+1) % 3 == 0 ? 'last' : ''}}" wx:for="{{currentCategory.subCategoryList}}" wx:key="item.id" id="{{item.id}}">
                 <image class="icon" src="{{item.wap_banner_url}}"></image>
                 <text class="txt">{{item.name}}</text>
-            </navigator>
+            </view>
         </view>
     </scroll-view>
   </view>
@@ -38,33 +38,82 @@ import wepy from "wepy";
 import api from "../../config/api";
 export default class Index extends wepy.page {
   config = {
-    enablePullDownRefresh: false
+    enablePullDownRefresh: false,
+    navigationBarTitleText: "商品分类"
   };
   data = {
-    navList: []
+    navList: [],
+    categoryList: [],
+    currentCategory: {},
+    scrollLeft: 0,
+    scrollTop: 0,
+    goodsCount: 0,
+    scrollHeight: 0,
+    currentCategoryId: null
   };
   async onLoad(options) {
-    await this.getGoodsList();
+    this.currentCategoryId = options.id;
+    await this.getCatalog();
   }
-  async getGoodsList() {
+  async getCatalog() {
     //获取商品列表
-    let resulgoodsList = await this.$parent.globalData.get(
-      `${api.server}/api/shop/catalog/index`
+    wx.showLoading({
+      title: "加载中..."
+    });
+    //console.log("===", this.currentCategoryId);
+    let resultCatalog = await this.$parent.globalData.get(
+      `${api.server}/api/shop/catalog/index?id=${
+        this.currentCategoryId
+      }&shopId=${this.$parent.globalData.shopId}`
     );
-    if (resulgoodsList.data.categoryList.length > 0) {
-      this.navList = this.$parent.globalData.navList =
-        resulgoodsList.data.categoryList;
+    if (resultCatalog.errno === 0) {
+      wx.hideLoading();
+      if (resultCatalog.data.categoryList.length > 0) {
+        this.navList = resultCatalog.data.categoryList;
+        this.currentCategory = resultCatalog.data.currentCategory;
+      }
     }
-    console.log(resulgoodsList);
+    console.log(resultCatalog);
+    let resultGoodsCount = await this.$parent.globalData.get(
+      `${api.server}/api/shop/goods/count?shopId=${
+        this.$parent.globalData.shopId
+      }`
+    );
+    if (resultGoodsCount.data.goodsCount.length > 0) {
+      this.goodsCount = resultCatalog.data.goodsCount;
+    }
+    //console.log(resultGoodsCount);
 
     this.$apply();
   }
 
-  methods = {};
+  async switchCate(event) {
+    if (this.currentCategory.id == event.currentTarget.id) {
+      return false;
+    }
+    this.getCurrentCategory(event.currentTarget.id);
+  }
+  async getCurrentCategory(id) {
+    let resultCurrent = await this.$parent.globalData.get(
+      `${api.server}/api/shop/catalog/current?id=${id}`
+    );
+
+    this.currentCategory = resultCurrent.data.currentCategory;
+
+    this.$apply();
+  }
+
+  methods = {
+    go2goods(e) {
+      let id = e.currentTarget.id;
+      console.log(id);
+      wx.navigateTo({ url: "/pages/shop/category?id=" + id });
+    }
+  };
 }
 </script>
 <style>
-search {
+.search {
   height: 88rpx;
   width: 100%;
   padding: 0 30rpx;
