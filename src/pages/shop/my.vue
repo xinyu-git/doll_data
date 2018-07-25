@@ -27,7 +27,7 @@
         <text class="txt">我的文章</text>
       </view>
     </view>
-    <view class="item no-border">
+    <view class="item">
       <view class="a">
         <text class="icon coupon"></text>
         <text class="txt">优惠券</text>
