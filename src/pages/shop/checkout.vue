@@ -278,7 +278,7 @@ export default class Index extends wepy.page {
       //console.log(resultorder)
       if (resultorder.errno === 0) {
         const orderId = resultorder.data.orderInfo.id;
-        /* let resultpay = this.$parent.globalData.get(
+        let resultpay = this.$parent.globalData.get(
           `${api.server}/api/shop/pay/prepay?orderId=${orderId}`
         );
         //console.log(resultpay);
@@ -292,23 +292,23 @@ export default class Index extends wepy.page {
             paySign: payParam.paySign,
             success: function(resultpay) {
               wx.redirectTo({
-                url: "/pages/card/payresult?status=0&orderId=" + orderId
+                url: "/pages/shop/payresult?status=0&orderId=" + orderId
               });
             },
             fail: function(resultpay) {
               wx.redirectTo({
-                url: "/pages/card/payresult?status=0&orderId=" + orderId
+                url: "/pages/shop/payresult?status=0&orderId=" + orderId
               });
             },
             complete: function(resultpay) {
               wx.redirectTo({
-                url: "/pages/card/payresult?status=0&orderId=" + orderId
+                url: "/pages/shop/payresult?status=0&orderId=" + orderId
               });
             }
           });
         } else {
           wx.redirectTo({
-            url: "/pages/card/payresult?status=0&orderId=" + orderId
+            url: "/pages/shop/payresult?status=0&orderId=" + orderId
           });
         }
       } else {
@@ -316,7 +316,7 @@ export default class Index extends wepy.page {
           title: "下单失败",
           icon: "none",
           duration: 2000
-        });*/
+        });
       }
     }
   };
