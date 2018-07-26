@@ -24,6 +24,7 @@ export default class extends wepy.app {
       "pages/shop/orderdetail",
       "pages/shop/payresult",
       "pages/shop/cart",
+      "pages/shop/crm",
       "pages/shop/checkout",
       "pages/portal/index2",
       "pages/card/mycard",

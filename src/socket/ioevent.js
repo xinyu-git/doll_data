@@ -3,8 +3,8 @@ const io = require('./weapp.socket.io')
 
 module.exports = {
     socketinit: (app) => {
-        let socket = null;
-        socket = io('https://io.kong.net/')
+        let socket = io('https://io.kong.net/')
+        
         app.globalData.socket1 = socket;
         app.globalData.chatusers = wx.getStorageSync("card:users") || {}
         app.globalData.chatmsg = wx.getStorageSync("card:chatmsg") || []

@@ -1,7 +1,7 @@
 <template>
 <view class="page">
     <view style="margin:60px 0;text-align:center;font-size:16px;color:#666;">
-        <image src="../../images/pclogin.png" style="display:block;margin:auto;width:240px;height:218px;"></image>
+        <image src="../../images/pclogin.png" style="display:block;margin:auto;width:240px;height:218px;"/>
         <view>登陆授权</view>
     </view>
     <view style="margin:60px 0">

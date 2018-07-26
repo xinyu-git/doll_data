@@ -76,7 +76,7 @@
                     userInfo: this.$parent.globalData.loginInfo.userinfo,
                     encryptedData: e.detail.encryptedData
                 }
-                let res = await wepy.request({url: `${api.api.auth.userMobile.url}`,data: formdata,method: 'POST'})
+                let res = await this.$parent.globalData.post(`/auth/wxa/main/getusermobile`,formdata)
                 if(res.data && res.data.phoneNumber){
                     this.mobile = res.data.phoneNumber;
                     this.$apply();
@@ -88,9 +88,9 @@
                 console.error("取消")
                 this.allowGetNum = false;
             }
-            console.log(e.detail.errMsg) 
-            console.log(e.detail.iv) 
-            console.log(e.detail.encryptedData) 
+            
+            console.log(e.detail.errMsg == "getPhoneNumber:ok")
+            
         } 
 
         onLoad(options) {
