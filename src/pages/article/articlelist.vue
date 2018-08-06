@@ -1,8 +1,8 @@
 <template>
 <view class="page">
-  <scroll-view class="page__bd"  scroll-y="true">
+  <view class="page__bd my_article">
     <view class="articleList" wx:for="{{articleList}}" wx:for-item="item"  wx:key="item.id">
-        <navigator url="article">
+        <navigator url="article1">
           <view class="articleBox">
             <view class="article-title">{{item.articleTitle}}</view>
           </view>
@@ -26,7 +26,27 @@
           </view>
         </navigator>
       </view>
-    </scroll-view>
+    </view>
+    <view class="weui-cell weui-bottombar noline">
+    <view class="weui-cell__ft ico_bt_card" bindtap=''>
+      <button class="ico_bt_btn">
+      <image src="../../images/ico_bt_card.png"></image>
+      <text>发现</text>
+      </button>
+    </view>
+   <view class="weui-cell__ft ico_bt_add">
+      <button class="ico_bt_btn" bindtap='go2create'>
+      <image src="../../images/ico_bt_add.png"></image>
+      <text>开始创作</text>
+      </button>
+    </view>
+   <view class="weui-cell__ft ico_bt_my">
+      <button class="ico_bt_btn">
+      <image src="../../images/ico_bt_my.png"></image>
+      <text>我的</text>
+      </button>
+    </view>
+  </view>
 </view>
 </template>
 <script>
@@ -72,6 +92,9 @@ export default class UploadVideo extends wepy.page {
   }
 
   methods = {};
+  go2create() {
+    wx.navigateTo({ url: "/pages/article/create" });
+  }
 }
 </script>
 <style>
@@ -143,6 +166,67 @@ page {
 .articleList {
   background: #fff;
   padding: 5rpx 31rpx 0 31rpx;
-  margin-top: 30rpx;
+  margin-top: 24rpx;
+}
+
+.my_article {
+  margin-bottom: 75rpx;
+}
+.weui-bottombar {
+  width: 100%;
+  height: 90rpx;
+  background: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  border-top: solid 1px #e0e0e0;
+}
+.ico_bt_btn {
+  line-height: 40rpx;
+  font-size: 30rpx;
+  padding: 0;
+}
+.ico_bt_btn text {
+  display: block;
+  color: #666;
+  font-size: 24rpx;
+}
+.ico_bt_card {
+  position: absolute;
+  left: 100rpx;
+  top: 37rpx;
+}
+.ico_bt_add {
+  position: absolute;
+  left: 330rpx;
+}
+.ico_bt_add .ico_bt_btn text {
+  position: relative;
+  top: -12rpx;
+}
+.ico_bt_my {
+  position: absolute;
+  right: 149rpx;
+  top: 35rpx;
+}
+
+.ico_bt_card image {
+  width: 36rpx;
+  height: 30rpx;
+}
+
+.ico_bt_add image {
+  width: 74rpx;
+  height: 74rpx;
+}
+.ico_bt_my image {
+  width: 28rpx;
+  height: 32rpx;
+}
+
+.noline::before,
+button::after {
+  border: none;
 }
 </style>

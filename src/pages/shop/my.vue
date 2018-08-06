@@ -9,7 +9,7 @@
     </view>
   </view>
 <view class="user-menu">
-    <view class="item" bindtap="go2crm">
+    <view class="item" bindtap="go2order">
       <view class="a">
         <text class="icon order"></text>
         <text class="txt">我的订单</text>
@@ -21,7 +21,7 @@
         <text class="txt">我的名片</text>
       </view>
     </view>
-    <view class="item no-border" bindtap="go2myarticle">
+    <view class="item" bindtap="go2myarticle">
       <view  class="a">
         <text class="icon kefu"></text>
         <text class="txt">我的文章</text>
@@ -106,8 +106,9 @@ export default class Index extends wepy.page {
     },
     go2crm(e) {
       //console.log(decodeURIComponent(e.currentTarget.dataset.url))
-      let url = 'https://card.kong.net?access_token=' + this.$parent.globalData.token
-      wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url)});
+      let url =
+        "https://card.kong.net?access_token=" + this.$parent.globalData.token;
+      wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
     },
     go2myarticle() {
       wx.navigateTo({ url: "/pages/article/articlelist" });

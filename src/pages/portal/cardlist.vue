@@ -1,7 +1,7 @@
 <template>
 <view class="page">
   <!--附近的名片列表-->
-  <view class="my-cardBox" style="display:none">
+  <view class="my-cardBox"  style="display:none;">
     <view class="weui-cell my-cardTitle">
       <view class="weui-cell__bd weui-cell_primary">
         <image class="ico_nearby_card" src="../../images/ico_nearby_card.png"></image>
@@ -148,11 +148,11 @@ export default class Mycard extends wepy.page {
       let resultlist = await this.$parent.globalData.get(
         `${api.server}/api/favorite/mylist`
       );
-      let _cardarray = []
+      let _cardarray = [];
       for (var i = 0; i < resultlist.rows.length; i++) {
         _cardarray.push(resultlist.rows[i].target_id);
       }
-      this.card_ids = _cardarray.join(",")
+      this.card_ids = _cardarray.join(",");
       this.$apply();
       let resultcard = await this.$parent.globalData.get(
         `${api.server}/auth/user/card/getcardbyids?card_ids=${this.card_ids}`

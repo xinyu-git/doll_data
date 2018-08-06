@@ -11,7 +11,7 @@
   <!--居家列表-->
   <view class="good-gridList">
     <view class="goods_title">
-      <text>{{goodsName}}</text>
+     <text>{{goodsName}}</text>
     </view>
     <view class="goodsBox">
       <block wx:for="{{goodsList}}" wx:key="{{item.id}}">
@@ -44,7 +44,8 @@ export default class Index extends wepy.page {
     banner: [],
     goodsList: [],
     goodsName: null,
-    goodsid: null
+    goodsid: null,
+    lotteryNum: true
   };
   async onLoad(options) {
     //console.log(options);
@@ -104,7 +105,7 @@ export default class Index extends wepy.page {
   flex-flow: row nowrap;
   align-items: center;
   justify-content: center;
-  height: 130rpx;
+  height: 100rpx;
   font-size: 36rpx;
   color: #333;
 }

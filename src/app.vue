@@ -13,6 +13,13 @@ export default class extends wepy.app {
   config = {
     pages: [
       "pages/portal/cardlist",
+      "pages/article/paragraph",
+      "pages/article/cover",
+      "pages/article/create",
+      "pages/article/music",
+      "pages/article/altertitle",
+      "pages/article/edit",
+
       "pages/article/articlelist",
       "pages/article/article",
       "pages/shop/index1",
@@ -365,7 +372,8 @@ export default class extends wepy.app {
     chatmsg: [],
     EventBus: EventBus,
     shopId: null,
-    cardid: null
+    cardid: null,
+    list: []
   };
 }
 </script>

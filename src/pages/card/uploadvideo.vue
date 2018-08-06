@@ -23,16 +23,16 @@ export default class UploadVideo extends wepy.page {
   }
   methods = {
     uploadvideo() {
+      let that = this;
       wx.chooseVideo({
-        count: 9, // 最多可以选择的视频张数，默认9
-        sizeType: ["original", "compressed"], // original 原图，compressed 压缩图，默认二者都有
-        sourceType: ["album", "camera"], // album 从相册选图，camera 使用相机，默认二者都有
+        sourceType: ["album", "camera"],
+        maxDuration: 60,
+        camera: "back",
         success: function(res) {
           // success
           console.log(res);
-          _this.setData({
-            src: res.tempFilePaths
-          });
+
+          that.src = res.tempFilePaths;
         },
         fail: function() {
           // fail

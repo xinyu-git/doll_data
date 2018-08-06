@@ -2,7 +2,7 @@
 <view class="page" >
 <scroll-view class="container" scroll-y="true" >
   <view wx:if="{{!openAttr}}">
-    <swiper class="goodsimgs" indicator-dots="true"  interval="3000" duration="1000">
+    <swiper class="goodsimgs" indicator-dots="true"  interval="3000" duration="1000" autoplay="true">
       <swiper-item wx:for="{{gallery}}" wx:key="{{item.id}}">
         <image src="{{item.img_url}}" background-size="cover"></image>
       </swiper-item>
