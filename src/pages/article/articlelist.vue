@@ -1,21 +1,22 @@
 <template>
 <view class="page">
   <view class="page__bd my_article">
-    <view class="articleList" wx:for="{{articleList}}" wx:for-item="item"  wx:key="item.id">
-        <navigator url="article1">
-          <view class="articleBox">
-            <view class="article-title">{{item.articleTitle}}</view>
+    <scroll-view class="list" style="height: 1208rpx" scroll-y="true" bindscrolltoupper="refresh" bindscrolltolower="loadMore"> 
+    <view class="articleList" wx:for="{{articleList}}" wx:for-item="item"  wx:key="item.id" id="{{item.id}}" bindtap="go2article">
+          <view class="articleBox" >
+            <view class="article-title">{{item.title}}</view>
           </view>
-          <view class="article-banner">
-            <image class="bannerImg" src="{{item.bannerImg}}" alt="" mode="aspectFill" />
+          <view class="article-banner" wx:if="{{item.content.cover}}">
+            <image class="bannerImg" src="{{http+item.content.cover}}" alt="" mode="aspectFill" />
           </view>
-          <view class="page__bd-foot  clearfloat">
+          <view class="article_cont" wx:else>{{item.coverText}}</view>
+        <view class="page__bd-foot  clearfloat">
             <view class="weui-media-box weui-media-box_appmsg avaterBox">
               <view class="weui-media-box__hd">
-                <image class="weui-media-box__thumb" src="{{item.headingImg}}"></image>
+                <image class="weui-media-box__thumb" src="{{item.Creator.headimg}}"></image>
               </view>
               <view class="weui-media-box__bd">
-                <text class="weui-media-box__title">{{item.articleAuthor}}</text>
+                <text class="weui-media-box__title">{{item.author}}</text>
               </view>
             </view>
             <view class="weui-flex my_dataStats">
@@ -24,7 +25,10 @@
               <view class="weui-flex__item">{{item.likeTimes}}点赞</view>
             </view>
           </view>
-        </navigator>
+      </view>
+     </scroll-view>
+     <view class="bottom" hidden="{{hideBottom}}">
+        <view>{{loadMoreData}}</view>
       </view>
     </view>
     <view class="weui-cell weui-bottombar noline">
@@ -35,7 +39,7 @@
       </button>
     </view>
    <view class="weui-cell__ft ico_bt_add">
-      <button class="ico_bt_btn" bindtap='go2create'>
+      <button class="ico_bt_btn" bindtap='go2paragraph'>
       <image src="../../images/ico_bt_add.png"></image>
       <text>开始创作</text>
       </button>
@@ -51,50 +55,117 @@
 </template>
 <script>
 import wepy from "wepy";
-import config from "../../config/api";
+import api from "../../config/api";
 export default class UploadVideo extends wepy.page {
   config = { navigationBarTitleText: "文章列表" };
   components = {};
   data = {
-    articleList: [
-      {
-        articleTitle: "活动 • 献礼八一，致敬军人！美篇军旅主题征稿开启",
-        bannerImg: "../../images/article_img1.jpg",
-        headingImg: "../../images/head_img1.jpg",
-        articleAuthor: "小美",
-        clickTimes: "503",
-        commentTimes: "118",
-        likeTimes: "231"
-      },
-      {
-        articleTitle: "童年的梦想,科罗拉多高原沙漠追星之旅",
-        bannerImg: "../../images/article_img2.jpg",
-        headingImg: "../../images/pic_card2.jpg",
-        articleAuthor: "昨日夏雪",
-        clickTimes: "503",
-        commentTimes: "118",
-        likeTimes: "231"
-      },
-      {
-        articleTitle: "南美之南的疯狂之美！好想去撒野",
-        bannerImg: "../../images/article_img3.jpg",
-        headingImg: "../../images/pic_card1.jpg",
-        articleAuthor: "冬日暖阳wlk",
-        clickTimes: "503",
-        commentTimes: "118",
-        likeTimes: "231"
-      }
-    ]
+    articleList: [],
+    http: null,
+    hideHeader: true,
+    hideBottom: true,
+    allPages: "", // 总页数
+    currentPage: 1, // 当前页数  默认是1
+    loadMoreData: "加载更多……",
+    content: ""
   };
   async onLoad(options) {
+    this.http = `${api.server}`;
     //进入到页面的时候，对告诉服务器，要lock住这个key
     this.key = options.key || options.scene;
+    this.article_id = options.id;
+    this.getArticleList(1);
   }
-
-  methods = {};
-  go2create() {
-    wx.navigateTo({ url: "/pages/article/create" });
+  //获取文章列表信息
+  async getArticleList(pageIndex) {
+    let resultArticle = await this.$parent.globalData.get(
+      `${api.server}/api/article/list`
+    );
+    console.log(typeof this.articleList);
+    if (resultArticle.rows.length > 0) {
+      for (let i = 0; i < resultArticle.rows.length; i++) {
+        resultArticle.rows[i].content = JSON.parse(
+          resultArticle.rows[i].content
+        );
+        //如果cover不存在 设置文章里的第一张图做为封面。
+        if (!resultArticle.rows[i].content.cover) {
+          for (let j in resultArticle.rows[i].content.list) {
+            if (resultArticle.rows[i].content.list[j].status == 1) {
+              resultArticle.rows[i].content.cover =
+                resultArticle.rows[i].content.list[j].media;
+              break;
+            }
+          }
+        }
+        //如果图片也不存在 显示第一段文字
+        if (!resultArticle.rows[i].content.cover) {
+          for (let m in resultArticle.rows[i].content.list) {
+            if (resultArticle.rows[i].content.list[m].content) {
+              resultArticle.rows[i]["coverText"] =
+                resultArticle.rows[i].content.list[m].content;
+              break;
+            }
+          }
+        }
+      }
+      console.log(resultArticle.rows);
+      //下拉刷新
+      if (pageIndex == 1) {
+        //this.allPages = resultArticle.allPages;//to--do
+        this.articleList = resultArticle.rows;
+        this.hideHeader = true;
+      } else {
+        //加载更多
+        console.log("加载更多");
+        let tempArray = this.articleList;
+        tempArray = tempArray.concat(resultArticle.rows);
+        this.allPages = resultArticle.allPages; //to--do
+        this.articleList = tempArray;
+        this.hideBottom = true;
+      }
+      this.$apply();
+    }
   }
+  // 下拉刷新
+  refresh(e) {
+    let that = this;
+    setTimeout(function() {
+      console.log("下拉刷新");
+      (that.currentPage = 1), (that.hideHeader = false);
+      that.getData();
+    }, 300);
+  }
+  getData() {
+    let that = this;
+    let pageIndex = that.currentPage;
+    this.getArticleList(pageIndex);
+  }
+  // 上拉加载更多
+  loadMore() {
+    var that = this;
+    // 当前页是最后一页
+    if (that.currentPage == that.allPages) {
+      that.loadMoreData = "已经到顶";
+      return;
+    }
+    setTimeout(function() {
+      console.log("上拉加载更多");
+      let tempCurrentPage = that.currentPage;
+      tempCurrentPage = tempCurrentPage + 1;
+      (that.currentPage = tempCurrentPage), (that.hideBottom = false);
+      that.getData();
+    }, 300);
+  }
+  methods = {
+    go2paragraph() {
+      wx.navigateTo({ url: "/pages/article/paragraph" });
+    },
+    go2article(e) {
+      let id = e.currentTarget.id;
+      //console.log(id);
+      wx.navigateTo({ url: "/pages/article/article?id=" + id });
+    }
+  };
 }
 </script>
 <style>
@@ -228,5 +299,17 @@ page {
 .noline::before,
 button::after {
   border: none;
+}
+.article_cont {
+  text-indent: 60rpx;
+  height: 100rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+button {
+  background: none;
 }
 </style>

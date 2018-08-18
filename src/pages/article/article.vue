@@ -1,21 +1,20 @@
 <template>
 <view class="page">
-  <scroll-view class="page__bd"  scroll-y="true">
+   <scroll-view class="page__bd"  scroll-y="true">
     <view class="articleDetails ">
-      <view class="article-content" wx:for="{{articleTitBox}}" wx:for-item="item"  wx:key="item.id">
-        <view class="article-title">{{item.articleTitle}}</view>
+      <view class="article-content">
+        <view class="article-title">{{articleConBox.title}}</view>
         <view class="article-data">
-          <text class="article-time">{{item.articleTime}}</text>
-          <text class="article-author">{{item.articleAuthor}}</text>
-          <text class="article-click">阅读{{item.clickTimes}}</text>
+          <text class="article-time">{{articleConBox.created_at}}</text>
+          <text class="article-author">{{articleConBox.author}}</text>
+          <text class="article-click">阅读{{articleConBox.clickTimes}}</text>
         </view>
       </view>
       <view class="article-text {{status ? 'height-auto' : ''}}" >
-        <view wx:for="{{articleConBox}}" wx:for-item="item"  wx:key="item.id">
-          <text>{{item.text1}}</text>
-          <image class="" src="{{item.image1}}"></image>
-          <text>{{item.text2}}</text>
-          <image class="" src="{{item.image2}}" ></image>
+        <view wx:for="{{content.list}}" wx:for-item="item"  wx:key="item.id">
+          <text>{{item.content}}</text>
+          <video objectFit="cover" wx:if="{{item.status==0}}"  src="{{http+item.media}}" class="addVideo" controls="{{false}}" ></video>
+          <image wx:if="{{item.status==1}}" class="" src="{{http+item.media}}"></image>
         </view>
         <view wx:if="{{openArticle}}" class="showText" bindtap="setHeight">
           <text>展开阅读全文</text>
@@ -30,47 +29,51 @@
 </template>
 <script>
 import wepy from "wepy";
-import config from "../../config/api";
+import api from "../../config/api";
 export default class UploadVideo extends wepy.page {
-  config = { navigationBarTitleText: "文章详情" };
+  config = {
+    navigationBarTitleText: "文章详情",
+    usingComponents: {
+      "i-icon": "../../icon/index"
+    }
+  };
   data = {
     status: false,
     openArticle: true,
-    articleTitBox: [
-      {
-        articleTitle: "活动 • 献礼八一，致敬军人！美篇军旅主题征稿开启",
-        articleTime: "2018.07.16",
-        articleAuthor: "小美",
-        clickTimes: "44.0w"
-      }
-    ],
-    articleConBox: [
-      {
-        text1:
-          "每当听到这首歌，小美就会忍不住热泪盈眶。他们为了国家的建设，浴血在战场上。只因穿上的军装，与家人天各一方，承担起保家卫国的重担！在第91个建军节来临之际，让我们一起用美篇，为穿过军装的他们，写下最美的篇章吧！",
-        image1: "../../images/article_img1.jpg",
-        image2: "../../images/article_img2.jpg",
-        text2:
-          "可以描绘自己充满温情的军旅生活，抒写最值得珍藏的战友情，晒出最帅最美的军装照，演唱最嘹亮的军旅歌曲，还可以用诗歌和朗诵的形式，献礼八一，致敬军人！文章内容和形式不限！"
-      },
-      {
-        text1:
-          "每当听到这首歌，小美就会忍不住热泪盈眶。他们为了国家的建设，浴血在战场上。只因穿上的军装，与家人天各一方，承担起保家卫国的重担！在第91个建军节来临之际，让我们一起用美篇，为穿过军装的他们，写下最美的篇章吧！",
-        image1: "../../images/article_img1.jpg",
-        image2: "../../images/article_img2.jpg",
-        text2:
-          "可以描绘自己充满温情的军旅生活，抒写最值得珍藏的战友情，晒出最帅最美的军装照，演唱最嘹亮的军旅歌曲，还可以用诗歌和朗诵的形式，献礼八一，致敬军人！文章内容和形式不限！"
-      }
-    ]
+    articleConBox: [],
+    article_id: null,
+    content: "",
+    http: null,
+    myarticle: false
   };
   async onLoad(options) {
-    //进入到页面的时候，对告诉服务器，要lock住这个key
-    this.key = options.key || options.scene;
+    this.http = `${api.server}`;
+    this.article_id = options.id;
+    this.getArticleDetail();
+  }
+  async getArticleDetail() {
+    let result = await this.$parent.globalData.get(
+      `${api.server}/api/article/info?article_id=${this.article_id}`
+    );
+    if (result) {
+      this.articleConBox = result;
+      this.content = JSON.parse(result.content);
+      let userInfo = wx.getStorageSync("user:detail");
+      if (userInfo.id === this.articleConBox.Creator.id) {
+        this.myarticle = true;
+      }
+      this.$apply();
+    }
   }
   methods = {
     setHeight() {
       this.status = true;
       this.openArticle = false;
+    },
+    editArticle() {
+      wx.navigateTo({
+        url: "/pages/article/paragraph?id=" + this.article_id
+      });
     }
   };
 }
@@ -179,5 +182,51 @@ export default class UploadVideo extends wepy.page {
 }
 .bottom-arrow2 {
   border-top: 10px white solid;
+}
+.tipsNav {
+  width: 100%;
+  height: 80rpx;
+  position: relative;
+  border-bottom: solid 1px #ccc;
+  background: #fff;
+}
+.navBtn text {
+  display: block;
+  float: left;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  margin-left: 80rpx;
+}
+.navBtn text:nth-child(2) {
+  float: right;
+  margin-right: 50rpx;
+  background: #4099ff;
+  height: 40rpx;
+  padding: 10rpx 30rpx;
+  line-height: 40rpx;
+  color: #fff;
+  margin-top: 6rpx;
+}
+.icoPage {
+  position: absolute;
+  top: 10rpx;
+  left: 30rpx;
+}
+.showBox {
+  position: absolute;
+  width: 116rpx;
+  height: 60px;
+  right: 50rpx;
+  background: #ccc;
+  top: 66rpx;
+  color: #000;
+  z-index: 99;
+  border-radius: 0 0 15rpx 15rpx;
+  padding-top: 15rpx;
+}
+.showBox text {
+  display: block;
+  text-align: center;
+  font-size: 28rpx;
 }
 </style>

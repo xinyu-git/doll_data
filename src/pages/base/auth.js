@@ -1,5 +1,7 @@
 import wepy from 'wepy';
-import { getCurrentPageUrlWithArgs } from '../../util/util'
+import {
+    getCurrentPageUrlWithArgs
+} from '../../util/util'
 
 export default class auth extends wepy.page {
     async onLoad(options) {
@@ -16,8 +18,10 @@ export default class auth extends wepy.page {
             title: '授权',
             content: '为给您提供更好的服务，请授权获取个人信息。',
             showCancel: false,
-            success: function (res) {
-                wx.redirectTo({ url: `/pages/auth/login?_originate=${encodeURIComponent(cp)}` })
+            success: function(res) {
+                wx.redirectTo({
+                    url: `/pages/auth/login?_originate=${encodeURIComponent(cp)}`
+                })
             }
         })
     }

@@ -5,11 +5,11 @@
      <view class="weui-cell my-chatBox  noline" wx:for="{{userlist}}" wx:key="id" bindtap="chat2person" data-url="{{item.id}}">
     <view class="weui-media-box weui-media-box_appmsg my-newsList">
           <view class="weui-media_hd">
-            <image class="weui-media-box__thumb" src="{{item.url}}"></image>
+            <image class="weui-media-box__thumb" src="{{item.headimg}}"></image>
           </view>
           <view class="weui-media_bd">
             <view class="weui-media-box__title my-news_title">{{item.fullname}}</view>
-            <view class="weui-media-box__desc my-news_desc">{{item.fullcon}}</view>
+            <view class="weui-media-box__desc my-news_desc">{{item.content}}</view>
           </view>
           <view class="weui-badge my-read-btn" wx:if="{{item.status==0}}">已读</view>
           <view class="weui-badge my-unread-btn" wx:else="{{item.status==1}}">未读</view>
@@ -28,35 +28,19 @@ export default class Chat extends wepy.page {
   };
   components = {};
   data = {
-    userlist: [
-      {
-        fullname: "唐小糖",
-        fullcon: "您好，很高兴认识您～",
-        status: 0,
-        url: "../../images/pic_card3.jpg"
-      },
-      {
-        fullname: "丁月",
-        fullcon: "您好，有什么可以帮到您？",
-        status: 1,
-        url: "../../images/pic_card3.jpg"
-      },
-      {
-        fullname: "李四",
-        fullcon: "请问什么什么什么什么什么？",
-        status: 1,
-        url: "../../images/pic_card3.jpg"
-      }
-    ],
+    userlist: [],
     canclick: true,
     showMainpage: false,
     socket: null
   };
   async onLoad(options) {
     let that = this;
-    //this.$parent.globalData.chatusers = wx.getStorageSync("card:users")
-    //this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg")
-    //this.onchatuserchange();
+    this.$parent.globalData.chatusers = wx.getStorageSync("card:users") || {};
+    console.log("-------");
+    console.log(wx.getStorageSync("card:users"));
+    console.log("-------");
+    this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg") || [];
+    this.onchatuserchange();
     this.$parent.globalData.EventBus.removeEventListener(
       "userchage",
       this.onchatuserchange,
@@ -70,9 +54,9 @@ export default class Chat extends wepy.page {
     this.key = options.key || options.scene;
   }
   onchatuserchange(evt) {
-    //console.log("user changes");
+    console.log("user changes");
     this.userlist = this.$parent.globalData.chatusers;
-    //console.log(this.userlist)
+    console.log(this.userlist);
     this.$apply();
   }
 

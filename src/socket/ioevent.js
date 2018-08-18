@@ -4,12 +4,12 @@ const io = require('./weapp.socket.io')
 module.exports = {
     socketinit: (app) => {
         let socket = io('https://io.kong.net/')
-        
+
         app.globalData.socket1 = socket;
         app.globalData.chatusers = wx.getStorageSync("card:users") || {}
         app.globalData.chatmsg = wx.getStorageSync("card:chatmsg") || []
-        //console.log("typeof app.globalData.chatusers ", app.globalData.chatusers)
-        //console.log(!app.globalData.chatmsg.push)
+            //console.log("typeof app.globalData.chatusers ", app.globalData.chatusers)
+            //console.log(!app.globalData.chatmsg.push)
         let me = app.globalData.userInfo
         if (!app.globalData.chatmsg.push) {
             console.log("init chatmsg to array")
@@ -26,9 +26,9 @@ module.exports = {
                 token: app.globalData.token,
                 client: 'wxa'
             });
-            socket.on('authenticated', function () {
+            socket.on('authenticated', function() {
                 console.log("already authenticated")
-                socket.emit('join');//发送加入事件
+                socket.emit('join'); //发送加入事件
             });
 
             //console.log('0 . global user is ', app.globalData.chatusers)
@@ -51,10 +51,12 @@ module.exports = {
             //app.globalData.chatusers = app.globalData.chatusers || {}
             console.log('m:msg : ', d);
             let users = app.globalData.chatusers
-            //console.log('1. global user is ', app.globalData.chatusers)
+                //console.log('1. global user is ', app.globalData.chatusers)
             if (!users["uid" + d.from] && d.from !== me.id) {
-                socket.emit('m:userinfo', { uid: d.from })
-                ///console.log(users)
+                socket.emit('m:userinfo', {
+                        uid: d.from
+                    })
+                    ///console.log(users)
                 users["uid" + d.from] = {
                     id: d.from
                 }

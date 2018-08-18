@@ -59,34 +59,23 @@
       </view>
     </view>
   </view>
-  <!--底部固定导航-->
+ <!--底部固定导航-->
   <view class="weui-cell weui-bottombar noline">
-    <view class="weui-cell__ft ico_bt_card" bindtap='go2cardlist'>
-      <button class="ico_bt_btn">
-      <image src="../../images/ico_bt_card.png"></image>
-      <text>名片夹</text>
+    <view class="weui-cell__ft ico_bt_share">
+      <button class="ico_bt_btn" open-type="share" data-name="pageShare" >
+      <image src="../../images/ico_bt_share.png"></image>
+      <text>推荐</text>
       </button>
     </view>
-    <view class="weui-cell__ft  ico_bt_news" bindtap='go2chatlist'>
-      <button class="ico_bt_btn">
-      <image src="../../images/ico_bt_news.png"></image>
-      <text>消息</text>
+    <view class="weui-cell__ft ico_bt_news2">
+      <button class="ico_bt_btn" open-type="contact" session-from="{{uid}}">
+      <image src="../../images/ico_bt_news2.png"></image>
+      <text>联系</text>
       </button>
     </view>
-    <view class="weui-cell__ft ico_bt_add">
-      <button class="ico_bt_btn" bindtap='go2uploadvideo'>
-      <image src="../../images/ico_bt_add.png"></image>
-      </button>
-    </view>
-    <view class="weui-cell__ft ico_bt_sell">
-      <button class="ico_bt_btn"  bindtap='go2dashboard'>
-      <image src="../../images/ico_bt_sell.png"></image>
-      <text>销售</text>
-      </button>
-    </view>
-    <view class="weui-cell__ft ico_bt_my">
-      <button class="ico_bt_btn">
-      <image src="../../images/ico_bt_my.png"></image>
+    <view class="weui-cell__ft  ico_bt_my2">
+      <button class="ico_bt_btn"  bindtap='go2my'>
+      <image src="../../images/ico_bt_my2.png"></image>
       <text>我的</text>
       </button>
     </view>
@@ -137,8 +126,8 @@ export default class Mycard extends wepy.page {
   go2dashboard() {
     wx.navigateTo({ url: "/pages/card/mydashboard" });
   }
-  go2mycard() {
-    wx.navigateTo({ url: "/pages/card/mycard" });
+  go2my() {
+    wx.navigateTo({ url: "/pages/shop/my" });
   }
   go2chatlist() {
     wx.navigateTo({ url: "/pages/card/chatlist" });
@@ -255,6 +244,7 @@ export default class Mycard extends wepy.page {
   z-index: 9999;
   border-top: solid 1px #e0e0e0;
 }
+
 .ico_bt_btn {
   background: rgba(0, 0, 0, 0);
   color: #fff;
@@ -262,60 +252,45 @@ export default class Mycard extends wepy.page {
   font-size: 30rpx;
   padding: 0;
 }
+
 .ico_bt_btn text {
   display: block;
   color: #666;
 }
-.ico_bt_card {
+
+.ico_bt_share {
   position: absolute;
-  left: 50rpx;
+  left: 105rpx;
 }
-.ico_bt_add {
+.ico_bt_share image {
+  width: 41rpx;
+  height: 40rpx;
+}
+.ico_bt_news2 {
   position: absolute;
-  left: 337rpx;
+  left: 351rpx;
 }
-.ico_bt_my {
+.ico_bt_news2 image {
+  width: 48rpx;
+  height: 45rpx;
+}
+.ico_bt_my2 {
   position: absolute;
-  right: 110rpx;
+  left: 604rpx;
 }
-.ico_bt_news {
-  position: absolute;
-  left: 210rpx;
-}
-.ico_bt_sell {
-  position: absolute;
-  left: 505rpx;
-}
-.ico_bt_card image {
-  width: 36rpx;
-  height: 30rpx;
-}
-.iconBox-three .ico_bt_card {
-  top: 20rpx;
-  left: 50rpx;
-}
-.iconBox-three .ico_bt_card image {
-  width: 44rpx;
+.ico_bt_my2 image {
+  width: 42rpx;
   height: 47rpx;
 }
-.ico_bt_add image {
-  width: 98rpx;
-  height: 98rpx;
+button::after,
+.noline::before {
+  border: 0;
 }
-.ico_bt_my image {
-  width: 28rpx;
-  height: 32rpx;
-}
-.ico_bt_news image {
-  width: 32rpx;
-  height: 29rpx;
-}
-.ico_bt_sell image {
-  width: 38rpx;
-  height: 36rpx;
-}
-.noline::before,
-button::after {
-  border: none;
+.clearfloat:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+  visibility: hidden;
 }
 </style>

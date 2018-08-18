@@ -1,17 +1,18 @@
 <template>
 <view class="page">
  <view class="page-bd">
-      <view class="musicList"  wx:for="{{musicList}}">
+    <text class="noMusic" data-name="{{noMusic}}" bindtap="addMusic">无背景音乐</text>
+      <view class="musicList"  wx:for="{{musicList}}" wx:key>
             <view class="weui-flex">
               <view class="weui-flex-item" bindtap="showList"  data-listid="{{index}}" >
                  <text>{{item.name}}</text>
                  <text class="musicNum">包含{{item.list.length}}首歌曲</text>
               </view>
             </view> 
-            <view class="page-category js-categoryInner">
-               <view class="weui-cells weui-cells_access" wx:for="{{item.list}}" wx:key=""  catchtap="alllist">
-                <text class="list-left">{{iitem.musicName}}</text>
-                </view>
+            <view class="page-category js-categoryInner {{uhide==index?'':'hidden'}}" >
+               <view class="weui-cells weui-cells_access" wx:for="{{item.list}}" wx:for-item="iitem" wx:key="" >
+                <text class="list-left" data-name="{{iitem.musicName}}" bindtap="addMusic">{{iitem.musicName}}</text>
+              </view>
          </view> 
         </view>
   </view> 
@@ -29,24 +30,24 @@ export default class UploadVideo extends wepy.page {
     musicList: [
       {
         id: 1,
-        name: "神挡",
+        name: "圣诞",
         list: [
           { musicName: "圣诞祝福", id: 1 },
-          { musicName: "铃儿叮当" },
-          { musicName: "欢乐颂" },
-          { musicName: "雨中漫步" },
-          { musicName: "生日快乐" }
+          { musicName: "铃儿叮当", id: 2 },
+          { musicName: "欢乐颂", id: 3 },
+          { musicName: "雨中漫步", id: 4 },
+          { musicName: "生日快乐", id: 5 }
         ]
       },
       {
         id: 2,
-        name: "ttdsf",
+        name: "欢快",
         list: [
           { musicName: "圣诞祝福", id: 1 },
-          { musicName: "铃儿叮当" },
-          { musicName: "欢乐颂" },
-          { musicName: "雨中漫步" },
-          { musicName: "生日快乐" }
+          { musicName: "铃儿叮当", id: 2 },
+          { musicName: "欢乐颂", id: 3 },
+          { musicName: "雨中漫步", id: 4 },
+          { musicName: "生日快乐", id: 5 }
         ]
       }
     ],
@@ -55,7 +56,9 @@ export default class UploadVideo extends wepy.page {
     taName: "",
     shoufenqinName: "",
     animationShoufenqin: "",
-    shoufenqinBloo: ""
+    shoufenqinBloo: "",
+    uhide: null,
+    noMusic: ""
   };
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
@@ -64,7 +67,22 @@ export default class UploadVideo extends wepy.page {
   methods = {
     showList(e) {
       let listid = e.currentTarget.dataset.listid;
-      console.log(listid);
+      if (listid == this.uhide) {
+        this.uhide = null;
+      } else {
+        this.uhide = listid;
+      }
+    },
+    addMusic(e) {
+      let that = this;
+      let pages = getCurrentPages();
+      let Page = pages[pages.length - 1]; //当前页
+      let prevPage = pages[pages.length - 2]; //上一个页面
+      let name = e.currentTarget.dataset.name;
+      prevPage.setData({
+        music: name
+      }); //设置数据
+      wx.navigateBack();
     }
   };
 }
@@ -76,7 +94,6 @@ page {
 .page-bd .musicList {
   background-color: #fff;
   border-radius: 2px;
-  cursor: pointer;
   margin: 10px 0;
   overflow: hidden;
   vertical-align: bottom;
@@ -104,11 +121,6 @@ page {
 .page-bd .js-show .page-category {
   height: auto;
 }
-
-.page-bd .page-category {
-  height: 0;
-  overflow: hidden;
-}
 .musicList text {
   display: block;
 }
@@ -129,5 +141,17 @@ page {
   line-height: 100rpx;
   margin-top: 0;
   font-size: 30rpx;
+}
+.hidden {
+  display: none;
+}
+.noMusic {
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+  background: #fff;
+  display: block;
+  margin-top: 20rpx;
+  padding-left: 25rpx;
 }
 </style>

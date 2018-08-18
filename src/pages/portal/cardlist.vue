@@ -1,25 +1,21 @@
 <template>
 <view class="page">
   <!--附近的名片列表-->
-  <view class="my-cardBox"  style="display:none;">
+  <view class="my-cardBox">
     <view class="weui-cell my-cardTitle">
       <view class="weui-cell__bd weui-cell_primary">
         <image class="ico_nearby_card" src="../../images/ico_nearby_card.png"></image>
-        <text>附近的名片</text>
-      </view>
-      <view class="weui-cell__ft my-btnBox">
-        <image class="ico_change_btn" src="../../images/ico_change_btn.png"></image>
-        <text bindtap="changeList">换一换</text>
+        <text>推荐的名片</text>
       </view>
     </view>
     <view class="weui-flex my-cardList">
       <block wx:for="{{msg}}" wx:for-item="item" wx:if="{{index<3}}" wx:key="item.id">
         <view class="weui-flex__item my-picCard" bindtap="go2card" data-cardid="{{item.id}}">
-          <image src="{{item.url}}"></image>
+          <image mode="aspectFill" src="{{item.User.headimg}}"></image>
           <view class="my-mark"></view>
           <view class="my-card-info">
             <text>{{item.name}}</text>
-            <text>{{item.tip}}</text>
+            <text>{{item.title}}</text>
           </view>
         </view>
       </block>
@@ -54,81 +50,27 @@
       <text>创建专属名片</text>
     </view>
   </view>
-  <!--底部固定导航-->
-  <view class="weui-cell weui-bottombar noline" wx:else>
-    <view class="weui-cell__ft ico_bt_card">
-      <button class="ico_bt_btn">
-      <image src="../../images/ico_bt_card.png"></image>
-      <text>名片夹</text>
-      </button>
-    </view>
-    <view class="weui-cell__ft  ico_bt_news" bindtap='go2chatlist'>
-      <button class="ico_bt_btn">
-      <image src="../../images/ico_bt_news.png"></image>
-      <text>消息</text>
-      </button>
-    </view>
-    <view class="weui-cell__ft ico_bt_add" bindtap='go2uploadvideo'>
-      <button class="ico_bt_btn" >
-      <image src="../../images/ico_bt_add.png"></image>
-      </button>
-    </view>
-    <view class="weui-cell__ft ico_bt_sell">
-      <button class="ico_bt_btn"  bindtap='go2dashboard'>
-      <image src="../../images/ico_bt_sell.png"></image>
-      <text>销售</text>
-      </button>
-    </view>
-    <view class="weui-cell__ft ico_bt_my">
-      <button class="ico_bt_btn"  bindtap='go2myshop'>
-      <image src="../../images/ico_bt_my.png"></image>
-      <text>我的</text>
-      </button>
+  <!--编辑我的名片-->
+  <view class="editCard-box" bindtap='go2my' wx:else>
+    <view class="my-editCard" >
+      <image src="../../images/ico_add_card.png"></image>
+      <text>编辑我的名片</text>
     </view>
   </view>
-</view>
+  </view>
 </template>
 <script>
-import wepy from "wepy";
+//import wepy from "wepy";
+import auth from "../base/auth";
 import api from "../../config/api";
-export default class Mycard extends wepy.page {
+export default class Cardlist extends auth {
   config = {
     navigationBarTitleText: "我的名片"
   };
   components = {};
   data = {
     key: "",
-    list: [
-      {
-        id: "5b0e85ce185d7b34f985ad99",
-        name: "孙奇",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/pic_card1.jpg",
-        status: "1"
-      },
-      {
-        id: "5b0e864c185d7b34f985ad9a",
-        name: "张益君",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/pic_card2.jpg",
-        status: "1"
-      },
-      {
-        id: "5b0e864e185d7b34f985ad9b",
-        name: "任建斌",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/pic_card3.jpg",
-        status: "0"
-      },
-      {
-        id: "5b0e86a8185d7b34f985ad9c",
-        name: "尹平辉",
-        tip: "坦克世界VIP运营经理",
-        url: "../../images/pic_card1.jpg",
-        status: "1"
-      }
-    ],
-    msg: "",
+    msg: [],
     cardlist: [],
     uid: null,
     createCard: true,
@@ -138,63 +80,64 @@ export default class Mycard extends wepy.page {
 
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
+
     this.key = options.key || options.scene;
-    this.msg = this.list;
     this.uid = options.id;
     this.usercard =
       this.$parent.globalData.usercard || wx.getStorageSync("user:card");
-    //console.log(this.usercard);
-    if (!this.usercard) {
-      let resultlist = await this.$parent.globalData.get(
-        `${api.server}/api/favorite/mylist`
-      );
-      let _cardarray = [];
-      for (var i = 0; i < resultlist.rows.length; i++) {
-        _cardarray.push(resultlist.rows[i].target_id);
-      }
-      this.card_ids = _cardarray.join(",");
-      this.$apply();
-      let resultcard = await this.$parent.globalData.get(
-        `${api.server}/auth/user/card/getcardbyids?card_ids=${this.card_ids}`
-      );
-      //console.log(resultcard);
-      if (resultcard.length > 0) {
-        this.cardlist = this.$parent.globalData.cardlist = resultcard;
-        this.$apply();
-      }
-
-      let result = await this.$parent.globalData.get(
-        `${api.server}/auth/user/card/myowncards`
-      );
-      //console.log(result);
-      if (result.length > 0) {
-        this.createCard = false;
-        this.usercard = this.$parent.globalData.usercard = result;
-        this.$apply();
-        //wx.setStorageSync("user:card",result.rows);
-      }
-    } else {
+  }
+  async onShow() {
+    this.getFavorite();
+    this.getRecommond();
+    this.checkCreate();
+  }
+  async checkCreate() {
+    //验证是否已经创建名片
+    let result = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/myowncards`
+    );
+    //console.log(result);
+    if (result.length > 0) {
       this.createCard = false;
-      this.usrCardbar = true;
+      this.usercard = this.$parent.globalData.usercard = result;
+      this.$apply();
+      //wx.setStorageSync("user:card",result.rows);
+    }
+  }
+  //获取推荐名片列表
+  async getRecommond() {
+    let resultinfo = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/recommond`
+    );
+    //console.log(resultinfo);
+    if (resultinfo.length > 0) {
+      this.msg = this.$parent.globalData.msg = resultinfo;
       this.$apply();
     }
-
-    if (this.uid) {
-      this.usrCardbar = true;
+  }
+  //获取收藏夹列表
+  async getFavorite() {
+    let resultlist = await this.$parent.globalData.get(
+      `${api.server}/api/favorite/mylist`
+    );
+    let _cardarray = [];
+    for (var i = 0; i < resultlist.rows.length; i++) {
+      _cardarray.push(resultlist.rows[i].target_id);
+    }
+    this.card_ids = _cardarray.join(",");
+    this.$apply();
+    //获取名片夹列表信息
+    let resultcard = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/getcardbyids?card_ids=${this.card_ids}`
+    );
+    //console.log(resultcard);
+    if (resultcard.length > 0) {
+      this.cardlist = this.$parent.globalData.cardlist = resultcard;
+      this.$apply();
     }
   }
-
-  go2dashboard() {
-    wx.navigateTo({ url: "/pages/card/mydashboard" });
-  }
-  go2uploadvideo() {
-    wx.navigateTo({ url: "/pages/card/uploadvideo" });
-  }
-  go2myshop() {
-    wx.navigateTo({ url: "/pages/shop/my" });
-  }
-  go2chatlist() {
-    wx.navigateTo({ url: "/pages/card/chatlist" });
+  go2my() {
+    wx.navigateTo({ url: "/pages/card/my" });
   }
   go2card(e) {
     let id = e.currentTarget.dataset.cardid;
@@ -203,25 +146,7 @@ export default class Mycard extends wepy.page {
   go2register() {
     wx.navigateTo({ url: "/pages/card/register" });
   }
-  methods = {
-    changeList() {
-      if (this.data.list.length > 3) {
-        let dataThree = new Array();
-        for (var k = 0; k < 3; k++) {
-          var i = Math.ceil(Math.random() * (this.data.list.length - 1));
-          if (dataThree.indexOf(this.data.list[i]) === -1) {
-            dataThree.push(this.data.list[i]);
-          } else {
-            k = k - 1;
-            continue;
-          }
-        }
-        this.msg = dataThree;
-      } else {
-        this.msg = this.list;
-      }
-    }
-  };
+  methods = {};
 }
 </script>
 <style>
@@ -380,7 +305,8 @@ export default class Mycard extends wepy.page {
   margin-left: 70rpx;
   color: #333;
 }
-.createCard-box {
+.createCard-box,
+.editCard-box {
   background: #ff6434;
   height: 120rpx;
   width: 88%;
@@ -393,19 +319,22 @@ export default class Mycard extends wepy.page {
   border-radius: 10rpx;
   border: solid 2px #cc502a;
 }
-.createCard-box text {
+.createCard-box text,
+.editCard-box text {
   float: left;
   display: block;
   font-size: 38rpx;
 }
-.createCard-box image {
+.createCard-box image,
+.editCard-box image {
   width: 52rpx;
   height: 52rpx;
   display: block;
   float: left;
   margin: 32rpx 20rpx 32rpx 35rpx;
 }
-.my-createCard {
+.my-createCard,
+.my-editCard {
   margin-left: 140rpx;
 }
 

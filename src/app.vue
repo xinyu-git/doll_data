@@ -12,31 +12,30 @@ const EventBus = require("./util/eventbus");
 export default class extends wepy.app {
   config = {
     pages: [
+      "pages/card/register",
       "pages/portal/cardlist",
-      "pages/article/paragraph",
-      "pages/article/cover",
-      "pages/article/create",
-      "pages/article/music",
-      "pages/article/altertitle",
-      "pages/article/edit",
+      "pages/card/my",
 
+      "pages/article/paragraph",
       "pages/article/articlelist",
+
       "pages/article/article",
+      "pages/shop/checkout",
+      "pages/article/edittitle",
+      "pages/article/music",
+      "pages/article/editorial",
       "pages/shop/index1",
       "pages/shop/goods",
       "pages/shop/catalog",
       "pages/shop/category",
-      "pages/shop/my",
       "pages/shop/orderlist",
       "pages/shop/orderdetail",
       "pages/shop/payresult",
       "pages/shop/cart",
       "pages/shop/crm",
-      "pages/shop/checkout",
       "pages/portal/index2",
       "pages/card/mycard",
       "pages/card/chat",
-      "pages/card/register",
       "pages/card/chatlist",
       "pages/card/mydashboard",
       "pages/card/uploadvideo",
@@ -372,7 +371,6 @@ export default class extends wepy.app {
     chatmsg: [],
     EventBus: EventBus,
     shopId: null,
-    cardid: null,
     list: []
   };
 }

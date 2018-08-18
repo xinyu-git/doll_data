@@ -27,7 +27,7 @@
         <text>地址：{{cardinfo.address}}</text>
         <text>手机：{{cardinfo.mobile}}</text>
       </view>
-      <button class="goShopBtn" bindtap="go2shop">我的商城</button>
+       <button class="goShopBtn" bindtap="go2shop">我的商城</button>
     </view>
   </view>
   <!--小视频列表-->
@@ -52,19 +52,25 @@
     <view class="weui-cell__ft ico_bt_share">
       <button class="ico_bt_btn" open-type="share" data-name="pageShare" >
       <image src="../../images/ico_bt_share.png"></image>
-      <text>分享</text>
+      <text>推荐</text>
       </button>
     </view>
     <view class="weui-cell__ft ico_bt_news2">
-      <button class="ico_bt_btn"  bindtap='go2chatlist'>
+      <button class="ico_bt_btn" open-type="contact" session-from="{{uid}}">
       <image src="../../images/ico_bt_news2.png"></image>
-      <text>消息</text>
+      <text>联系</text>
       </button>
     </view>
-    <view class="weui-cell__ft  ico_bt_my2">
-      <button class="ico_bt_btn"  bindtap='go2mycard'>
+     <view class="weui-cell__ft  ico_bt_my2" wx:if="{{my}}">
+      <button class="ico_bt_btn"  bindtap='go2my'>
       <image src="../../images/ico_bt_my2.png"></image>
       <text>我的</text>
+      </button>
+    </view>
+    <view class="weui-cell__ft  ico_bt_my2" wx:else>
+      <button class="ico_bt_btn"  bindtap='go2shop'>
+      <image src="../../images/ico_bt_my2.png"></image>
+      <text>商城</text>
       </button>
     </view>
   </view>
@@ -90,20 +96,31 @@ export default class Index extends wepy.page {
     mycard2: false,
     posterurl: "",
     source: "",
-    videolist: []
+    videolist: [],
+    my: true
+    //http: null
   };
 
   async onLoad(options) {
+    //this.http = `${api.server}`;
     this.cardid = options.id;
-    await this.createFavorite();
-    await this.loadCard();
+    let userInfo = wx.getStorageSync("user:detail");
+    this.userInfo = userInfo;
+    //console.log(this.$parent.globalData.usercard[0].id);
+    //console.log(this.cardid);
+    if (this.cardid != this.$parent.globalData.usercard[0].id) {
+      this.my = false;
+    }
+  }
+  async onShow() {
+    this.loadCard();
   }
   async loadCard() {
+    let that = this;
     wx.showNavigationBarLoading();
     this.cardinfo = await this.$parent.globalData.get(
       `${api.server}/auth/user/card/info?card_id=${this.cardid}`
     );
-    //console.log(this.cardinfo)
     let medias = this.cardinfo.medias;
     try {
       this.medias = JSON.parse(medias);
@@ -121,42 +138,24 @@ export default class Index extends wepy.page {
     //console.log(this.medias)
     this.uid = this.cardinfo.User.id;
     this.$apply();
-    wx.setNavigationBarTitle({ title: this.cardinfo.name });
+    wx.setNavigationBarTitle({ title: that.cardinfo.name });
     wx.hideNavigationBarLoading();
+    this.createFavorite();
+    //console.log(this.cardinfo);
   }
   async createFavorite() {
     let result = await this.$parent.globalData.post(
       `${api.server}/api/favorite/create`,
       {
-        target_id: "cardid",
+        target_id: this.cardid,
         target_type: "card",
-        description: "descriptio",
-        category: "classify",
-        cover_img:
-          "https://ws4.sinaimg.cn/large/006tNc79ly1fruhbv2j9ej30rs0rudvt.jpg",
-        title: "标题"
+        description: this.cardinfo.description,
+        category: "",
+        cover_img: "",
+        title: this.cardinfo.title
       }
     );
-    //console.log(this.cardid);
-
-    if (result.status == 1) {
-      wx.showToast({
-        title: result.message,
-        icon: "success",
-        duration: 2000
-      });
-      this.$apply();
-      return;
-    }
-    if (result.status == -1) {
-      wx.showToast({
-        title: result.message,
-        image: "/static/images/icon_error.png",
-        duration: 2000
-      });
-      this.$apply();
-      return;
-    }
+    //console.log(result);
   }
   methods = {
     async playVideo(e) {
@@ -167,7 +166,7 @@ export default class Index extends wepy.page {
       //if (e.currentTarget.id == 2) {
       //  this.vCoverBox2 = false;
       //}
-      console.log(e.currentTarget.id);
+      //console.log(e.currentTarget.id);
       for (var i = 0; i < this.videolist.length; i++) {
         if (e.currentTarget.id == i) {
           this.source = this.videolist[i].source;
@@ -179,36 +178,11 @@ export default class Index extends wepy.page {
       //this.videoContext.play();
       this.videoContext.requestFullScreen({ direction: 90 });
     },
-    /*handletouchmove: function(event) {
-      var currentX = event.touches[0].pageX;
-      var currentY = event.touches[0].pageY;
-      var tx = currentX - this.data.lastX;
-      var ty = currentY - this.data.lastY;
-      var text = "";
-      if (Math.abs(tx) > Math.abs(ty)) {
-      } else {
-        if (ty < 0) {
-          this.custombg = false;
-          this.mycard1 = false;
-          this.mycard2 = true;
-        } else if (ty > 0) {
-          this.custombg = true;
-          this.mycard1 = true;
-          this.mycard2 = false;
-        }
-      }
-      //将当前坐标进行保存以进行下一次计算
-      this.data.lastX = currentX;
-      this.data.lastY = currentY;
-    },*/
     playVideo2() {
       this.videoContext.requestFullScreen({ direction: 90 });
     },
-    go2mycard() {
-      wx.navigateTo({ url: "/pages/shop/my" });
-    },
-    go2chatlist() {
-      wx.navigateTo({ url: "/pages/card/chatlist" });
+    go2my() {
+      wx.navigateTo({ url: "/pages/card/my" });
     },
     go2shop() {
       wx.navigateTo({ url: "/pages/shop/index1?id=" + this.cardid });

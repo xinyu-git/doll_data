@@ -1,6 +1,6 @@
 <template>
 <view class="page">
-  <view class="address-box">
+  <view class="address-box" >
         <view class="address-item" wx:if="{{addressList}}" bindtap="chooseAddress">
             <view class="l">
                 <text class="name">{{checkedAddress.userName}}</text>
@@ -13,7 +13,7 @@
                 <image src="/static/images/address_right.png"></image>
             </view>
         </view>
-        <view class="address-item address-empty" bindtap="chooseAddress" wx:if="{{Address}}">
+        <view class="address-item address-empty" bindtap="chooseAddress" wx:if="{{Address}}" >
             <view class="m">
                选择收货地址
             </view>
@@ -22,6 +22,10 @@
             </view>
         </view>
     </view>
+    <view class="address-box2" style="display:none">
+        <label>充值账号 :</label>
+        <input class="inp" type="number" placeholder="请输入账号" placeholder-class='placeholdercolor'/>
+    </view> 
     <view class="coupon-box">
         <view class="coupon-item">
             <view class="l">
@@ -33,8 +37,7 @@
             </view>
         </view>
     </view>
-
-    <view class="order-box">
+     <view class="order-box">
         <view class="order-item">
             <view class="l">
                 <text class="name">商品合计</text>
@@ -612,5 +615,26 @@ export default class Index extends wepy.page {
   text-align: center;
   color: #fff;
   font-size: 30rpx;
+}
+.address-box2 {
+  font-size: 30rpx;
+  background: #fff;
+  height: 108.3rpx;
+  line-height: 108.3rpx;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+.address-box2 label {
+  float: left;
+  margin-left: 31.25rpx;
+  position: relative;
+  top: 5rpx;
+  margin-right: 10rpx;
+}
+.address-box2 .inp {
+  padding-left: 10rpx;
+  width: 450rpx;
+  top: 30rpx;
+  position: relative;
 }
 </style>
