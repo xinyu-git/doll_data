@@ -6,7 +6,7 @@ import {
 export default class auth extends wepy.page {
     async onLoad(options) {
         let cp = getCurrentPageUrlWithArgs();
-        let userinfo = this.$parent.globalData.userInfo = this.$parent.globalData.userInfo || wx.getStorageSync('user:detail');
+        let userinfo = this.$parent.globalData.userInfo = this.$parent.globalData.userInfo || wx.getStorageSync('user:detail') || {};
         userinfo.isRegister = !!userinfo.nickname;
         console.log(userinfo)
         console.log(!!userinfo.nickname)

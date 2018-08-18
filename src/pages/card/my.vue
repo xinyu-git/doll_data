@@ -73,7 +73,7 @@
 <script>
 import wepy from "wepy";
 import api from "../../config/api";
-export default class Index extends wepy.page {
+export default class My extends wepy.page {
   config = {
     enablePullDownRefresh: false,
     navigationBarTitleText: "我"
@@ -89,7 +89,13 @@ export default class Index extends wepy.page {
   }
   methods = {
     go2dashboard() {
-      wx.navigateTo({ url: "/pages/card/mydashboard" });
+      //wx.navigateTo({ url: "/pages/card/mydashboard" });
+      wx.showModal({
+        confirmColor: "#338AF1",
+        title: "提示",
+        showCancel: false,
+        content: "正在开发中"
+      });
     },
     go2crm(e) {
       //console.log(decodeURIComponent(e.currentTarget.dataset.url))

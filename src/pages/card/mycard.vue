@@ -1,23 +1,23 @@
 <template>
 <view class="page">
   <!--名片信息-->
-  <view class="weui-media-box weui-media-box_appmsg my-cardinfoBox" wx:for="{{cardinfo}}" wx:if="{{index<1}}" wx:key="">
+  <view class="weui-media-box weui-media-box_appmsg my-cardinfoBox" wx:for="{{cardinfo}}" wx:if="{{index<1}}"   wx:key="">
     <view class="weui-media-box__hd_in-appmsg my-roundness-img">
       <image class="weui-media-box__thumb" src="{{my_avator}}"></image>
     </view>
-    <view class="weui-media-box__bd_in-appmsg my-infoBox" >
+    <view class="weui-media-box__bd_in-appmsg my-infoBox {{save?'':'editBox'}}" >
       <view class="weui-media-box__title my-nameBox">
-        <text>{{item.name}}</text>
-        <text>{{item.title}}</text>
+        <input disabled='{{save}}' bindinput="bindInput" data-name='name' class="inp" value="{{item.name}}" type="text" placeholder-class='placeholdercolor' />
+        <input disabled='{{save}}' bindinput ="bindInput" data-name='title' class="inp" value="{{item.title}}" type="text"  placeholder-class='placeholdercolor' />
       </view>
       <view class="weui-media-box__desc my-addressBox">
-        <text>公司：{{item.corp}}</text>
-        <text>地址：{{item.address}}</text>
-        <text>手机：{{item.mobile}}</text>
+        <input disabled='{{save}}' bindinput ="bindInput" data-name='corp' class="inp" value="{{item.corp}}" type="text"  placeholder-class='placeholdercolor' />
+        <input disabled='{{save}}' bindinput ="bindInput" data-name='address' class="inp" value="{{item.address}}" type="text"  placeholder-class='placeholdercolor' />
+        <input disabled='{{save}}' bindinput ="bindInput" data-name='mobile' class="inp" value="{{item.mobile}}" type="text"  placeholder-class='placeholdercolor' />
       </view>
       <view class="ico-editor-btn">
         <image src="../../images/ico-editor.png"></image>
-        <text>编辑</text>
+        <text bindtap="editButton">{{editText}}</text>
       </view>
     </view>
   </view>
@@ -84,7 +84,6 @@
 </template>
 <script>
 import wepy from "wepy";
-
 import api from "../../config/api";
 export default class Mycard extends wepy.page {
   config = {
@@ -92,34 +91,60 @@ export default class Mycard extends wepy.page {
   };
   components = {};
   data = {
-    cardinfo: null,
+    cardinfo: [],
+    editinfo: [],
     uid: null,
     cardid: null,
     hasbackgroundmusic: false,
     mycard1: true,
     medias: [],
     mycard2: false,
-    my_avator: ""
+    my_avator: "",
+    editText: "编辑",
+    save: true
   };
 
   async onLoad(options) {
     this.cardid = options.id;
     //console.log(this.cardinfo);
-    if (!this.cardinfo) {
-      let result = await this.$parent.globalData.get(
-        `${api.server}/auth/user/card/myowncards`
-      );
-      //console.log(result);
-      if (result.length > 0) {
-        this.createCard = false;
-        this.cardinfo = this.$parent.globalData.usercard = result;
-        this.my_avator = this.$parent.globalData.userInfo.headimg;
-        this.$apply();
-        //wx.setStorageSync("user:card",result.rows);
-      }
+    let result = await this.$parent.globalData.get(
+      `${api.server}/auth/user/card/myowncards`
+    );
+    //console.log(result);
+    if (result.length > 0) {
+      this.createCard = false;
+      this.cardinfo = this.editinfo = this.$parent.globalData.usercard = result;
+      this.my_avator = this.$parent.globalData.userInfo.headimg;
+
+      //wx.setStorageSync("user:card",result.rows);
     }
+
+    this.$apply();
   }
-  methods = {};
+  methods = {
+    async editButton(e) {
+      //console.log(this.editinfo)
+      if (this.editText === "编辑") {
+        this.editText = "保存";
+        this.save = false;
+      } else {
+        let resultUpdate = await this.$parent.globalData.post(
+          `${api.server}/auth/user/card/modify`,
+          this.editinfo[0]
+        );
+        console.log(resultUpdate);
+        //根据返回结果判断提示成功 失败
+        this.editText = "编辑";
+        this.save = true;
+      }
+      this.$apply();
+    },
+    bindInput(e) {
+      let key = e.currentTarget.dataset.name;
+      this.editinfo[0][key] = e.detail.value;
+      console.log(this.editinfo);
+    }
+  };
   go2cardlist() {
     wx.navigateTo({ url: "/pages/portal/cardlist" });
   }
@@ -141,6 +166,17 @@ export default class Mycard extends wepy.page {
 }
 </script>
 <style>
+.editBox .inp {
+  border: 1px solid #ccc;
+}
+.inp {
+  font-size: 30rpx;
+  padding: 0 15rpx;
+  margin-bottom: 15rpx;
+}
+.placeholdercolor {
+  color: #ccc;
+}
 .my-addressBox text {
   display: block;
   color: #666;
@@ -148,7 +184,6 @@ export default class Mycard extends wepy.page {
   line-height: 1.4;
 }
 .my-nameBox {
-  padding-bottom: 10rpx;
   width: 75%;
 }
 .my-nameBox text {
@@ -222,8 +257,8 @@ export default class Mycard extends wepy.page {
 }
 .ico-editor-btn {
   position: absolute;
-  top: 60rpx;
-  right: 100rpx;
+  top: 30rpx;
+  right: 30rpx;
 }
 .ico-editor-btn image {
   width: 22rpx;

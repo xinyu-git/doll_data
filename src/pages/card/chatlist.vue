@@ -22,7 +22,7 @@
 <script>
 import wepy from "wepy";
 import config from "../../config/api";
-export default class Chat extends wepy.page {
+export default class Chatlist extends wepy.page {
   config = {
     navigationBarTitleText: "最新消息"
   };

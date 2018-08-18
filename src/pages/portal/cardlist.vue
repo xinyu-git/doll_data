@@ -61,8 +61,9 @@
 </template>
 <script>
 //import wepy from "wepy";
-import auth from "../base/auth";
+
 import api from "../../config/api";
+import auth from "../base/auth";
 export default class Cardlist extends auth {
   config = {
     navigationBarTitleText: "我的名片"
@@ -80,7 +81,11 @@ export default class Cardlist extends auth {
 
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
-
+    let result = await super.onLoad();
+    if (!result) {
+      return;
+    }
+    let userinfo = (this.userinfo = this.$parent.globalData.userInfo);
     this.key = options.key || options.scene;
     this.uid = options.id;
     this.usercard =

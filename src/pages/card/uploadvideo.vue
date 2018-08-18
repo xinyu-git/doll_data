@@ -38,7 +38,7 @@ export default class UploadVideo extends wepy.page {
     this.cardinfo = await this.$parent.globalData.get(
       `${api.server}/auth/user/card/info?card_id=${this.cardid}`
     );
-    console.log(this.cardinfo);
+    //console.log(this.cardinfo);
     let medias = this.cardinfo.medias;
     try {
       medias = JSON.parse(medias);
@@ -58,7 +58,7 @@ export default class UploadVideo extends wepy.page {
       }
     }
     this.medias.push(obj);
-    console.log(this.medias);
+    //console.log(this.medias);
 
     this.$apply();
   }
@@ -69,7 +69,7 @@ export default class UploadVideo extends wepy.page {
       `${api.server}/api/util/fileupload`,
       tempFilePaths
     );
-    console.log(resultUpload);
+    //console.log(resultUpload);
     resultUpload = JSON.parse(resultUpload);
     if (resultUpload[0].url) {
       that.showImg = false;
@@ -110,7 +110,7 @@ export default class UploadVideo extends wepy.page {
             title: "上传中。。"
           });
           // success
-          console.log(res);
+          //console.log(res);
           that.saveMedia(res.tempFilePath);
         },
         fail: function() {
