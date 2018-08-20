@@ -91,10 +91,9 @@ export default class Chat extends wepy.page {
     this.$apply();
   }
   methods = {
-    getfocus() {
-      this.setData({
-        toView: "sroll-bottom"
-      });
+    async getfocus() {
+      let that = this;
+      this.toView = "sroll-bottom";
     },
     bindInputTitle(e) {
       this.readyToSend = e.detail.value;
