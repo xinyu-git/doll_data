@@ -2,7 +2,7 @@
 <view class="page">
   <view class="page__bd ">
     <view class="content">
-      <scroll-view scroll-y style="height:1000rpx;" scroll-into-view="{{toView}}"  bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll">
+      <scroll-view scroll-y style="height:1050rpx;" scroll-into-view="{{toView}}"  bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" >
         <view class="my-timeShow">
           <text>{{topTime}}</text>
           <view class="my-line"></view>
@@ -21,7 +21,7 @@
     <view class="weui-footer weui-footer_fixed-bottom" style="bottom:0;">
       <view class="replymsg_box">
         <input class="weui-textarea" placeholder="请输入要回复的内容" style="text-align:left;" 
-                value="{{readyToSend}}" bindtap="getfocus"  bindinput="bindInputTitle" confirm-type="send" cursor-spacing="75" bindconfirm="send" />
+                value="{{readyToSend}}" bindtap="getfocus"  bindinput="bindInputTitle" confirm-type="send" cursor-spacing="85" bindconfirm="send" />
       </view>
       <view class="my-send-box">
         <image class="uploadimg" bindtap="uploadimg"  src="../../images/ico-pic.png"></image>
@@ -54,6 +54,7 @@ export default class Chat extends wepy.page {
   };
   async onLoad(options) {
     //进入到页面的时候，对告诉服务器，要lock住这个key
+    this.toView = "sroll-bottom";
     this.$parent.globalData.EventBus.removeEventListener(
       "m:msg",
       this.onmsgchange,
@@ -64,10 +65,16 @@ export default class Chat extends wepy.page {
       this.onmsgchange,
       this
     );
-    //console.log(this.$parent.globalData.userInfo);
+    console.log(this.$parent.globalData.userInfo);
     this.my_avator = this.$parent.globalData.userInfo.headimg;
+    let chatmsg = this.$parent.globalData.chatusers;
     this.myid = this.$parent.globalData.userInfo.id;
     this.uid = options.id;
+    for (let i in chatmsg) {
+      if ((this.uid = chatmsg[i].id)) {
+        this.to_avator = chatmsg[i].headimg;
+      }
+    }
     console.log("this.uid is ", this.uid);
     console.log(this.$parent.globalData);
     this.onmsgchange();
@@ -142,8 +149,8 @@ export default class Chat extends wepy.page {
 .my-send-box {
   padding: 30rpx;
   position: relative;
-  height: 80rpx;
   background: #fff;
+  height: 45rpx;
 }
 .my-send-box .uploadimg {
   width: 52rpx;
@@ -158,7 +165,7 @@ export default class Chat extends wepy.page {
   border-bottom: 1px solid #ccc;
 }
 .weui-textarea {
-  height: 80rpx;
+  height: 15rpx;
   padding: 30rpx;
   color: #000;
   background: #fff;

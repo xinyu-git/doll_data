@@ -22,7 +22,7 @@
     </view>
   </view>
   <!--名片发送数据-->
-  <view class="weui-flex my-dateBox">
+  <view class="weui-flex my-dateBox" style="display:none;">
     <view class="weui-cell__ft my-dateNum">
       <text>150</text>
       <text>次发送名片</text>
@@ -36,7 +36,7 @@
     </view>
   </view>
   <!--视频列表-->
-  <view class="my-videoList">
+  <view class="my-videoList" style="display:none">
     <view class="weui-cells__title my-videoTitle">视频</view>
     <view class="weui-grids my-sVideoBox">
       <view class="weui-grid my-small-video">
