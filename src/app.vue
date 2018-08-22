@@ -13,12 +13,11 @@ export default class extends wepy.app {
   config = {
     pages: [
       "pages/portal/cardlist",
-      "pages/card/my",
       "pages/card/register",
-
+      "pages/card/mycard",
+      "pages/card/my",
       "pages/article/paragraph",
       "pages/article/articlelist",
-
       "pages/article/article",
       "pages/shop/checkout",
       "pages/article/edittitle",
@@ -34,7 +33,7 @@ export default class extends wepy.app {
       "pages/shop/cart",
       "pages/shop/crm",
       "pages/portal/index2",
-      "pages/card/mycard",
+
       "pages/card/chat",
       "pages/card/chatlist",
       "pages/card/mydashboard",

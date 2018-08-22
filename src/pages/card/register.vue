@@ -8,7 +8,7 @@
         <label class="weui-label">姓名</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入姓名"  bindinput="bindInput" data-name="fullname"/>
+        <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入姓名"  bindinput="bindInput" data-name="name"/>
       </view>
     </view>
     <!--手机号-->
@@ -20,7 +20,7 @@
         <text >{{mobilelite}}</text>
       </view> 
       <view class="weui-cell__ft">
-        <button class="weui-vcode-btn my-orange-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取验证码</button>
+        <button class="weui-vcode-btn my-orange-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号</button>
       </view>
     </view>
     <!--公司-->
@@ -29,7 +29,7 @@
         <label class="weui-label">公司</label>
       </view>
       <view class="weui-cell_bd weui-cell_primary">
-        <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入公司" bindinput="bindInput"  data-name="company"/>
+        <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入公司" bindinput="bindInput"  data-name="corp"/>
       </view>
     </view>
     <!--职位-->
@@ -39,6 +39,15 @@
       </view>
       <view class="weui-cell_bd weui-cell_primary">
         <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入职位" bindinput="bindInput"  data-name="title"/>
+      </view>
+    </view>
+    <!--地址-->
+    <view class="weui-cell my-formBox">
+      <view class="weui-cell_hd">
+        <label class="weui-label">地址</label>
+      </view>
+      <view class="weui-cell_bd weui-cell_primary">
+        <input class="weui-input" placeholder-class="phcolor" type="text" placeholder="请输入地址"  bindinput="bindInput" data-name="address"/>
       </view>
     </view>
     <!--保存按钮-->
@@ -58,13 +67,13 @@ export default class Register extends wepy.page {
   components = {};
   data = {
     allowGetNum: false,
-    fullname: "",
+    name: "",
     mobile: "",
     mobilelite: "",
     fromcode: "",
-    checkcode: "",
+    address: "",
     title: "",
-    company: "",
+    corp: "",
     key: ""
   };
   async createCard() {
@@ -77,7 +86,7 @@ export default class Register extends wepy.page {
       });
       return;
     }
-    if (!this.fullname) {
+    if (!this.name) {
       wx.showModal({
         confirmColor: "#338AF1",
         title: "提示",
@@ -95,7 +104,16 @@ export default class Register extends wepy.page {
       });
       return;
     }
-    if (!this.company) {
+    if (!this.address) {
+      wx.showModal({
+        confirmColor: "#338AF1",
+        title: "提示",
+        showCancel: false,
+        content: "为了更好的服务，请填写地址！"
+      });
+      return;
+    }
+    if (!this.corp) {
       wx.showModal({
         confirmColor: "#338AF1",
         title: "提示",
@@ -108,11 +126,11 @@ export default class Register extends wepy.page {
     let result = await this.$parent.globalData.post(
       `${api.server}/auth/user/card/registerAndCreate`,
       {
-        fullname: this.fullname,
+        name: this.name,
         mobile: this.mobile,
-        checkcode: this.checkcode,
+        address: this.address,
         title: this.title,
-        company: this.company
+        corp: this.corp
       }
     );
     wx.hideLoading();
@@ -125,7 +143,7 @@ export default class Register extends wepy.page {
       });
     } else {
       await this.$parent.globalData.refreshUserInfo();
-      wx.navigateTo({ url: "/pages/portal/cardlist" });
+      wx.navigateTo({ url: "/pages/card/my" });
     }
   }
   async onLoad(options) {

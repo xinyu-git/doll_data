@@ -7,13 +7,13 @@
     </view>
     <view class="weui-media-box__bd_in-appmsg my-infoBox {{save?'':'editBox'}}" >
       <view class="weui-media-box__title my-nameBox">
-        <input disabled='{{save}}' bindinput="bindInput" data-name='name' class="inp" value="{{item.name}}" type="text" placeholder-class='placeholdercolor' />
-        <input disabled='{{save}}' bindinput ="bindInput" data-name='title' class="inp" value="{{item.title}}" type="text"  placeholder-class='placeholdercolor' />
+      <label>姓名:</label><input disabled='{{save}}' bindinput="bindInput" data-name='name' class="inp" value="{{item.name}}" type="text" placeholder-class='placeholdercolor' />
+      <label>职位:</label> <input disabled='{{save}}' bindinput ="bindInput" data-name='title' class="inp" value="{{item.title}}" type="text"  placeholder-class='placeholdercolor' />
       </view>
       <view class="weui-media-box__desc my-addressBox">
-        <input disabled='{{save}}' bindinput ="bindInput" data-name='corp' class="inp" value="{{item.corp}}" type="text"  placeholder-class='placeholdercolor' />
-        <input disabled='{{save}}' bindinput ="bindInput" data-name='address' class="inp" value="{{item.address}}" type="text"  placeholder-class='placeholdercolor' />
-        <input disabled='{{save}}' bindinput ="bindInput" data-name='mobile' class="inp" value="{{item.mobile}}" type="text"  placeholder-class='placeholdercolor' />
+        <label>公司:</label><input disabled='{{save}}' bindinput ="bindInput" data-name='corp' class="inp" value="{{item.corp}}" type="text"  placeholder-class='placeholdercolor' />
+        <label>地址:</label><input disabled='{{save}}' bindinput ="bindInput" data-name='address' class="inp" value="{{item.address}}" type="text"  placeholder-class='placeholdercolor' />
+        <label>电话:</label><input disabled='{{save}}' bindinput ="bindInput" data-name='mobile' class="inp" value="{{item.mobile}}" type="text"  placeholder-class='placeholdercolor' />
       </view>
       <view class="ico-editor-btn">
         <image src="../../images/ico-editor.png"></image>
@@ -177,15 +177,27 @@ export default class Mycard extends wepy.page {
 .placeholdercolor {
   color: #ccc;
 }
+.my-addressBox {
+  font-size: 30rpx;
+  display: block;
+  line-height: 1.8;
+}
 .my-addressBox text {
   display: block;
   color: #666;
   font-size: 32rpx;
   line-height: 1.4;
 }
+.my-infoBox label {
+  float: left;
+  width: 80rpx;
+  display: block;
+  font-size: 32rpx;
+}
 .my-nameBox {
   width: 75%;
 }
+
 .my-nameBox text {
   display: block;
   margin-right: 30rpx;

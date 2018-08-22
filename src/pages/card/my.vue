@@ -47,7 +47,7 @@
       </view>
     </view>
 </view>
-<view class="user-menu">
+<view class="user-menu" style="display:none">
     <view class="card_title">商城管理</view>
     <view class="item">
       <view class="a">

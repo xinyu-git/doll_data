@@ -229,4 +229,13 @@ export default class UploadVideo extends wepy.page {
   text-align: center;
   font-size: 28rpx;
 }
+.commentInp text {
+  display: block;
+  float: left;
+  font-size: 30rpx;
+  margin-left: 40rpx;
+}
+.commentInp text:nth-child(2) {
+  float: right;
+}
 </style>
