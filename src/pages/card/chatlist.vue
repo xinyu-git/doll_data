@@ -36,12 +36,8 @@ export default class Chatlist extends wepy.page {
   };
   async onLoad(options) {
     let that = this;
-    this.$parent.globalData.chatusers = wx.getStorageSync("card:users");
-    //this.$parent.globalData.chatusers = {"uid19900":{"id":19900,"fullname":"孙奇","headimg":"http://wx.qlogo.cn/mmopen/HE6qQtUcENYLLkjK0icyic1oh7fe71HguCxS0WEklQkibKZiasNjAat1GYEPicqt04cpcWnfKJL68bh1XuYTdXibBJnh7bZznkQeQr/0","nickname":null}}
-
-    this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg");
-    //this.$parent.globalData.chatmsg =[{"from":19900,"to":"19902","content":"啦啦啦啦","msgTime":"2018-08-20 10:30:18","type":"text"},{"from":19900,"to":"19902","content":"早上好","msgTime":"2018-08-20 10:31:01","type":"text"},{"from":19900,"to":"19902","content":"刚刚刚刚","msgTime":"2018-08-20 10:32:17","type":"text"},{"from":"me","to":"19900","content":"哈哈哈哈","type":"text"},{"type":"","from":19902,"to":"19900","msgTime":"2018-08-20 10:40:01","content":"哈哈哈哈"},{"from":"me","to":"19900","content":"哈哈哈哈","type":"text"},{"type":"","from":19902,"to":"19900","msgTime":"2018-08-20 10:40:05","content":"哈哈哈哈"},{"from":"me","to":"19900","content":"哈哈哈","type":"text"},{"type":"","from":19902,"to":"19900","msgTime":"2018-08-20 10:40:10","content":"哈哈哈"},{"type":"","from":19902,"to":"19900","msgTime":"2018-08-20 10:50:29","content":"你好"}]
-
+    this.$parent.globalData.chatusers = wx.getStorageSync("card:users") || {};
+    this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg") || [];
     let userInfo = wx.getStorageSync("user:detail");
     this.userInfo = userInfo;
     console.log(this.userInfo);
