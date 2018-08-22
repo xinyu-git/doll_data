@@ -36,12 +36,11 @@ export default class Chatlist extends wepy.page {
   };
   async onLoad(options) {
     let that = this;
+    this.key = options.key || options.scene;
+  }
+  async onShow() {
     this.$parent.globalData.chatusers = wx.getStorageSync("card:users") || {};
     this.$parent.globalData.chatmsg = wx.getStorageSync("card:chatmsg") || [];
-    let userInfo = wx.getStorageSync("user:detail");
-    this.userInfo = userInfo;
-    console.log(this.userInfo);
-    this.onchatuserchange();
     this.$parent.globalData.EventBus.removeEventListener(
       "userchage",
       this.onchatuserchange,
@@ -52,7 +51,10 @@ export default class Chatlist extends wepy.page {
       this.onchatuserchange,
       this
     );
-    this.key = options.key || options.scene;
+    let userInfo = wx.getStorageSync("user:detail");
+    this.userInfo = userInfo;
+    console.log(this.userInfo);
+    this.onchatuserchange();
   }
   onchatuserchange(evt) {
     /*console.log("user changes");
@@ -87,7 +89,7 @@ export default class Chatlist extends wepy.page {
     chat2person(e) {
       let id = e.currentTarget.dataset.url;
       //console.log("go 2 chat");
-      //console.log(id);
+      console.log(id);
       wx.navigateTo({ url: `../card/chat?id=${id}` });
     }
   };
