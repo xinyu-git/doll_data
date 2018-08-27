@@ -187,7 +187,8 @@ export default class extends wepy.app {
     let self = this;
     let result = wx.getSystemInfoSync(); //取运行环境
     self.globalData.environment = result.environment || "";
-
+    if (result.environment == "wxwork") {
+    }
     if (!!options.scene) {
       self.globalData.scene = options.scene; //huan
     }

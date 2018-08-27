@@ -1,6 +1,6 @@
 <template>
 <view class="page">
-   <scroll-view class="page__bd"  scroll-y="true">
+   
     <view class="articleDetails ">
       <view class="article-content">
         <view class="article-title">{{articleConBox.title}}</view>
@@ -24,13 +24,13 @@
         </view>
       </view>
     </view>
-  </scroll-view>
+
 </view>
 </template>
 <script>
 import wepy from "wepy";
 import api from "../../config/api";
-export default class UploadVideo extends wepy.page {
+export default class Article extends wepy.page {
   config = {
     navigationBarTitleText: "文章详情",
     usingComponents: {

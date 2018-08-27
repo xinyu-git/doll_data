@@ -2,7 +2,7 @@
 <view class="page">
   <view class="page__bd my_article">
     <scroll-view class="list" style="height: 1208rpx" scroll-y="true" bindscrolltoupper="refresh" bindscrolltolower="loadMore"> 
-    <view class="articleList" wx:for="{{articleList}}" wx:for-item="item"  wx:key="item.id" id="{{item.id}}" bindtap="go2article">
+    <view class="articleList" wx:for="{{articleList}}"  wx:for-item="item"  wx:key="item.id" id="{{item.id}}" bindtap="go2article">
           <view class="articleBox" >
             <view class="article-title">{{item.title}}</view>
           </view>
@@ -21,7 +21,7 @@
             </view>
             <view class="weui-flex my_dataStats">
               <view class="weui-flex__item">{{item.clickTimes}}阅读</view>
-              <view class="weui-flex__item">{{item.commentTimes}}评论</view>
+              <!--<view class="weui-flex__item">{{item.commentTimes}}评论</view>-->
               <view class="weui-flex__item">{{item.likeTimes}}点赞</view>
             </view>
           </view>
@@ -56,7 +56,7 @@
 <script>
 import wepy from "wepy";
 import api from "../../config/api";
-export default class UploadVideo extends wepy.page {
+export default class ArticleList extends wepy.page {
   config = { navigationBarTitleText: "文章列表" };
   components = {};
   data = {
@@ -79,7 +79,7 @@ export default class UploadVideo extends wepy.page {
   //获取文章列表信息
   async getArticleList(pageIndex) {
     let resultArticle = await this.$parent.globalData.get(
-      `${api.server}/api/article/list`
+      `${api.server}/api/article/list/created`
     );
     console.log(typeof this.articleList);
     if (resultArticle.rows.length > 0) {

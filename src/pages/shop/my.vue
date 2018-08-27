@@ -49,7 +49,7 @@
 </view>
 <view class="user-menu">
     <view class="card_title">商城管理</view>
-    <view class="item">
+    <view class="item" bindtap="go2crm">
       <view class="a">
         <text class="icon address"></text>
         <text class="txt">商品管理</text>
@@ -88,13 +88,13 @@ export default class Index extends wepy.page {
     //console.log(userInfo.nickname);
   }
   methods = {
-    go2dashboard() {
-      wx.navigateTo({ url: "/pages/card/mydashboard" });
-    },
+    go2dashboard() {},
     go2crm(e) {
-      //console.log(decodeURIComponent(e.currentTarget.dataset.url))
       let url =
-        "https://card.kong.net?access_token=" + this.$parent.globalData.token;
+        "https://card.kong.net/?access_token=" +
+        this.$parent.globalData.token +
+        "#/goods/goodsList";
+      console.log("----", encodeURIComponent(url));
       wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
     },
     go2myarticle() {
@@ -109,7 +109,7 @@ export default class Index extends wepy.page {
     go2mycard() {
       wx.navigateTo({ url: "/pages/card/mycard" });
     },
-    go2card(e) {
+    go2card() {
       wx.navigateTo({
         url: "/pages/portal/index2?id=" + this.$parent.globalData.usercard[0].id
       });

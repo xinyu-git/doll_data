@@ -88,6 +88,7 @@ export default class Cardlist extends auth {
     let userinfo = (this.userinfo = this.$parent.globalData.userInfo);
     this.key = options.key || options.scene;
     this.uid = options.id;
+
     this.usercard =
       this.$parent.globalData.usercard || wx.getStorageSync("user:card");
   }

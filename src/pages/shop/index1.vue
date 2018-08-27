@@ -10,8 +10,8 @@
   </swiper>
   <!--居家列表-->
   <view class="good-gridList">
-    <view class="goods_title">
-     <text>{{goodsName}}</text>
+    <view class="goods_title" >
+     <!--<text >{{goodsName}}</text>-->
     </view>
     <view class="goodsBox">
       <block wx:for="{{goodsList}}" wx:key="{{item.id}}">
@@ -21,14 +21,7 @@
           <text class="price">￥{{item.retail_price}}</text>
         </view>
       </block>
-      <!--more-->
-      <view class="item item-b item-more">
-        <navigator url="/pages/shop/catalog?id={{goodsid}}" class="more-a">
-          <view class="txt">{{'更多'+goodsName+'好物'}}</view>
-          <image class="icon" src="../../static/images/icon_go_more.png" background-size="cover"></image>
-        </navigator>
-      </view>
-    </view>
+   </view>
   </view>
 </view>
 </template>
@@ -51,6 +44,7 @@ export default class Index extends wepy.page {
     //console.log(options);
     this.$parent.globalData.shopId = options.id;
     await this.getIndexData();
+    await this.getIndexList();
   }
   async getIndexData() {
     //banner
@@ -64,15 +58,21 @@ export default class Index extends wepy.page {
     }
     //goodsList
     //console.log(resultindex.data.categoryList[0].goodsList);
-    this.goodsName = this.$parent.globalData.goodsName =
-      resultindex.data.categoryList[0].name;
-    this.goodid = resultindex.data.categoryList[0].id;
-    if (resultindex.data.categoryList[0].goodsList.length > 0) {
-      this.goodsList = this.$parent.globalData.goodsList =
-        resultindex.data.categoryList[0].goodsList;
-    }
+
     //console.log(this.goodsList);
     this.$apply();
+  }
+  async getIndexList() {
+    let resultList = await this.$parent.globalData.get(
+      `${api.server}/api/shop/goods/list?shopId=${
+        this.$parent.globalData.shopId
+      }`
+    );
+    console.log(JSON.stringify(resultList));
+    if (resultList.data.goodsList.length > 0) {
+      this.goodsList = resultList.data.goodsList;
+    }
+    this.$apply;
   }
 
   methods = {

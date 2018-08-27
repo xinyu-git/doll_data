@@ -6,6 +6,7 @@
       <video id="myVideo" class="myVideo" src="{{source}}" autoplay="true"  loop="true" controls></video>
     </view>
   </view>
+  <view class="hitImg" wx:else>请去上传视频</view>
   <!--名片信息-->
   <view class="my-cardBox1" wx:if="{{mycard1}}">
     <view class="weui-cell my-cardCon">
@@ -27,7 +28,7 @@
         <text>地址：{{cardinfo.address}}</text>
         <text>手机：{{cardinfo.mobile}}</text>
       </view>
-       <button class="goShopBtn" bindtap="go2shop">我的商城</button>
+       <button wx:if="{{hasShop}}" class="goShopBtn" bindtap="go2shop">我的商城</button>
     </view>
   </view>
   <!--小视频列表-->
@@ -41,11 +42,32 @@
     </view></view>
   </view>
   <!--企业信息文章-->
-  <view class="my-introBox">
-    <view class="weui-cells__title my_title">企业信息</view>
-    <text>空中网是中国领先的网络游戏研发商和运营商，致力于为中国及海外互联网用户提供高品质的大型在线游戏服务，同时为中国手机用户提供多元化的无线娱乐服务。 </text>
-    <text>公司于2004年在美国纳斯达克上市，目前公司业务覆盖互联网游戏、手机游戏以及无线增值三大领域。</text>
-    <text> 2017年4月14日晚间消息，空中网今日宣布，已完成私有化交易，公司将不再是一家上市公司，而成为Linkedsee Limited的全资子公司。</text>
+  <view class="my-articleList">
+  <view class="weui-cells__title my_title">最新动态</view>
+    <view class="articleList" wx:for="{{articleList}}" wx:for-item="item" wx:if="{{index<3}}"  wx:key="item.id" id="{{item.id}}" bindtap="go2article">
+          <view class="articleBox" >
+            <view class="article-title">{{item.title}}</view>
+          </view>
+          <view class="article-banner" wx:if="{{item.content.cover}}">
+            <image class="bannerImg" src="{{http+item.content.cover}}" alt="" mode="aspectFill" />
+          </view>
+          <view class="article_cont" wx:else>{{item.coverText}}</view>
+        <view class="page__bd-foot  clearfloat">
+            <view class="weui-media-box weui-media-box_appmsg avaterBox">
+              <view class="weui-media-box__hd">
+                <image class="weui-media-box__thumb" src="{{item.Creator.headimg}}"></image>
+              </view>
+              <view class="weui-media-box__bd">
+                <text class="weui-media-box__title">{{item.author}}</text>
+              </view>
+            </view>
+            <view class="weui-flex my_dataStats">
+              <view class="weui-flex__item">{{item.clickTimes}}阅读</view>
+              <!--<view class="weui-flex__item">{{item.commentTimes}}评论</view>-->
+              <view class="weui-flex__item">{{item.likeTimes}}点赞</view>
+            </view>
+          </view>
+      </view>
   </view>
   <!--底部固定导航-->
   <view class="weui-cell weui-bottombar noline">
@@ -97,24 +119,51 @@ export default class Index extends wepy.page {
     posterurl: "",
     source: "",
     videolist: [],
-    my: true
-    //http: null
+    articleList: [],
+    content: "",
+    my: true,
+    http: null,
+    arry: [],
+    hasShop: false
   };
 
   async onLoad(options) {
-    //this.http = `${api.server}`;
+    this.http = `${api.server}`;
     this.cardid = options.id;
+    this.article_id = this.cardid;
+    this.loadCard();
     let userInfo = wx.getStorageSync("user:detail");
     this.userInfo = userInfo;
     //console.log(this.$parent.globalData.usercard[0].id);
-    //console.log(this.cardid);
     if (this.cardid != this.$parent.globalData.usercard[0].id) {
       this.my = false;
     }
   }
   async onShow() {
-    this.loadCard();
+    this.getArticleList();
+    this.getHasShop();
   }
+  //判断商城数据
+  async getHasShop() {
+    let resultindex = await this.$parent.globalData.get(
+      `${api.server}/api/shop/goods/list?shopId=${this.cardid}`
+    );
+    console.log(resultindex);
+    if (!resultindex.data.goodsList) {
+      wx.setStorageSync("has_shop", false); //是没有
+    } else {
+      wx.setStorageSync("has_shop", true); //是有
+    }
+    if (wx.getStorageSync("has_shop") == true) {
+      this.hasShop = true;
+    } else if (wx.getStorageSync("has_shop") == false) {
+      this.hasShop = false;
+    } else {
+      this.getHasShop();
+    }
+    this.$apply();
+  }
+  //获取名片的Info
   async loadCard() {
     let that = this;
     wx.showNavigationBarLoading();
@@ -127,22 +176,28 @@ export default class Index extends wepy.page {
     } catch (e) {
       this.medias = [];
     }
-    for (var i = 0; i < this.medias.length; i++) {
-      if (this.medias[i].isDefault) {
-        this.source = this.medias[i].source;
-      } else {
-        this.videolist.push(this.medias[i]);
+    if (this.medias.length == 0) {
+      this.custombg = false;
+    } else {
+      for (var i = 0; i < this.medias.length; i++) {
+        if (this.medias[i].isDefault) {
+          this.source = this.medias[i].source;
+        } else {
+          this.videolist.push(this.medias[i]);
+        }
       }
     }
     //console.log(this.cardinfo.medias)
     //console.log(this.medias)
     this.uid = this.cardinfo.User.id;
+    //console.log(this.uid);
     this.$apply();
     wx.setNavigationBarTitle({ title: that.cardinfo.name });
     wx.hideNavigationBarLoading();
     this.createFavorite();
     //console.log(this.cardinfo);
   }
+  //对个人信息名片收藏
   async createFavorite() {
     let result = await this.$parent.globalData.post(
       `${api.server}/api/favorite/create`,
@@ -156,6 +211,47 @@ export default class Index extends wepy.page {
       }
     );
     //console.log(result);
+  }
+  //获取文章最新动态
+  async getArticleList() {
+    console.log(123123);
+    let resultArticle = await this.$parent.globalData.get(
+      `${api.server}/api/article/list`
+    );
+    console.log(typeof this.articleList);
+    if (resultArticle.rows.length > 0) {
+      for (let i = 0; i < resultArticle.rows.length; i++) {
+        resultArticle.rows[i].content = JSON.parse(
+          resultArticle.rows[i].content
+        );
+        //如果cover不存在 设置文章里的第一张图做为封面。
+        if (!resultArticle.rows[i].content.cover) {
+          for (let j in resultArticle.rows[i].content.list) {
+            if (resultArticle.rows[i].content.list[j].status == 1) {
+              resultArticle.rows[i].content.cover =
+                resultArticle.rows[i].content.list[j].media;
+              break;
+            }
+          }
+        }
+        //如果图片也不存在 显示第一段文字
+        if (!resultArticle.rows[i].content.cover) {
+          for (let m in resultArticle.rows[i].content.list) {
+            if (resultArticle.rows[i].content.list[m].content) {
+              resultArticle.rows[i]["coverText"] =
+                resultArticle.rows[i].content.list[m].content;
+              break;
+            }
+          }
+        }
+        //console.log(resultArticle.rows[i]);
+        if (this.uid == resultArticle.rows[i].Creator.id) {
+          this.arry.push(resultArticle.rows[i]);
+        }
+      }
+      this.articleList = this.arry;
+      // console.log(this.uid);
+    }
   }
   methods = {
     async playVideo(e) {
@@ -172,7 +268,6 @@ export default class Index extends wepy.page {
           this.source = this.videolist[i].source;
         }
       }
-
       //this.custombg = false;
       //this.box = true;
       //this.videoContext.play();
@@ -191,6 +286,11 @@ export default class Index extends wepy.page {
       wx.makePhoneCall({
         phoneNumber: this.cardinfo.mobile
       });
+    },
+    go2article(e) {
+      let id = e.currentTarget.id;
+      //console.log(id);
+      wx.navigateTo({ url: "/pages/article/article?id=" + id });
     }
   };
 }
@@ -398,5 +498,96 @@ button::after {
   color: #fff;
   background: #ff6434;
   font-size: 32rpx;
+}
+.article-banner image {
+  width: 688rpx;
+  height: 302rpx;
+  border-radius: 15rpx;
+}
+.articleBox {
+  width: 688rpx;
+}
+
+.articleBox .article-title,
+.articleBox .article-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.articleBox .article-title {
+  margin-top: 32rpx;
+  margin-bottom: 20rpx;
+  font-size: 32rpx;
+  color: #444;
+  font-weight: bold;
+  line-height: 40rpx;
+}
+.articleBox .article-content {
+  font-size: 32rpx;
+  color: #7f7f7f;
+  margin-bottom: 28rpx;
+}
+.page__bd-foot {
+  height: 72rpx;
+  padding-top: 20rpx;
+}
+
+.avaterBox {
+  float: left;
+  width: 39%;
+  padding: 0;
+}
+.my_dataStats {
+  float: right;
+  width: 60%;
+  font-size: 22rpx;
+  color: #a0a0a0;
+  margin-right: 1%;
+  height: 50rpx;
+  line-height: 50rpx;
+  padding-top: 5rpx;
+}
+.avaterBox image {
+  width: 50rpx;
+  height: 50rpx;
+  display: block;
+  border-radius: 50%;
+}
+.avaterBox text {
+  font-size: 22rpx;
+  color: #a0a0a0;
+  margin-left: 10rpx;
+}
+.articleList {
+  background: #fff;
+  padding: 5rpx 31rpx 0 31rpx;
+  margin-top: 24rpx;
+}
+
+.my_article {
+  margin-bottom: 75rpx;
+}
+.article_cont {
+  text-indent: 60rpx;
+  height: 100rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.my-articleList {
+  padding-bottom: 150rpx;
+}
+.hitImg {
+  width: 100%;
+  height: 568rpx;
+  background: #ccc;
+  text-align: center;
+  line-height: 568rpx;
+  font-size: 48rpx;
+  color: #444;
 }
 </style>

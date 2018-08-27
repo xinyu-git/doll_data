@@ -47,7 +47,7 @@
       </view>
     </view>
 </view>
-<view class="user-menu" style="display:none">
+<view class="user-menu" wx:if="{{hasShop}}">
     <view class="card_title">商城管理</view>
     <view class="item">
       <view class="a">
@@ -68,6 +68,7 @@
      </view>
     </view>
    </view>
+   <view wx:else>开通我的商城</view>
 </view>
 </template>
 <script>
@@ -79,14 +80,17 @@ export default class My extends wepy.page {
     navigationBarTitleText: "我"
   };
   data = {
-    userInfo: {}
+    userInfo: {},
+    hasShop: false
   };
   async onLoad(options) {}
-  onShow() {
+  async onShow() {
     let userInfo = wx.getStorageSync("user:detail");
     this.userInfo = userInfo;
-    //console.log(userInfo.nickname);
+    //this.getHasShop();
+    console.log(this.userInfo.id);
   }
+
   methods = {
     go2dashboard() {
       //wx.navigateTo({ url: "/pages/card/mydashboard" });
@@ -101,6 +105,27 @@ export default class My extends wepy.page {
       //console.log(decodeURIComponent(e.currentTarget.dataset.url))
       let url =
         "https://card.kong.net?access_token=" + this.$parent.globalData.token;
+      wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
+    },
+    go2goodsList() {
+      let url =
+        "https://card.kong.net/?access_token=" +
+        this.$parent.globalData.token +
+        "#/goods/goodsList";
+      wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
+    },
+    go2orderList() {
+      let url =
+        "https://card.kong.net/?access_token=" +
+        this.$parent.globalData.token +
+        "#/order/orderList";
+      wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
+    },
+    go2dateList() {
+      let url =
+        "https://card.kong.net/?access_token=" +
+        this.$parent.globalData.token +
+        "#/";
       wx.navigateTo({ url: "/pages/shop/crm?url=" + encodeURIComponent(url) });
     },
     go2myarticle() {
