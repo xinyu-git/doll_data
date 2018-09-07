@@ -1,6 +1,9 @@
 
 <style>
 @import "style/app.wxss";
+@import 'style/style/weui.wxss';
+@import 'style/iconfont.wxss';
+@import 'style/example.wxss';
 </style>
 <script>
 import wepy from "wepy";
@@ -12,32 +15,19 @@ const EventBus = require("./util/eventbus");
 export default class extends wepy.app {
   config = {
     pages: [
-      "pages/portal/cardlist",
-      "pages/card/register",
-      "pages/card/mycard",
-      "pages/card/my",
-      "pages/article/paragraph",
-      "pages/article/articlelist",
-      "pages/article/article",
-      "pages/shop/checkout",
-      "pages/article/edittitle",
-      "pages/article/music",
-      "pages/article/editorial",
-      "pages/shop/index1",
-      "pages/shop/goods",
-      "pages/shop/catalog",
-      "pages/shop/category",
-      "pages/shop/orderlist",
-      "pages/shop/orderdetail",
-      "pages/shop/payresult",
-      "pages/shop/cart",
-      "pages/shop/crm",
-      "pages/portal/index2",
-
-      "pages/card/chat",
-      "pages/card/chatlist",
-      "pages/card/mydashboard",
-      "pages/card/uploadvideo",
+      "pages/home/index",
+      'pages/dollEditor/editor',
+      'pages/dollEditor/index',
+      'pages/stock/stockDetails',
+      'pages/stock/stockEditor',
+      'pages/stock/stockList',
+      'pages/dataUpload/dataUpload',
+      'pages/dataUpload/uploadResult',
+      'pages/dataUpload/dollPhoto',
+      'pages/dollEditor/editorResult',
+      'pages/replenishment/dollList',
+      'pages/replenishment/result',
+      'pages/replenishment/index',
       "pages/auth/refreToken",
       "pages/auth/signup",
       "pages/auth/login"
@@ -53,7 +43,7 @@ export default class extends wepy.app {
     },
 
     networkTimeout: {
-      request: 10000,
+      request: 100,
       downloadFile: 10000
     },
     debug: false
@@ -349,6 +339,7 @@ export default class extends wepy.app {
     // console.log("this is app on hide");
   }
 
+
   globalData = {
     sleep: this.sleep,
     get: this.Prequest("GET"),
@@ -370,8 +361,11 @@ export default class extends wepy.app {
     loginInfo: {},
     chatmsg: [],
     EventBus: EventBus,
-    shopId: null,
-    list: []
+    macheid: '00e0dca6-ff58-e811-9dfd-6c92bf',
+    machename:'娃娃机01',
+    type:'queryall',
+    operator:'张三',
+    dollEditorArr:[],
   };
 }
 </script>

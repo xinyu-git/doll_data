@@ -33,7 +33,8 @@ export default class loginPc extends wepy.page {
     async agree(e) {
       let res1 = await wepy.login();
       let res2 = e.detail;
-      console.log(res2);
+      console.log(res1);
+      console.log(res2)
       let formdata = {
         code: res1.code,
         iv: res2.iv,

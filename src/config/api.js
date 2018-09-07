@@ -1,11 +1,13 @@
-const appid = 'wxc9d5ed55f506d95c'
+const appid = 'wx51c8d8bbc15b28e2'
 const env = 'production'
+const env1 = 'production1'
 const constant = {
     fileServer: "http://card.kong.net",
-    production: "https://card.kong.net",
+    production: "http://hifun.kongzhong.com",
+    production1: "http://hifun.kongzhong.com",
     development: "https://card.kong.net"
 }
-
+//process.env.TZ = 'Asia/Shanghai';
 // urls 小程序的递归模块有问题，暂时使用两层结构，urls>auth>
 let urls = {
     auth: {
@@ -67,6 +69,7 @@ let disposeUrl = function (obj, prefix) {
 module.exports = {
     appid: appid,
     server: constant[env],
+    server1: constant[env1],
     fileServer: constant['fileServer'],
     api: disposeUrl(urls, constant[env])
 }
