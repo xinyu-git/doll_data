@@ -18,16 +18,16 @@ export default class extends wepy.app {
       "pages/home/index",
       'pages/dollEditor/editor',
       'pages/dollEditor/index',
+      'pages/dollEditor/editorResult',
       'pages/stock/stockDetails',
       'pages/stock/stockEditor',
       'pages/stock/stockList',
       'pages/dataUpload/dataUpload',
       'pages/dataUpload/uploadResult',
       'pages/dataUpload/dollPhoto',
-      'pages/dollEditor/editorResult',
+      'pages/replenishment/index',
       'pages/replenishment/dollList',
       'pages/replenishment/result',
-      'pages/replenishment/index',
       "pages/auth/refreToken",
       "pages/auth/signup",
       "pages/auth/login"
@@ -43,7 +43,7 @@ export default class extends wepy.app {
     },
 
     networkTimeout: {
-      request: 100,
+      request: 10000,
       downloadFile: 10000
     },
     debug: false
@@ -59,7 +59,8 @@ export default class extends wepy.app {
         let defaultheader = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${that.globalData.token}`,
-          Sourceorigin: "app"
+          Sourceorigin: "app",
+          uid:wx.getStorageSync("user:detail").id
         };
         for (let key in header) {
           defaultheader[key] = header[key];
@@ -239,6 +240,7 @@ export default class extends wepy.app {
     });
     self.globalData.token = res.data.token;
     self.globalData.expireTime = res.data.expireTime;
+    //self.globalData.userInfo=res.userInfo;
     wx.setStorageSync("user:token", self.globalData.token);
     wx.setStorageSync("user:expireTime", self.globalData.expireTime);
   }
@@ -331,6 +333,8 @@ export default class extends wepy.app {
     self.globalData.userInfo = userDetail;
     wx.setStorageSync("user:detail", userDetail);
   }
+
+
   onShow() {
     // console.log("this is app on show")
     //此处管理正在背景播放的音乐
@@ -338,7 +342,7 @@ export default class extends wepy.app {
   onHide() {
     // console.log("this is app on hide");
   }
-
+  
 
   globalData = {
     sleep: this.sleep,
@@ -361,10 +365,10 @@ export default class extends wepy.app {
     loginInfo: {},
     chatmsg: [],
     EventBus: EventBus,
-    macheid: '00e0dca6-ff58-e811-9dfd-6c92bf',
-    machename:'娃娃机01',
+    macheid: null,
+    machename:null,
     type:'queryall',
-    operator:'张三',
+    operator:null,
     dollEditorArr:[],
   };
 }

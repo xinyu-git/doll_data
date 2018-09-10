@@ -105,6 +105,7 @@
                 that.dollListAll=JSON.parse(result.data);
             }
             this.dataFilter(that.dollListAll);   
+            this.$apply();
             console.log(that.dollListAll);  
         };
         dataFilter(data){
@@ -119,6 +120,6 @@
 </script>
 <style lang="less">
 .body-Margin{margin-bottom:120rpx;}
-.dollList{font-size:26rpx;}
+.dollList{font-size:30rpx;}
 .dollList .weui-cell__hd image{width:100rpx;height:100rpx;margin-right: 15rpx;}
 </style>

@@ -4,7 +4,7 @@
         <view class="page-body body-Margin">
             <scroll-view class='body-v' scroll-y >
                 <view class="weui-cells dollList">
-                    <block wx:for="{{dollListAll}}" wx:for-item="item" wx:key="item.id">
+                    <block wx:for="{{dollListAll}}" wx:for-item="item" wx:key="index">
                         <view class="weui-cell_item"  @tap="stockDetails" data-stockid="{{item.id}}" data-stockname="{{item.name}}" data-size="{{item.size}}">
                             <view class="weui-cell">
                                 <view class="weui-cell__hd"><image src="http://img.kongzhong.com/wot/20180817/221fa5a21c_1534487014.jpg" /></view>
@@ -35,7 +35,7 @@
         };
         //可用于页面模板绑定的数据
         data = {
-            dollListAll:[],
+            dollListAll:[{name:1}],
             macheid:null,
             type:null
         };
@@ -49,12 +49,11 @@
                 wx.navigateTo({ url: `../stock/stockDetails?stockid=${stockid}&stockname=${stockname}&size=${size}` });
             }
         };
-        async onShow(){
+        onShow(){
             this.getDollListAll();
-            this.$apply();
-        }
+        };
         //页面的生命周期函数
-        async onLoad() {           
+        async onLoad() {         
             this.macheid=this.$parent.globalData.macheid;
             this.type=this.$parent.globalData.type;
         };
@@ -62,8 +61,9 @@
             let that=this;
             let result = await this.$parent.globalData.get(`${api.server1}/kucuns/getCatLog`);
             if(result.code==0){
-                that.dollListAll=JSON.parse(result.data);
+                that.dollListAll=JSON.parse(result.data);              
             }
+            this.$apply();
             console.log(that.dollListAll)        
         };
         
@@ -72,7 +72,7 @@
 <style lang="less">
 .body-Margin{top:0rpx;}
 .dollList .weui-cell__hd image{width:100rpx;height:100rpx;margin-right: 15rpx;}
-.weui-cell_item{position: relative;font-size:26rpx;}
+.weui-cell_item{position: relative;font-size:30rpx;}
 .weui-cell_item:before {
     content: " ";
     position: absolute;

@@ -3,8 +3,8 @@ const env = 'production'
 const env1 = 'production1'
 const constant = {
     fileServer: "http://card.kong.net",
-    production: "http://hifun.kongzhong.com",
-    production1: "http://hifun.kongzhong.com",
+    production: "https://hifun.kongzhong.com",
+    production1: "https://hifunservice.kongzhong.com",
     development: "https://card.kong.net"
 }
 //process.env.TZ = 'Asia/Shanghai';
@@ -13,7 +13,7 @@ let urls = {
     auth: {
         authorize: {
             method: 'GET',
-            url: '/auth/wxa/v2/card'
+            url: '/auth/wxa/v2/wwj'
         },
         refreshToken: {
             method: 'GET',

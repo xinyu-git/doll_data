@@ -54,55 +54,63 @@
         methods = {
             async addDoll () {
                 let that=this;
-                console.log(that.selectDollList);   
-                //return false;
-                let result = await this.$parent.globalData.post(
-                    `${api.server1}/inventorys/addInventory`,
-                    {
-                        data:JSON.stringify(that.selectDollList)
-                    }
-                );
-                console.log(result)
-                if(result.code==0){
-                    wx.navigateTo({ url: `index`});
-                }
-            },
-            toggleSel(e){
-                let that=this;
-                let selArr=that.selectDollList;            
+                let selArr=that.selectDollList;
                 let dataList=that.dollListAll;
-                let itemIndex=e.target.dataset.index || e.currentTarget.dataset.index
-                let dollItem=dataList[itemIndex]
-                let checked=dataList[itemIndex].checked;
-                checked=!checked
-                dataList[itemIndex].checked=checked;
-                if (checked) {
-                    selArr.push({
-                        stockid:dollItem.id,
-                        stockname:dollItem.name,
-                        macheid:that.macheid
-                    });
-                } else {
-                    selArr.splice(itemIndex, 1)
+                for(let i=0;i<dataList.length;i++){
+                    if(dataList[i].checked){
+                        selArr.push({
+                            stockid:dataList[i].id,
+                            stockname:dataList[i].name,
+                            macheid:that.macheid
+                        })
+                    }
                 }
                 that.selectDollList=selArr;
+                if(that.selectDollList.length>0){
+                    //return false;
+                    let result = await this.$parent.globalData.post(
+                        `${api.server1}/inventorys/addInventory`,
+                        {
+                            data:JSON.stringify(that.selectDollList)
+                        }
+                    );
+                    console.log(result)
+                    if(result.code==0){
+                        wx.navigateTo({ url: `index`});
+                    }
+                    this.$apply();
+                }else{
+                    wx.showModal({
+                        confirmColor: "#7ec792",
+                        title: "提示",
+                        showCancel: false,
+                        content: "请选择新增的娃娃"
+                    });
+                }
+                
+            },
+            toggleSel(e){
+                let that=this;          
+                let dataList=that.dollListAll;
+                let itemIndex=e.target.dataset.index || e.currentTarget.dataset.index;
+                let dollItem=dataList[itemIndex];
+                let checked=dataList[itemIndex].checked;
+                checked=!checked;
+                dataList[itemIndex].checked=checked;
                 that.dollListAll=dataList;
                 this.$apply();
             }
         };
         async onShow(){
             this.getDollListAll();
-            this.$apply();
         };
         //页面的生命周期函数
         async onLoad(options) {
             let that=this;
-            let existDollIdTemp=options.id;
+            let existDollIdTemp=options.idArr;
             that.idCutt(existDollIdTemp);
-            console.log(options)
             this.macheid=this.$parent.globalData.macheid;
-            this.machename=this.$parent.globalData.machename;
-            
+            this.machename=this.$parent.globalData.machename;         
         };
         async getDollListAll(){
             let that=this;
@@ -110,8 +118,9 @@
             if(result.code==0){
                 that.dollListAll=JSON.parse(result.data);
             }
-            this.dataFilter(that.dollListAll);          
-            console.log(this.dollListAll)
+            this.dataFilter(that.dollListAll);     
+            this.$apply();     
+            console.log(this.dollListAll);
         };
         dataFilter(data){
             if(data.length>0){
@@ -123,7 +132,7 @@
                     for(let i=0;i<this.existDollId.length;i++){
                         for(let j=0;j<data.length;j++){
                             //删除列表中已有的娃娃
-                            if(this.existDollId[i]==data[j].id){
+                            if(this.existDollId[i]==data[j].baby_stock_id){
                                 data.splice(j,1);
                             }
                         }
@@ -132,13 +141,16 @@
             }           
             return data;
         };
-        idCutt(id){
-            this.existDollId=id.split(",")
+        //id切割
+        idCutt(idArr){
+            if(idArr){
+                this.existDollId=idArr.split(",")
+            }
         }
     }
 </script>
 <style lang="less">
 .body-Margin{margin-bottom:120rpx;}
-.dollList{font-size:26rpx;}
+.dollList{font-size:30rpx;}
 .dollList .weui-cell__hd image{width:100rpx;height:100rpx;margin-right: 15rpx;}
 </style>

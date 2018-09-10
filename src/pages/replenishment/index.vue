@@ -6,7 +6,7 @@
                 <view class="doll_name">机器：<text>{{machename}}</text></view>
             </view>
             <view class="doll_handle">
-                <view class="doll_add"><navigator url="dollList?id={{idArr}}">新增</navigator></view>
+                <view class="doll_add"><button @tap="newAdd">新增</button></view>
             </view>
             <view class="page-cell">
                 <view class="page-cell__bd">名称</view>
@@ -103,6 +103,7 @@
                         content: "请选择要补货的娃娃"
                     });
                 }
+                this.$apply();
             },
             bindInput(e) {
                 let that=this;         
@@ -157,6 +158,7 @@
                 let that=this;
                 let delIndex=e.currentTarget.dataset.index;
                 let delId=e.currentTarget.dataset.id;
+                let baby_stock_id=that.dollList[delIndex].baby_stock_id;
                 let result = await this.$parent.globalData.post(
                     `${api.server1}/inventorys/delInventory`,
                     {
@@ -164,10 +166,18 @@
                         stockid:delId
                     }
                 );
-                console.log(result)
-                that.dollList.splice(delIndex, 1);
-                console.log(that.dollList)
+                //删除idArr中的baby_stock_id
+                for(let i=0;i<that.idArr.length;i++){
+                    if(that.idArr[i]==baby_stock_id){
+                        that.idArr.splice(i,1);
+                    }
+                }
+                that.dollList.splice(delIndex, 1);              
                 this.$apply();
+            },
+            //新增
+            newAdd(e){
+                wx.navigateTo({ url: `dollList?idArr=${this.idArr}` });
             }
         };
         async onShow(){
@@ -182,18 +192,21 @@
         };
         async getDollList(){
             let that=this;
-            let idArrTemp=[];
+            let idArrTemp=[];//临时存储页面中的娃娃baby_stock_id
             let result = await this.$parent.globalData.get(`${api.server1}/inventorys/queryInventory?macheid=${that.macheid}&type=${that.type}`)
             if(result.code==0){
                 that.dollList=JSON.parse(result.data);
             }
+            //在idArrTemp里存放baby_stock_id
             for(let i=0;i<that.dollList.length;i++){
                 idArrTemp.push(that.dollList[i].baby_stock_id)
             }
             this.dataFilter(that.dollList);
-            that.idArr=idArrTemp;
+            that.idArr=idArrTemp;//将idArrTemp赋值给idArr  用于触发新增去列表页，过滤已有的娃娃
+            this.$apply();
             console.log(that.dollList)
         };
+        //数据过滤
         dataFilter(data){
             for(let i=0;i<data.length;i++){
                 data[i].stocknums=0;
@@ -214,17 +227,12 @@
     }
 </script>
 <style lang="less">
-    .dollName_box{border-bottom:1px solid #ccc;background:#fff;font-size:30rpx;}
-    .body-Margin{margin-top:270rpx;margin-bottom:120rpx;}
-    .page-cell{display: flex;height: 90rpx;line-height: 90rpx;align-items: center;-webkit-box-align: center;padding:0 15rpx;font-size:30rpx;background: #fff;}
-    .page-cell__bd{flex:1;}
-    .page-cell__ft{text-align:center;}
+    .body-Margin{margin-top:310rpx;margin-bottom:120rpx;}
     .doll-item{padding:10rpx 15rpx;}
     .doll-item .weui-cell__ft{color:#000;text-align:left;}
     .doll-item .weui-cell__ft input{border:1px solid #ccc;width:100rpx;padding:5rpx 5rpx;}
-    .dollList{font-size:30rpx;}
-    .doll_handle{display: flex;justify-content:space-between;padding:10rpx 15rpx;font-size:30rpx;align-items: center;border-bottom: 1px solid #ccc;background: #fff;}
-    .doll_handle button{font-size:30rpx;}
+    .doll_handle{display: flex;justify-content:flex-end;padding:10rpx 15rpx;font-size:30rpx;align-items: center;border-bottom: 1px solid #ccc;background: #fff;}
+    .doll_handle button{font-size:30rpx;background: #27b3f0;color:#fff;}
     .weui-btn_warn{background:#E64340;}
     .weui-btn_mini {
         display: inline-block;
@@ -234,7 +242,6 @@
     }
     .doll-item .weui-cell__hd button{color:#fff;margin-left:1em;margin-top:0.5em;}
     .touch-item {
-  font-size: 14px;
   display: flex;
   justify-content: space-between;
   border-bottom:1px solid #ccc;

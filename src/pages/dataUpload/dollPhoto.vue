@@ -1,13 +1,13 @@
 <template>
 <view class="page">
     <view class="page_container">
-        <view class="set-weui-cell">
+        <view class="dollName_box set-weui-cell">
              <view class="doll_name">机器：<text>{{machename}}</text></view>
         </view>
         <view class="weui-uploader__bd upImg_box">
             <view class="weui-uploader__files" id="uploaderFiles" wx:if="{{!isShow}}">
               <block >
-                <view class="weui-uploader__file itemImg" >
+                <view class="weui-uploader__file itemImg" style="display:none;">
                   <image class="weui-uploader__img" src="{{src}}" mode="aspectFill" />
                   <view class='deleteBtn' @tap="deleteImg">x</view>
                 </view>
@@ -22,7 +22,7 @@
                     <view class="weui-cell__ft"><input type="number" @input="bindInput" data-name="stocknums"/></view>
                 </view>
                 <view class="btn-operate_box">
-                    <button type="warn" bindtap="bindMachine"  class="weui-btn weui-btn_mini weui-btn_primary"> 重拍 </button>
+                    <button type="warn" bindtap="bindMachine"  class="weui-btn weui-btn_mini weui-btn_primary" style="display:none;"> 重拍 </button>
                     <button type="primary" bindtap="bindMachine"  class="weui-btn weui-btn_mini weui-btn_warn" @tap="photoSubmit"> 确定提交 </button>
                 </view>
             </view>
@@ -54,7 +54,7 @@
         //可用于页面模板绑定的数据
         data = {
             src:'',
-            isShow:true,
+            isShow:false,
             stocknums:null,
             stockcoins:null,
             macheid:null,
@@ -91,11 +91,17 @@
             },
             async photoSubmit() {
                 let that=this;
+                let tipsMsg=null;
                 if(that.stockcoins!=null && that.stocknums!=null){
+                    if(that.stockcoins<=that.stocknums){
+                        tipsMsg='币数少于娃娃数，确定提交？'
+                    }else{
+                        tipsMsg="是否确定提交？"
+                    }
                      wx.showModal({
                         confirmColor: "#7ec792",
                         title: "提示",
-                        content:  "是否确定提交",
+                        content:  tipsMsg,
                         success: function(res) {
                             if (res.confirm) {
                                 that.updateCode();
@@ -113,40 +119,12 @@
                         content: "请填写娃娃和币数"
                     });
                 }
-            },
-            hideModal (flag) {
-                let that=this;
-                that.dialogControl=false;
-                if(flag==1){
-                    console.log(flag)
-                    //wx.chooseImage({
-                       // success: function(res) {
-                            //console.log(res)
-                           // return false
-                            //var tempFilePaths = res.tempFilePaths
-                            wx.uploadFile({
-                                url: 'https://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
-                                filePath: that.src,
-                                name: 'file',
-                                formData:{
-                                  'user': 'test'
-                                },
-                                success: function(res){
-                                  var data = res.data
-                                  //do something
-                                }
-                            })
-                        //}
-                    //})
-                }else if(flag==0){
-                    this.isShow=true;
-                    console.log('else'+flag)
-                }
+                this.$apply();
             },
             bindInput(e) {
                 let that=this;         
                 let name=e.target.dataset.name
-                this[name]=e.detail.value;
+                this[name]=parseInt(e.detail.value);
                 this.$apply();
             },
         };
@@ -177,6 +155,7 @@
                      content: result.msg || "出错了，请重试"
                  });
             }
+            this.$apply();
         }
         //页面的生命周期函数
         async onLoad(options) {
@@ -237,6 +216,7 @@
     font-size: 13px;
 }
 .btn-operate_box{text-align:center;}
-.btn-operate_box button{margin:0 10rpx;}
-.doll-item .weui-cell__ft input{background: #fff;}
+.btn-operate_box button{margin:80rpx 10rpx 50rpx;}
+.doll-item .weui-cell__ft input{width:300rpx;border:1px solid #ccc;}
+.photo-data{background:#fff;border:1px solid #ccc;}
 </style>

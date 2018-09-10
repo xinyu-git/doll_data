@@ -75,9 +75,14 @@
                         confirmColor: "#7ec792",
                         title: "提示",
                         showCancel: false,
-                        content: result.msg || "出错了，请重试"
+                        content: '保存成功',
+                        success:function(res){
+                            if(res.confirm){
+                                that.saveJump();
+                                that.$apply();
+                            }
+                        } 
                     });
-                    wx.navigateTo({ url: `../stock/stockDetails?stockid=${this.stockid}&stockname=${this.stockname}&size=${this.stocknums}`});
                 }else{
                     wx.showModal({
                         confirmColor: "#7ec792",
@@ -86,6 +91,7 @@
                         content: result.msg || "出错了，请重试"
                     });
                 }
+                this.$apply();
             },
             bindInput(e) {
                 let key = e.currentTarget.dataset.name;
@@ -93,7 +99,10 @@
                 this.$apply();
             },
         };
-    
+        saveJump(){
+            let that=this;
+            wx.navigateTo({ url: `../stock/stockList?stockid=${that.stockid}&stockname=${that.stockname}&size=${that.stocknums}`});
+        }
         //页面的生命周期函数
         onLoad(options) {
             this.stockid=options.stockid;
@@ -104,11 +113,11 @@
     }
 </script>
 <style lang="less">
-.check_preview{font-size:30rpx;}
+.check_preview{font-size:36rpx;}
 .check_preview .weui-form-preview__hd,.check_preview .weui-form-preview__bd{padding:10rpx 15px;text-align: left;}
 .check_preview .number_input,.check_preview .text_input{border:1px solid #ccc;}
-.check_preview .number_input{width:120rpx;margin-top:10rpx;float:right;}
+.check_preview .number_input{width:320rpx;margin-top:20rpx;float:right;}
 .check_preview .text_input{flex:1;}
-.btn-save{width:95%;font-size:26rpx;margin:20rpx auto;}
+.btn-save{width:90%;font-size:30rpx;margin:60rpx auto;}
 .check_preview .weui-form-preview__label{color:#000;}
 </style>

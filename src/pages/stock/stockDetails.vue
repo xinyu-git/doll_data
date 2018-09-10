@@ -57,7 +57,7 @@
             type:'querysignle',
             operator:null
         };
-        async onShow(){
+        onShow(){
             this.getDollRecord();
             this.$apply();
         }
@@ -80,7 +80,8 @@
             if(result.code==0){
                 that.dollRecord=JSON.parse(result.data);
             }
-            this.dataFilter(that.dollRecord)
+            this.dataFilter(that.dollRecord);
+            this.$apply();
             console.log(that.dollRecord)
         };
         dataFilter(data){

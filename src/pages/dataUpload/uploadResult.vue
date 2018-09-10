@@ -1,7 +1,7 @@
 <template>
 <view class="page">
     <view class="page_container">
-        <view class="set-weui-cell">
+        <view class="dollName_box set-weui-cell">
              <view class="doll_name">机器：<text>{{machename}}</text></view>
         </view>
         <view class="bind-result_text">
@@ -19,7 +19,7 @@
             
         </view>
         <view class="btn-confirm">
-            <button type="primary" @tap="flick"> 扫一扫 </button>
+            <button type="primary" @tap="flickJump" data-url="/pages/dataUpload/dataUpload" data-codetype="1"> 娃娃机抄码表 </button>
         </view>
     </view>
 </view>
@@ -44,16 +44,65 @@
     
         //事件处理函数(集中保存在methods对象中)
         methods = {
-            flick() {
-                wx.scanCode({
-                    onlyFromCamera:true,
-                    success:(res)=>{
-                        console.log(res)
-                    }
+            flickJump(e){
+                let that=this;
+                //跳转链接
+                let dataUrl=e.currentTarget.dataset.url;
+                //二维码类型：娃娃机--1  库房--2
+                let codeType=e.currentTarget.dataset.codetype;
+                that.flick(dataUrl,codeType);
+            }
+            
+        };
+        resolveUrl(url){
+            let obj = {};
+            let reg = /[?&][^?&]+=[^?&%]+/g;
+            let arr = url.match(reg);
+            if(arr!=null){
+                arr.forEach((item) => {
+                    let tempArr = item.substring(1).split('=');
+                    let key = decodeURIComponent(tempArr[0]);
+                    let val = decodeURIComponent(tempArr[1]);
+                    obj[key] = val;
                 })
             }
+            return obj;
         };
-    
+        flick(entryUrl,codeType) {
+            wx.scanCode({
+                onlyFromCamera:true,
+                success:(res)=>{
+                    let url=res.result;
+                    let machineInfo=this.resolveUrl(url);
+                    this.$parent.globalData.macheid=machineInfo.macheid;
+                    this.$parent.globalData.machename=machineInfo.machename;
+                    if(machineInfo.macheid && codeType==1){
+                        wx.showToast({
+                            title: '成功',
+                            icon: 'success',
+                            duration: 1000,
+                            success:function(){
+                                wx.navigateTo({ url: entryUrl });
+                            }
+                        })
+                    }else{
+                        wx.showModal({
+                            confirmColor: "#7ec792",
+                            title: "提示",
+                            showCancel: false,
+                            content: "二维码不符"
+                        });
+                    }
+                },
+                fail:(res)=>{
+                    wx.showToast({
+                        title: '失败',
+                        icon: 'success',
+                        duration: 2000
+                    })
+                }
+            })
+        }
         //页面的生命周期函数
         async onLoad(options) {
             this.macheid=this.$parent.globalData.macheid;

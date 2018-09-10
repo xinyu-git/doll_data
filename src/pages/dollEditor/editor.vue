@@ -136,6 +136,7 @@
                         content: "请选择要补货的娃娃"
                     });
                 }
+                this.$apply();
             },
         };
         async onShow(){
@@ -161,7 +162,8 @@
         async getDollList(){
             let that=this;
             that.dollList=this.$parent.globalData.dollEditorArr;
-            this.dataFilter(that.dollList)          
+            this.dataFilter(that.dollList);
+            this.$apply();         
         };
         dataFilter(data){
             for(let i=0;i<data.length;i++){
@@ -175,7 +177,7 @@
 <style lang="less">
 .page-head{z-index: 10;}
 .body-Margin{margin-bottom:120rpx;}
-.dollList{font-size:26rpx;}
+.dollList{font-size:30rpx;}
 .dollList .weui-cell__hd image{width:100rpx;height:100rpx;margin-right: 15rpx;}
 .title{padding:20rpx 10rpx;font-size:32rpx;}
 </style>
