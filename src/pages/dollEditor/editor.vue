@@ -22,7 +22,7 @@
                             <view class="weui-cell__ft">
                                 <view class='stepper'>
                                     <text class='{{item.minusStatus}}' @tap='bindMinus' data-item-index="{{index}}">-</text>
-                                    <input @input='bindManual' value='{{item.stocknums}}'  type="number" data-item-index="{{index}}"/>
+                                    <input @blur='bindBlur' @input="bindInput"  value='{{item.stocknums}}'  type="number" data-item-index="{{index}}"/>
                                     <text @tap='bindPlus' data-item-index="{{index}}">+</text>
                                 </view>
                             </view>
@@ -83,14 +83,25 @@
                 dollItem.stocknums=num;
                 dollItem.minusStatus=minusStatus;
             },
-            bindManual(e){
+            bindBlur(e){
                 let that=this;
-                let itemIndex=e.target.dataset.itemIndex;
+                let itemIndex=e.currentTarget.dataset.itemIndex;//操作元素绑定的index
                 let dollItem=that.dollList[itemIndex];
                 let num=e.detail.value;
+                num=num.replace(/\b(0+)/gi,"");
                 let minusStatus=num>1?'normal':'disable';
                 dollItem.stocknums=num;
-                that.minusStatus=minusStatus;
+                dollItem.minusStatus=minusStatus;
+                this.$apply();
+            },
+            //小程序中input的value绑定的是输入框的初始内容。当输入框输入的时候，value 值并没有改变，所以得绑定一个bindinput事件，将每次输入的值赋值给 value
+            bindInput(e){
+                let that=this;
+                let itemIndex=e.currentTarget.dataset.itemIndex;//操作元素绑定的index
+                let dollItem=that.dollList[itemIndex];//操作元素的item数据
+                let num=e.detail.value; //输入的value值
+                dollItem.stocknums=num;//将处理后的num赋值给dollItem.stocknums
+                this.$apply();
             },
             async stockEditor(){
                 let that=this; 
@@ -98,17 +109,16 @@
                 for(let i=0;i<repArr.length;i++){
                     if(repArr[i].stocknums!=0){
                         that.replenishArr.push({
-                            stockid:repArr[i].id,
+                            stockid:repArr[i].baby_stock_id,
                             stockname:repArr[i].name,
                             stocktype:that.stocktype,
-                            stocknums:repArr[i].stocknums,
+                            stocknums: that.stocktype==1 ? (-repArr[i].stocknums) : (repArr[i].stocknums),
                             marks:''
                         })
                     }
                 }
                 console.log(that.replenishArr);
                 let repStr=JSON.stringify(that.replenishArr)
-                //return false;
                 if(that.replenishArr.length>0){
                     //return false;
                     let result = await this.$parent.globalData.post(
@@ -133,7 +143,7 @@
                         confirmColor: "#7ec792",
                         title: "提示",
                         showCancel: false,
-                        content: "请选择要补货的娃娃"
+                        content: "娃娃数不能为0"
                     });
                 }
                 this.$apply();
@@ -141,7 +151,6 @@
         };
         async onShow(){
             this.getDollList();
-            this.$apply();
         };
         //页面的生命周期函数
         async onLoad(option) {
@@ -171,7 +180,7 @@
                 data[i].minusStatus='disable';
             }
             return data;
-        }
+        };
     }
 </script>
 <style lang="less">

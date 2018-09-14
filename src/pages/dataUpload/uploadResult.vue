@@ -102,14 +102,18 @@
                     })
                 }
             })
-        }
+        };
+        async onShow(){
+            let userInfo=wx.getStorageSync("user:detail");
+            this.operator=userInfo.nickname;
+        };
         //页面的生命周期函数
         async onLoad(options) {
             this.macheid=this.$parent.globalData.macheid;
             this.type=this.$parent.globalData.type;
             this.machename=this.$parent.globalData.machename;
             this.resultMsg=options.resultMsg;
-            this.operator=this.$parent.globalData.operator;
+            //this.operator=this.$parent.globalData.operator;
             console.log(options)
         };
     }

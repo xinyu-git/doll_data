@@ -26,14 +26,16 @@
         config = {
             navigationBarTitleText: "娃娃"
         };
+        async onShow(){
+            let userInfo=wx.getStorageSync("user:detail");
+            this.operator=userInfo.nickname;
+        };
         //页面的生命周期函数
         async onLoad() {
             let result = await super.onLoad();
             if (!result) {
               return;
             }
-            let userInfo=wx.getStorageSync("user:detail");
-            this.$parent.globalData.operator=userInfo.nickname;
         };
         //可用于页面模板绑定的数据
         data = {
@@ -64,7 +66,8 @@
                   text:'退货',
                   codeType:2
               }
-          ]
+          ],
+          operator:null
         };
         //事件处理函数(集中保存在methods对象中)
         methods = {
@@ -99,13 +102,12 @@
                     let machineInfo=this.resolveUrl(url);
                     this.$parent.globalData.macheid=machineInfo.macheid;
                     this.$parent.globalData.machename=machineInfo.machename;
-                    //|| machineInfo.codetype=="warehouse"
                     console.log(res)
                     if( (machineInfo.macheid && codeType==1) || (machineInfo.codetype=="warehouse" && codeType==2) ){
                         wx.showToast({
                             title: '成功',
                             icon: 'success',
-                            duration: 1000,
+                            duration: 2000,
                             success:function(){
                                 wx.navigateTo({ url: entryUrl });
                             }

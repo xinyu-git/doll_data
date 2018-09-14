@@ -48,7 +48,8 @@
         //事件处理函数(集中保存在methods对象中)
         methods = {
             next () {
-                wx.navigateTo({ url: `dollPhoto` });
+                wx.navigateTo({ url: `/pages/dataUpload/dollPhoto` });
+                //wx.redirectTo({ url: `dollPhoto` });
             }
         };
         onShow(){

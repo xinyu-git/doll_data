@@ -19,12 +19,14 @@
                 <block wx:for="{{dollRecord}}" wx:for-item="item" wx:key="item.id">
                     <view class="weui-panel weui-panel_access set-panel_access" >
                         <view class="weui-cell weui-cell_access">
-                            <view class="weui-cell__label"> {{(item.stock_type)}} </view>
+                            <view class="weui-cell__label"> {{item.stock_type}} </view>
                             <view class="weui-cell__label">{{item.create_time}}</view>
                         </view>
                         <view class="weui-panel__bd">
                             <view class="weui-cell weui-cell_access">
-                                <view class="weui-cell__label">{{item.marks}}</view>
+                                <view class="weui-cell__label" >
+                                    <view wx:if="{{item.stock_type=='盘货'}}"  @tap="checkRemark({{item.marks}})" >查看备注</view>
+                                </view>
                                 <view class="weui-cell__label">{{item.stockMarksStr}} : {{item.stock_nums}}</view>
                             </view>
                         </view>
@@ -59,19 +61,28 @@
         };
         onShow(){
             this.getDollRecord();
-            this.$apply();
+            let userInfo=wx.getStorageSync("user:detail");
+            this.operator=userInfo.nickname;
         }
         //页面的生命周期函数
         async onLoad(options) {
             this.stockid=options.stockid;
             this.stockname=options.stockname;
             this.size=options.size;
-            this.operator=this.$parent.globalData.operator;
+            //this.operator=this.$parent.globalData.operator;
         };
         //事件处理函数(集中保存在methods对象中)
         methods = {
             async stock(){
                 wx.navigateTo({ url: `../stock/stockEditor?stockid=${this.stockid}&stockname=${this.stockname}&size=${this.size}&stocktype=2` });
+            },
+            checkRemark(marks){
+                wx.showModal({
+                     confirmColor: "#7ec792",
+                     title: "提示",
+                     showCancel: false,
+                     content: marks
+                });
             }
         };
         async getDollRecord(){

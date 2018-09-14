@@ -20,7 +20,7 @@
                 <view class="weui-form-preview__bd">
                     <view class="weui-form-preview__item">
                         <label class="weui-form-preview__label">备注</label>
-                        <input  type="text"  class="text_input" @input="bindInput"  data-name="marks" />
+                        <textarea  class="weui-textarea" @input="bindInput"  data-name="marks" />
                     </view>
                 </view>
                 <view class="weui-form-preview__ft">
@@ -114,10 +114,11 @@
 </script>
 <style lang="less">
 .check_preview{font-size:36rpx;}
-.check_preview .weui-form-preview__hd,.check_preview .weui-form-preview__bd{padding:10rpx 15px;text-align: left;}
+.check_preview .weui-form-preview__hd,.check_preview .weui-form-preview__bd{padding:20rpx 15px;text-align: left;}
 .check_preview .number_input,.check_preview .text_input{border:1px solid #ccc;}
-.check_preview .number_input{width:320rpx;margin-top:20rpx;float:right;}
+.check_preview .number_input{width:320rpx;margin-top:20rpx;float:right;padding:10rpx 10rpx;}
 .check_preview .text_input{flex:1;}
 .btn-save{width:90%;font-size:30rpx;margin:60rpx auto;}
 .check_preview .weui-form-preview__label{color:#000;}
+.weui-form-preview__item .weui-textarea{margin-top:80rpx;border:1px solid #ccc;box-sizing: border-box;}
 </style>

@@ -56,10 +56,11 @@
                 let that=this;
                 let selArr=that.selectDollList;
                 let dataList=that.dollListAll;
+                console.log(dataList)
                 for(let i=0;i<dataList.length;i++){
                     if(dataList[i].checked){
                         selArr.push({
-                            stockid:dataList[i].id,
+                            stockid:dataList[i].baby_stock_id,
                             stockname:dataList[i].name,
                             macheid:that.macheid
                         })

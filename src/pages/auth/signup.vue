@@ -223,7 +223,7 @@ export default class Signup extends wepy.page {
           if (that.originate) {
             wx.reLaunch({ url: `/${decodeURIComponent(that.originate)}` });
           } else {
-            wx.reLaunch({ url: "/pages/portal/index?suggest=" + suggest });
+            wx.reLaunch({ url: "/pages/home/index?suggest=" + suggest });
           }
         }, 2000);
       }

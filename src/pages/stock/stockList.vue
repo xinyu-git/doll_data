@@ -5,12 +5,12 @@
             <scroll-view class='body-v' scroll-y >
                 <view class="weui-cells dollList">
                     <block wx:for="{{dollListAll}}" wx:for-item="item" wx:key="index">
-                        <view class="weui-cell_item"  @tap="stockDetails" data-stockid="{{item.id}}" data-stockname="{{item.name}}" data-size="{{item.size}}">
+                        <view class="weui-cell_item"  @tap="stockDetails" data-stockid="{{item.baby_stock_id}}" data-stockname="{{item.name}}" data-size="{{item.size}}">
                             <view class="weui-cell">
                                 <view class="weui-cell__hd"><image src="http://img.kongzhong.com/wot/20180817/221fa5a21c_1534487014.jpg" /></view>
                                 <view class="weui-cell__bd">
                                     <view><text>{{item.name}}</text></view>
-                                    <view>分类：<text>T</text></view>
+                                    <view style="display:none;">分类：<text>T</text></view>
                                 </view>
                                 <view class="weui-cell__ft">
                                     库存：<text>{{item.size}}{{item.unit}}</text>
@@ -35,7 +35,7 @@
         };
         //可用于页面模板绑定的数据
         data = {
-            dollListAll:[{name:1}],
+            dollListAll:[],
             macheid:null,
             type:null
         };
@@ -63,8 +63,7 @@
             if(result.code==0){
                 that.dollListAll=JSON.parse(result.data);              
             }
-            this.$apply();
-            console.log(that.dollListAll)        
+            this.$apply();      
         };
         
     }

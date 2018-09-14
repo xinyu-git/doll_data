@@ -40,7 +40,7 @@ export default class refreToken extends wepy.page {
       this.$parent.globalData.appPrepare = false;
       wx.hideLoading();
       setTimeout(() => {
-        wx.reLaunch({ url: "/pages/portal/index" });
+        wx.reLaunch({ url: "/pages/home/index" });
       }, 600);
     } catch (e) {
       wx.hideLoading();

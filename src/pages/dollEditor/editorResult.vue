@@ -29,7 +29,7 @@
                     <block wx:for="{{replenishArr}}" wx:for-item="item" wx:key="index">
                         <view class="weui-cell weui-cell_access" >
                             <view>{{item.stockname}}</view>
-                            <view class="weui-cell__label">{{item.stocknums}}</view>
+                            <view class="weui-cell__label">{{item.stocknums>0 ?item.stocknums:(-item.stocknums)}}</view>
                         </view>
                     </block>
                 </view>
@@ -47,7 +47,7 @@
     //通过继承自wepy.page的类创建页面逻辑
     export default class editorResult extends wepy.page {
         config = {
-            navigationBarTitleText: "提货成功",
+            //navigationBarTitleText: "提货成功",
             navigationBarBackgroundColor:'#f2f2f2',
         };
         //可用于页面模板绑定的数据
@@ -67,6 +67,8 @@
         };
         async onShow(){
             this.total();
+            let userInfo=wx.getStorageSync("user:detail");
+            this.operator=userInfo.nickname;
         };
         //页面的生命周期函数
         async onLoad(option) {
@@ -77,17 +79,21 @@
                 })
             }else if(option.stocktype==3){
                 wx.setNavigationBarTitle({
-                    title: '退货'
+                    title: '退货'+this.resultMsg
                 })
             }
             this.stocktype=option.stocktype;
-            this.operator=this.$parent.globalData.operator;
             this.replenishArr=JSON.parse(option.replenishArr);
+            //this.operator=this.$parent.globalData.operator;
         };
         async total(){
             let rep=this.replenishArr;
             for(let i=0;i<rep.length;i++){
-                this.totalNum+=rep[i].stocknums;
+                if(rep[i].stocknums<0){
+                    this.totalNum+=(-rep[i].stocknums);
+                }else{
+                    this.totalNum+=(rep[i].stocknums);
+                }
             }
         }
     }

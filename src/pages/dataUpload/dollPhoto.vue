@@ -23,7 +23,7 @@
                 </view>
                 <view class="btn-operate_box">
                     <button type="warn" bindtap="bindMachine"  class="weui-btn weui-btn_mini weui-btn_primary" style="display:none;"> 重拍 </button>
-                    <button type="primary" bindtap="bindMachine"  class="weui-btn weui-btn_mini weui-btn_warn" @tap="photoSubmit"> 确定提交 </button>
+                    <button type="primary" bindtap="bindMachine"  class="weui-btn  weui-btn_warn" @tap="photoSubmit"> 确定提交 </button>
                 </view>
             </view>
             </view>
@@ -48,7 +48,7 @@
     //通过继承自wepy.page的类创建页面逻辑
     export default class repleResult extends wepy.page {
         config = {
-            navigationBarTitleText: "拍照",
+            navigationBarTitleText: "娃娃机抄码表",
             navigationBarBackgroundColor:'#f2f2f2',
         };
         //可用于页面模板绑定的数据
@@ -216,7 +216,9 @@
     font-size: 13px;
 }
 .btn-operate_box{text-align:center;}
-.btn-operate_box button{margin:80rpx 10rpx 50rpx;}
-.doll-item .weui-cell__ft input{width:300rpx;border:1px solid #ccc;}
+.btn-operate_box button{margin:80rpx 10rpx 50rpx;font-size:30rpx;padding:10rpx 0;}
+.doll-item .weui-cell__ft input{width:300rpx;border:1px solid #ccc;color:#000;padding:10rpx 10rpx;}
 .photo-data{background:#fff;border:1px solid #ccc;}
+.doll-item{padding:60rpx 15rpx;}
+.doll-item .weui-cell__ft{text-align: left;}
 </style>

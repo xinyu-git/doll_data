@@ -20,8 +20,15 @@
                         <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" @touchstart="touchstart" @touchmove="touchmove">
                             <view class="weui-cell doll-item content">
                                 <view class="weui-cell__bd">{{item.name}}</view>
-                                <view class="weui-cell__ft"><input type="number" value="{{item.stocknums}}" data-index="{{index}}" @input="bindInput"  data-name="stockNums" /></view>
-                            </view> 
+                                <!-- <view class="weui-cell__ft"><input type="number" value="{{item.stocknums}}" data-index="{{index}}" @input="bindInput"  data-name="stockNums" /></view> -->
+                                <view class="weui-cell__ft">
+                                    <view class='stepper'>
+                                        <text class='{{item.minusStatus}}' @tap='bindMinus' data-item-index="{{index}}">-</text>
+                                        <input @blur='bindBlur' @input="bindInput" value='{{item.stocknums}}'  type="number" data-item-index="{{index}}"/>
+                                        <text @tap='bindPlus' data-item-index="{{index}}">+</text>
+                                    </view>
+                                </view>
+                           </view> 
                             <view class="del" @tap.stop="del" data-index="{{index}}" data-id="{{item.id}}">删除</view>
                         </view>
                     </block>                  
@@ -54,7 +61,8 @@
             stocktype:0,
             replenishArr:[],
             startX: 0, //开始坐标
-            startY: 0
+            startY: 0,
+            minusStatus:'disable'
         };
     
         //事件处理函数(集中保存在methods对象中)
@@ -66,7 +74,7 @@
                 for(let i=0;i<repArr.length;i++){
                     if(repArr[i].stocknums!=0){
                         that.replenishArr.push({
-                            stockid:repArr[i].id,
+                            stockid:repArr[i].baby_stock_id,
                             stockname:repArr[i].name,
                             macheid:that.macheid,
                             stocktype:that.stocktype,
@@ -105,14 +113,47 @@
                 }
                 this.$apply();
             },
-            bindInput(e) {
-                let that=this;         
-                let dataList=that.dollList;
-                let itemIndex=e.target.dataset.index || e.currentTarget.dataset.index
-                let dollItem=dataList[itemIndex]
-                let stocknums=e.detail.value;
-                dataList[itemIndex].stocknums=stocknums;
-                that.dollList=dataList;
+            //减号
+            bindMinus(e){
+                let that=this;
+                let itemIndex=e.target.dataset.itemIndex;
+                let dollItem=that.dollList[itemIndex];
+                let num=dollItem.stocknums;
+                if(num>1){
+                    num--;
+                }
+                let minusStatus=num>1?'normal':'disable';
+                dollItem.stocknums=num;
+                dollItem.minusStatus=minusStatus;
+            },
+            //加号
+            bindPlus(e){
+                let that=this;
+                let itemIndex=e.target.dataset.itemIndex;
+                let dollItem=that.dollList[itemIndex];
+                let num=dollItem.stocknums;
+                num++;               
+                var minusStatus = num > 1 ? 'normal' : 'disable';
+                dollItem.stocknums=num;
+                dollItem.minusStatus=minusStatus;
+            },
+            bindBlur(e){
+                let that=this;
+                let itemIndex=e.currentTarget.dataset.itemIndex;//操作元素绑定的index
+                let dollItem=that.dollList[itemIndex];
+                let num=e.detail.value;
+                num=num.replace(/\b(0+)/gi,"");
+                let minusStatus=num>1?'normal':'disable';
+                dollItem.stocknums=num;
+                dollItem.minusStatus=minusStatus;
+                this.$apply();
+            },
+            bindInput(e){
+                let that=this;
+                let itemIndex=e.currentTarget.dataset.itemIndex;//操作元素绑定的index
+                let dollItem=that.dollList[itemIndex];//操作元素的item数据
+                let num=e.detail.value; //输入的value值
+                dollItem.stocknums=num;//将处理后的num赋值给dollItem.stocknums
                 this.$apply();
             },
             //手指触摸动作开始 记录起点X坐标
@@ -182,7 +223,6 @@
         };
         async onShow(){
             this.getDollList();
-            this.$apply();
         };
         //页面的生命周期函数
         async onLoad() {
@@ -210,6 +250,7 @@
         dataFilter(data){
             for(let i=0;i<data.length;i++){
                 data[i].stocknums=0;
+                data[i].minusStatus='disable';
             }           
             return data;
         };
@@ -230,7 +271,6 @@
     .body-Margin{margin-top:310rpx;margin-bottom:120rpx;}
     .doll-item{padding:10rpx 15rpx;}
     .doll-item .weui-cell__ft{color:#000;text-align:left;}
-    .doll-item .weui-cell__ft input{border:1px solid #ccc;width:100rpx;padding:5rpx 5rpx;}
     .doll_handle{display: flex;justify-content:flex-end;padding:10rpx 15rpx;font-size:30rpx;align-items: center;border-bottom: 1px solid #ccc;background: #fff;}
     .doll_handle button{font-size:30rpx;background: #27b3f0;color:#fff;}
     .weui-btn_warn{background:#E64340;}

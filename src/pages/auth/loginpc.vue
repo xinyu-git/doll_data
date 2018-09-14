@@ -87,7 +87,7 @@
                 })
                 
                 setTimeout(function(){
-                    wx.reLaunch({url: '/pages/portal/index'})
+                    wx.reLaunch({url: '/pages/home/index'})
                 },2000)
             }
         }
